@@ -1,0 +1,11 @@
+#chat-content {
+    height: 300px; /* Adjust to your preferred height */
+    overflow-y: auto;
+}
+.no-gutter > .col {
+    padding-right: 5px;
+    padding-left: 5px;
+}
+.custom-header {
+    font-size: 0.8rem; /* Adjust as needed */
+}

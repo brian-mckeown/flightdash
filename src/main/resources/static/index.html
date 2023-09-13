@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIM Chat</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>   
+    <!-- Optional AngularJS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <!-- Custom stylesheet-->
+    <link href="./styles.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="row">
+            <!-- Chat Window -->
+            <div class="col-md-4">
+                <div class="border bg-light p-3" style="height: 500px;">
+                    <div class="bg-primary text-white p-2">Pilot Log</div>
+                    <div class="mt-3 chat-content" id="chat-content" style="height: 400px; overflow-y: scroll;"></div>
+                    <textarea class="form-control mt-3" id="chat-message" placeholder="Type your message..."></textarea>
+                    <div class="d-flex mt-2"></div>
+                        <button class="btn btn-primary" id="send-button">Send</button>
+                        <!-- New Colored Buttons -->
+                        <button class="btn btn-success ml-2">A</button>
+                        <button class="btn btn-warning ml-2">B</button>
+                        <button class="btn btn-warning ml-2">C</button>
+                        <button class="btn btn-danger ml-2">D</button>
+                    </div>
+            </div>
+            <!-- Panel of Buttons -->
+            <div class="col-md-8">
+                <div class="row no-gutter">
+                    <!-- Preflight -->
+                    <div class="col d-flex flex-column align-items-center">
+                        <h5 class="custom-header text-center">Preflight</h5>
+                        <button class="btn btn-secondary mb-2">Button 1</button>
+                        <!-- Add more buttons up to 10 -->
+                    </div>
+            
+                    <!-- Taxi -->
+                    <div class="col d-flex flex-column align-items-center">
+                        <h5 class="custom-header text-center">Taxi</h5>
+                        <button class="btn btn-secondary mb-2">Button 1</button>
+                        <!-- Add 2 more buttons -->
+                    </div>
+            
+                    <!-- Flight -->
+                    <div class="col d-flex flex-column align-items-center">
+                        <h5 class="custom-header text-center">Flight</h5>
+                        <button class="btn btn-secondary mb-2">Button 1</button>
+                        <!-- Add 4 more buttons -->
+                    </div>
+            
+                    <!-- Landing -->
+                    <div class="col d-flex flex-column align-items-center">
+                        <h5 class="custom-header text-center">Landing</h5>
+                        <button class="btn btn-secondary mb-2">Button 1</button>
+                        <!-- Add 2 more buttons -->
+                    </div>
+            
+                    <!-- After-Landing -->
+                    <div class="col d-flex flex-column align-items-center">
+                        <h5 class="custom-header text-center">After-Landing</h5>
+                        <button class="btn btn-secondary mb-2">Button 1</button>
+                        <!-- Add 2 more buttons -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('send-button').addEventListener('click', sendMessage);
+        document.getElementById('chat-message').addEventListener('keypress', function(event) {
+            if (event.keyCode === 13 || event.which === 13) {  // Enter key
+                event.preventDefault();  // Prevent default behavior like newline in textarea
+                sendMessage();
+            }
+        });
+    
+        function sendMessage() {
+            const messageArea = document.getElementById('chat-message');
+            const chatContent = document.getElementById('chat-content');
+            const message = messageArea.value.trim();
+    
+            if (message !== "") {
+                const timestamp = new Date().toLocaleTimeString();
+                chatContent.innerHTML += `<p><strong>[${timestamp}]</strong>: ${message}</p>`;
+                messageArea.value = "";  // Clear the textarea
+            }
+            // Scroll to the bottom of the chatContent
+            chatContent.scrollTop = chatContent.scrollHeight;
+        }
+    </script>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-alpha2/dist/js/bootstrap.bundle.min.js"></script>
+    
+</body>
+</html>
