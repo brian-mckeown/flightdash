@@ -9,3 +9,15 @@
 .custom-header {
     font-size: 0.8rem; /* Adjust as needed */
 }
+.uniform-width {
+    width: 100px;  /* adjust to your desired width */
+    /*white-space: nowrap;  /* ensures text doesn't wrap inside the button */
+    overflow: hidden;  
+    text-overflow: ellipsis;  /* shows '...' for overflowing text */
+}
+.small-text {
+    font-size: 0.6rem;  /* adjust to your desired font size */
+}
+.slim-button {
+    padding: 5px 12px;  /* adjust to your desired padding */
+}
