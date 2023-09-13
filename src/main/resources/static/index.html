@@ -20,7 +20,7 @@
             <div class="col-md-4">
                 <div class="border bg-light p-3" style="height: 500px;">
                     <div class="bg-primary text-white p-2">Pilot Log</div>
-                    <div class="mt-3 chat-content" id="chat-content" style="height: 400px; overflow-y: scroll;">
+                    <div class="mt-3 chat-content" id="chat-content" ng-ref="chatContentDiv" style="height: 400px; overflow-y: scroll;">
                         <!-- Rendering Messages with ng-repeat -->
                         <div ng-repeat="message in messages" class="text-{{message.color}}">
                             <span ng-bind-html="message.text"></span>
@@ -30,10 +30,10 @@
                     <div class="d-flex mt-2 justify-content-start align-items-center">
                         <button class="btn btn-primary" ng-click="sendMessage()" id="send-button">Send</button>
                         <!-- New Colored Buttons -->
-                        <button class="btn btn-success ml-2">A</button>
-                        <button class="btn btn-warning ml-2">B</button>
-                        <button class="btn btn-warning ml-2">C</button>
-                        <button class="btn btn-danger ml-2">D</button>
+                        <button class="btn btn-success ml-2" ng-click="handleButtonPress('A')">A</button>
+                        <button class="btn btn-warning ml-2" ng-click="handleButtonPress('B')">B</button>
+                        <button class="btn btn-warning ml-2" ng-click="handleButtonPress('C')">C</button>
+                        <button class="btn btn-danger ml-2"  ng-click="handleButtonPress('D')">D</button>
                     </div>
                     <div>State: {{ state }}</div>
                     </div>
