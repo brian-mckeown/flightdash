@@ -11,9 +11,166 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', function($s
 
     $scope.buttonMessages = {
         'Walkaround': {
-            'A': { text: 'A - Begin', color: 'success' },
-            'D': { text: 'D - Cancel', color: 'danger' }
+            'A': { text: 'Begin', color: 'success' },
+            'D': { text: 'Cancel', color: 'danger' }
         },
+        'Walkaround-1': {
+            //Nose tires
+            'A': { text: 'Look good.', color: 'success' },
+            'D': { text: 'Cancel', color: 'danger' }
+        },
+        'Walkaround-2': {
+            //Nose Struts
+            'A': { text: 'Look good.', color: 'success' },
+            'D': { text: 'Cancel', color: 'danger' }
+        },
+        'Walkaround-3': {
+            //Nose Pitot Tubes
+            'A': { text: 'Are fine.', color: 'success' },
+            'D': { text: 'Cancel', color: 'danger' }
+        },
+        'Walkaround-4': {
+            //Nose Static Ports
+            'A': { text: 'Good.', color: 'success' },
+            'D': { text: 'Cancel', color: 'danger' }
+        },
+        'Walkaround-5': {
+            //tires
+            'A': { text: 'Look Good.', color: 'success' },
+            'D': { text: 'Cancel', color: 'danger' }
+        },
+        'Walkaround-6': {
+            //Left Tires
+            'A': { text: 'Good.', color: 'success' },
+            'D': { text: 'Cancel', color: 'danger' }
+        },
+        'Walkaround-7': {
+            //Left Struts
+            'A': { text: 'Look fine.', color: 'success' },
+            'D': { text: 'Cancel', color: 'danger' }
+        },
+        'Walkaround-8': {
+            //Left Brake Wear Indicators
+            'A': { text: 'Are good.', color: 'success' },
+            'D': { text: 'Cancel', color: 'danger' }
+        },
+        'Walkaround-9': {
+            //Left wing leading and trailing edges
+            'A': { text: 'Are fine.', color: 'success' },
+            'D': { text: 'Cancel', color: 'danger' }
+        },
+        'Walkaround-10': {
+            //Left wing flaps
+            'A': { text: 'Good.', color: 'success' },
+            'D': { text: 'Cancel', color: 'danger' }
+        },
+        'Walkaround-11': {
+            //Left wing slats
+            'A': { text: 'Good.', color: 'success' },
+            'D': { text: 'Cancel', color: 'danger' }
+        },
+        'Walkaround-12': {
+            //Left wing fuel and vent ports. 
+            'A': { text: 'Are good.', color: 'success' },
+            'D': { text: 'Cancel', color: 'danger' }
+        },
+        'Walkaround-13': {
+            //Left engine fan blades
+            'A': { text: 'Good.', color: 'success' },
+            'D': { text: 'Cancel', color: 'danger' }
+        },
+        'Walkaround-14': {
+            //Left engine intakes
+            'A': { text: 'Fine.', color: 'success' },
+            'D': { text: 'Cancel', color: 'danger' }
+        },
+        'Walkaround-15': {
+            //Left engine exhaust
+            'A': { text: 'Is fine.', color: 'success' },
+            'D': { text: 'Cancel', color: 'danger' }
+        },
+        'Walkaround-16': {
+            //Tail Horizontal Stabilizers
+            'A': { text: 'Look good.', color: 'success' },
+            'D': { text: 'Cancel', color: 'danger' }
+        },
+        'Walkaround-17': {
+            //Tail Vertical Stabilizers
+            'A': { text: 'Looks fine.', color: 'success' },
+            'D': { text: 'Cancel', color: 'danger' }
+        },
+        'Walkaround-18': {
+            //APU Exhaust
+            'A': { text: 'Good.', color: 'success' },
+            'D': { text: 'Cancel', color: 'danger' }
+        },
+        'Walkaround-19': {
+            //Right Engine Fan Blades
+            'A': { text: 'Are fine.', color: 'success' },
+            'D': { text: 'Cancel', color: 'danger' }
+        },
+        'Walkaround-20': {
+            //Right Engine Intakes
+            'A': { text: 'Looks good.', color: 'success' },
+            'D': { text: 'Cancel', color: 'danger' }
+        },
+        'Walkaround-21': {
+            //Right Engine Exhaust
+            'A': { text: 'Looks fine.', color: 'success' },
+            'D': { text: 'Cancel', color: 'danger' }
+        },
+        'Walkaround-22': {
+            //Right Wing Leading and Trailing Edges
+            'A': { text: 'Look fine.', color: 'success' },
+            'D': { text: 'Cancel', color: 'danger' }
+        },
+        'Walkaround-23': {
+            //Right Wing Flaps
+            'A': { text: 'Good.', color: 'success' },
+            'D': { text: 'Cancel', color: 'danger' }
+        },
+        'Walkaround-24': {
+            //Right Wing Slats
+            'A': { text: 'Good.', color: 'success' },
+            'D': { text: 'Cancel', color: 'danger' }
+        },
+        'Walkaround-25': {
+            //Right Wing Fuel and Vent Ports
+            'A': { text: 'Look good.', color: 'success' },
+            'D': { text: 'Cancel', color: 'danger' }
+        },
+        'Walkaround-26': {
+            //Right Tires
+            'A': { text: 'Good.', color: 'success' },
+            'D': { text: 'Cancel', color: 'danger' }
+        },
+        'Walkaround-27': {
+            //Right Struts
+            'A': { text: 'Look fine.', color: 'success' },
+            'D': { text: 'Cancel', color: 'danger' }
+        },
+        'Walkaround-28': {
+            //Right Brake Wear Indicators
+            'A': { text: 'Look fine.', color: 'success' },
+            'D': { text: 'Cancel', color: 'danger' }
+        },
+        'Walkaround-29': {
+            //Windows
+            'A': { text: 'Good.', color: 'success' },
+            'D': { text: 'Cancel', color: 'danger' }
+        },
+        'Walkaround-30': {
+            //Doors
+            'A': { text: 'Good.', color: 'success' },
+            'D': { text: 'Cancel', color: 'danger' }
+        },
+        'Walkaround-31': {
+            //Emergency Exits
+            'A': { text: 'Good.', color: 'success' },
+            'D': { text: 'Cancel', color: 'danger' }
+        }
+
+        
         // More states can be added here with their own button messages
     };
 
@@ -47,17 +204,323 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', function($s
             var color = $scope.buttonMessages[$scope.state][button].color;
             $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: " + message), color: color });
         }
-    
+        $timeout(function() {
+        if (button === 'A') {
+            if ($scope.state === 'Walkaround') {
+                $scope.state = 'Walkaround-1';
+                var timestamp = new Date().toLocaleTimeString(); // e.g., "12:35:47 PM"
+                $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Nose Tires."), color: 'magenta' });
+                $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
+                $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+
+                $scope.scrollToBottom(); // Scroll to the bottom after sending a message
+            }
+            else if ($scope.state === 'Walkaround-1') {
+                $scope.state = 'Walkaround-2';
+                var timestamp = new Date().toLocaleTimeString(); // e.g., "12:35:47 PM"
+                $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Nose Struts"), color: 'magenta' });
+                $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
+                $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+
+                $scope.scrollToBottom(); // Scroll to the bottom after sending a message
+            }
+            else if ($scope.state === 'Walkaround-2') {
+                $scope.state = 'Walkaround-3';
+                var timestamp = new Date().toLocaleTimeString(); // e.g., "12:35:47 PM"
+                $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Pitot Tubes"), color: 'magenta' });
+                $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
+                $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+
+                $scope.scrollToBottom(); // Scroll to the bottom after sending a message
+            }
+            else if ($scope.state === 'Walkaround-3') {
+                $scope.state = 'Walkaround-4';
+                var timestamp = new Date().toLocaleTimeString(); // e.g., "12:35:47 PM"
+                $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Static Ports"), color: 'magenta' });
+                $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
+                $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+
+                $scope.scrollToBottom(); // Scroll to the bottom after sending a message
+            }
+            else if ($scope.state === 'Walkaround-4') {
+                $scope.state = 'Walkaround-5';
+                var timestamp = new Date().toLocaleTimeString(); // e.g., "12:35:47 PM"
+                $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Left Tires"), color: 'magenta' });
+                $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
+                $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+
+                $scope.scrollToBottom(); // Scroll to the bottom after sending a message
+            }
+            else if ($scope.state === 'Walkaround-5') {
+                $scope.state = 'Walkaround-6';
+                var timestamp = new Date().toLocaleTimeString(); // e.g., "12:35:47 PM"
+                $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Left Struts."), color: 'magenta' });
+                $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
+                $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+
+                $scope.scrollToBottom(); // Scroll to the bottom after sending a message
+            }
+            else if ($scope.state === 'Walkaround-6') {
+                $scope.state = 'Walkaround-7';
+                var timestamp = new Date().toLocaleTimeString(); // e.g., "12:35:47 PM"
+                $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Left Brake Wear Indicators."), color: 'magenta' });
+                $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
+                $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+
+                $scope.scrollToBottom(); // Scroll to the bottom after sending a message
+            }
+            else if ($scope.state === 'Walkaround-7') {
+                $scope.state = 'Walkaround-8';
+                var timestamp = new Date().toLocaleTimeString(); // e.g., "12:35:47 PM"
+                $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Left wing leading and trailing edges."), color: 'magenta' });
+                $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
+                $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+
+                $scope.scrollToBottom(); // Scroll to the bottom after sending a message
+            }
+            else if ($scope.state === 'Walkaround-8') {
+                $scope.state = 'Walkaround-9';
+                var timestamp = new Date().toLocaleTimeString(); // e.g., "12:35:47 PM"
+                $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Left flaps."), color: 'magenta' });
+                $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
+                $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+
+                $scope.scrollToBottom(); // Scroll to the bottom after sending a message
+            }
+            else if ($scope.state === 'Walkaround-9') {
+                $scope.state = 'Walkaround-10';
+                var timestamp = new Date().toLocaleTimeString(); // e.g., "12:35:47 PM"
+                $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Left slats."), color: 'magenta' });
+                $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
+                $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+
+                $scope.scrollToBottom(); // Scroll to the bottom after sending a message
+            }
+            else if ($scope.state === 'Walkaround-10') {
+                $scope.state = 'Walkaround-11';
+                var timestamp = new Date().toLocaleTimeString(); // e.g., "12:35:47 PM"
+                $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Left fuel and vent ports."), color: 'magenta' });
+                $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
+                $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+
+                $scope.scrollToBottom(); // Scroll to the bottom after sending a message
+            }
+            else if ($scope.state === 'Walkaround-11') {
+                $scope.state = 'Walkaround-12';
+                var timestamp = new Date().toLocaleTimeString(); // e.g., "12:35:47 PM"
+                $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Left engine fan blades."), color: 'magenta' });
+                $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
+                $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+
+                $scope.scrollToBottom(); // Scroll to the bottom after sending a message
+            }
+            else if ($scope.state === 'Walkaround-12') {
+                $scope.state = 'Walkaround-13';
+                var timestamp = new Date().toLocaleTimeString(); // e.g., "12:35:47 PM"
+                $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Left engine intakes."), color: 'magenta' });
+                $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
+                $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+
+                $scope.scrollToBottom(); // Scroll to the bottom after sending a message
+            }
+            else if ($scope.state === 'Walkaround-13') {
+                $scope.state = 'Walkaround-14';
+                var timestamp = new Date().toLocaleTimeString(); // e.g., "12:35:47 PM"
+                $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Left engine exhaust."), color: 'magenta' });
+                $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
+                $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+
+                $scope.scrollToBottom(); // Scroll to the bottom after sending a message
+            }
+            else if ($scope.state === 'Walkaround-14') {
+                $scope.state = 'Walkaround-15';
+                var timestamp = new Date().toLocaleTimeString(); // e.g., "12:35:47 PM"
+                $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Tail horizontal stabilizers."), color: 'magenta' });
+                $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
+                $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+
+                $scope.scrollToBottom(); // Scroll to the bottom after sending a message
+            }
+            else if ($scope.state === 'Walkaround-15') {
+                $scope.state = 'Walkaround-16';
+                var timestamp = new Date().toLocaleTimeString(); // e.g., "12:35:47 PM"
+                $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Tail vertical stabilizer."), color: 'magenta' });
+                $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
+                $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+
+                $scope.scrollToBottom(); // Scroll to the bottom after sending a message
+            }
+            else if ($scope.state === 'Walkaround-16') {
+                $scope.state = 'Walkaround-17';
+                var timestamp = new Date().toLocaleTimeString(); // e.g., "12:35:47 PM"
+                $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: A.P.U Exhaust."), color: 'magenta' });
+                $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
+                $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+
+                $scope.scrollToBottom(); // Scroll to the bottom after sending a message
+            }
+            else if ($scope.state === 'Walkaround-17') {
+                $scope.state = 'Walkaround-18';
+                var timestamp = new Date().toLocaleTimeString(); // e.g., "12:35:47 PM"
+                $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Right engine fan blades."), color: 'magenta' });
+                $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
+                $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+
+                $scope.scrollToBottom(); // Scroll to the bottom after sending a message
+            }
+            else if ($scope.state === 'Walkaround-18') {
+                $scope.state = 'Walkaround-19';
+                var timestamp = new Date().toLocaleTimeString(); // e.g., "12:35:47 PM"
+                $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Right engine intakes."), color: 'magenta' });
+                $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
+                $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+
+                $scope.scrollToBottom(); // Scroll to the bottom after sending a message
+            }
+            else if ($scope.state === 'Walkaround-19') {
+                $scope.state = 'Walkaround-20';
+                var timestamp = new Date().toLocaleTimeString(); // e.g., "12:35:47 PM"
+                $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Right engine exhaust."), color: 'magenta' });
+                $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
+                $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+
+                $scope.scrollToBottom(); // Scroll to the bottom after sending a message
+            }
+            else if ($scope.state === 'Walkaround-20') {
+                $scope.state = 'Walkaround-21';
+                var timestamp = new Date().toLocaleTimeString(); // e.g., "12:35:47 PM"
+                $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Right wing leading and trailing edges."), color: 'magenta' });
+                $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
+                $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+
+                $scope.scrollToBottom(); // Scroll to the bottom after sending a message
+            }
+            else if ($scope.state === 'Walkaround-21') {
+                $scope.state = 'Walkaround-22';
+                var timestamp = new Date().toLocaleTimeString(); // e.g., "12:35:47 PM"
+                $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Right flaps."), color: 'magenta' });
+                $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
+                $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+
+                $scope.scrollToBottom(); // Scroll to the bottom after sending a message
+            }
+            else if ($scope.state === 'Walkaround-22') {
+                $scope.state = 'Walkaround-23';
+                var timestamp = new Date().toLocaleTimeString(); // e.g., "12:35:47 PM"
+                $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Right slats."), color: 'magenta' });
+                $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
+                $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+
+                $scope.scrollToBottom(); // Scroll to the bottom after sending a message
+            }
+            else if ($scope.state === 'Walkaround-23') {
+                $scope.state = 'Walkaround-24';
+                var timestamp = new Date().toLocaleTimeString(); // e.g., "12:35:47 PM"
+                $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Right wing fuel and vent ports."), color: 'magenta' });
+                $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
+                $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+
+                $scope.scrollToBottom(); // Scroll to the bottom after sending a message
+            }
+            else if ($scope.state === 'Walkaround-24') {
+                $scope.state = 'Walkaround-25';
+                var timestamp = new Date().toLocaleTimeString(); // e.g., "12:35:47 PM"
+                $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Nose Tires."), color: 'magenta' });
+                $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
+                $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+
+                $scope.scrollToBottom(); // Scroll to the bottom after sending a message
+            }
+            else if ($scope.state === 'Walkaround-25') {
+                $scope.state = 'Walkaround-26';
+                var timestamp = new Date().toLocaleTimeString(); // e.g., "12:35:47 PM"
+                $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Right tires."), color: 'magenta' });
+                $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
+                $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+
+                $scope.scrollToBottom(); // Scroll to the bottom after sending a message
+            }
+            else if ($scope.state === 'Walkaround-26') {
+                $scope.state = 'Walkaround-27';
+                var timestamp = new Date().toLocaleTimeString(); // e.g., "12:35:47 PM"
+                $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Right struts."), color: 'magenta' });
+                $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
+                $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+
+                $scope.scrollToBottom(); // Scroll to the bottom after sending a message
+            }
+            else if ($scope.state === 'Walkaround-27') {
+                $scope.state = 'Walkaround-28';
+                var timestamp = new Date().toLocaleTimeString(); // e.g., "12:35:47 PM"
+                $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Right brake wear indicators."), color: 'magenta' });
+                $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
+                $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+
+                $scope.scrollToBottom(); // Scroll to the bottom after sending a message
+            }
+            else if ($scope.state === 'Walkaround-28') {
+                $scope.state = 'Walkaround-29';
+                var timestamp = new Date().toLocaleTimeString(); // e.g., "12:35:47 PM"
+                $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Windows."), color: 'magenta' });
+                $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
+                $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+
+                $scope.scrollToBottom(); // Scroll to the bottom after sending a message
+            }
+            else if ($scope.state === 'Walkaround-29') {
+                $scope.state = 'Walkaround-30';
+                var timestamp = new Date().toLocaleTimeString(); // e.g., "12:35:47 PM"
+                $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Doors."), color: 'magenta' });
+                $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
+                $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+
+                $scope.scrollToBottom(); // Scroll to the bottom after sending a message
+            }
+            else if ($scope.state === 'Walkaround-30') {
+                $scope.state = 'Walkaround-31';
+                var timestamp = new Date().toLocaleTimeString(); // e.g., "12:35:47 PM"
+                $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Emergency Exists."), color: 'magenta' });
+                $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
+                $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+
+                $scope.scrollToBottom(); // Scroll to the bottom after sending a message
+            }
+            else if ($scope.state === 'Walkaround-31') {
+                $scope.state = 'Idle';
+                var timestamp = new Date().toLocaleTimeString(); // e.g., "12:35:47 PM"
+                $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Walkaround Complete."), color: 'magenta' });
+
+                $scope.scrollToBottom(); // Scroll to the bottom after sending a message
+            }
+            
+        }
+        if (button === 'B') {
+            if ($scope.state === 'Walkaround') {
+                //$scope.walkaroundStarted = false;
+            }
+        }
+        if (button === 'C') {
+            if ($scope.state === 'Walkaround') {
+                //$scope.walkaroundStarted = false;
+            }
+        }
         if (button === 'D') {
             if ($scope.state === 'Walkaround') {
-                $scope.walkaroundStarted = false;
+                //$scope.walkaroundStarted = false;
             }
             $scope.state = 'Idle';
+        }
+        if (button === 'Reset') {
+            $scope.state = 'Idle';
+            $scope.walkaroundStarted = false;
+
         }
     
         // Additional actions for other buttons can be added as needed
 
         $scope.scrollToBottom(); // Scroll to the bottom after sending a message
+    }, 1000);
+    $scope.scrollToBottom()
     };
 
     $scope.startWalkaround = function() {
