@@ -26,9 +26,9 @@
                             <span ng-bind-html="message.text"></span>
                         </div>
                     </div>
-                    <textarea class="form-control mt-3" id="chat-message" placeholder="Type your message..."></textarea>
+                    <textarea class="form-control mt-3" ng-model="chatMessage" ng-keypress="sendMessage($event)" id="chat-message" placeholder="Type your message..."></textarea>
                     <div class="d-flex mt-2 justify-content-start align-items-center">
-                        <button class="btn btn-primary" id="send-button">Send</button>
+                        <button class="btn btn-primary" ng-click="sendMessage()" id="send-button">Send</button>
                         <!-- New Colored Buttons -->
                         <button class="btn btn-success ml-2">A</button>
                         <button class="btn btn-warning ml-2">B</button>
@@ -44,7 +44,12 @@
                     <!-- Preflight -->
                     <div class="col d-flex flex-column align-items-center">
                         <h5 class="custom-header text-center">Preflight</h5>
-                        <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Walkaround'); startWalkaround()">Walkaround</button>
+                        <button class="btn mb-2 uniform-width small-text slim-button" 
+                            ng-class="{'btn-primary': walkaroundStarted, 'btn-secondary': !walkaroundStarted}" 
+                            ng-click="setState('Walkaround'); startWalkaround()" 
+                            ng-disabled="walkaroundStarted">
+                            Walkaround
+                        </button>
                         <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Pre-Power Checklist')">Pre-Power Checklist</button>
                         <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Cockpit Prep Checklist')">Cockpit Prep Checklist</button>
                         <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Pre-Boarding')">Pre-Boarding</button>

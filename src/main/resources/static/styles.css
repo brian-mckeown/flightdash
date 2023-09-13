@@ -2,6 +2,9 @@
     height: 300px; /* Adjust to your preferred height */
     overflow-y: auto;
 }
+.text-magenta {
+    color: magenta;
+}
 .no-gutter > .col {
     padding-right: 5px;
     padding-left: 5px;
