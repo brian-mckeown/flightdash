@@ -3,11 +3,12 @@
 /**************************** */
 var app = angular.module('checklistApp', []);
 
-app.controller('ChecklistController', ['$scope', '$sce', '$timeout', function($scope, $sce, $timeout) {
+app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', function($scope, $sce, $timeout, $http) {
     $scope.state = 'Idle';
     $scope.messages = [];
 
     $scope.walkaroundStarted = false;
+    $scope.prePowerChecklistStarted = false;
 
     $scope.buttonMessages = {
         'Walkaround': {
@@ -168,7 +169,12 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', function($s
             //Emergency Exits
             'A': { text: 'Good.', color: 'success' },
             'D': { text: 'Cancel', color: 'danger' }
-        }
+        },
+        'Pre-Power Checklist': {
+            //Emergency Exits
+            'A': { text: 'Begin.', color: 'success' },
+            'D': { text: 'Cancel', color: 'danger' }
+        },
 
         
         // More states can be added here with their own button messages
@@ -185,6 +191,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', function($s
         
         var timestamp = new Date().toLocaleTimeString();
         var trustedHtmlMessage = $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: " + $scope.chatMessage);
+        $scope.speakText($scope.chatMessage);
         $scope.messages.push({ text: trustedHtmlMessage, color: '' });
         $scope.chatMessage = '';  // Clear the message box
         $scope.scrollToBottom(); // Scroll to the bottom after sending a message
@@ -197,11 +204,38 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', function($s
         });
     };
 
+    $scope.voices = [];
+    if ('speechSynthesis' in window) {
+        speechSynthesis.onvoiceschanged = function() {
+            $scope.voices = speechSynthesis.getVoices();
+        };
+    }
+
+    $scope.speakText = function(message) {
+        if ('speechSynthesis' in window) {
+            var utterance = new SpeechSynthesisUtterance(message);
+            utterance.volume = 1;  // 0 to 1
+            utterance.rate = 0.9;    // 0.1 to 10
+            utterance.pitch = 1;   // 0 to 2
+
+            // Set the voice to Daniel en-GB
+            var danielVoice = $scope.voices.find(voice => voice.name === 'Daniel' && voice.lang === 'en-GB');
+            if (danielVoice) {
+                utterance.voice = danielVoice;
+            }
+
+            window.speechSynthesis.speak(utterance);
+        } else {
+            alert("Your browser doesn't support speech synthesis.");
+        }
+    };
+
     $scope.handleButtonPress = function(button) {
         if ($scope.state in $scope.buttonMessages && button in $scope.buttonMessages[$scope.state]) {
             var timestamp = new Date().toLocaleTimeString();
             var message = $scope.buttonMessages[$scope.state][button].text;
             var color = $scope.buttonMessages[$scope.state][button].color;
+            $scope.speakText(message);
             $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: " + message), color: color });
         }
         $timeout(function() {
@@ -212,6 +246,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', function($s
                 $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Nose Tires."), color: 'magenta' });
                 $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
                 $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+                $scope.speakText("Nose Tires");
 
                 $scope.scrollToBottom(); // Scroll to the bottom after sending a message
             }
@@ -221,6 +256,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', function($s
                 $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Nose Struts"), color: 'magenta' });
                 $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
                 $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+                $scope.speakText("Nose Struts");
 
                 $scope.scrollToBottom(); // Scroll to the bottom after sending a message
             }
@@ -230,6 +266,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', function($s
                 $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Pitot Tubes"), color: 'magenta' });
                 $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
                 $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+                $scope.speakText("Pitot Tubes");
 
                 $scope.scrollToBottom(); // Scroll to the bottom after sending a message
             }
@@ -239,6 +276,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', function($s
                 $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Static Ports"), color: 'magenta' });
                 $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
                 $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+                $scope.speakText("Static Ports");
 
                 $scope.scrollToBottom(); // Scroll to the bottom after sending a message
             }
@@ -248,6 +286,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', function($s
                 $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Left Tires"), color: 'magenta' });
                 $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
                 $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+                $scope.speakText("Left Tires");
 
                 $scope.scrollToBottom(); // Scroll to the bottom after sending a message
             }
@@ -257,6 +296,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', function($s
                 $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Left Struts."), color: 'magenta' });
                 $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
                 $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+                $scope.speakText("Left Struts");
 
                 $scope.scrollToBottom(); // Scroll to the bottom after sending a message
             }
@@ -266,6 +306,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', function($s
                 $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Left Brake Wear Indicators."), color: 'magenta' });
                 $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
                 $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+                $scope.speakText("Left Brake Wear Indicators");
 
                 $scope.scrollToBottom(); // Scroll to the bottom after sending a message
             }
@@ -275,6 +316,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', function($s
                 $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Left wing leading and trailing edges."), color: 'magenta' });
                 $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
                 $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+                $scope.speakText("Left wing leading and trailing edges");
 
                 $scope.scrollToBottom(); // Scroll to the bottom after sending a message
             }
@@ -284,6 +326,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', function($s
                 $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Left flaps."), color: 'magenta' });
                 $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
                 $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+                $scope.speakText("Left flaps");
 
                 $scope.scrollToBottom(); // Scroll to the bottom after sending a message
             }
@@ -293,6 +336,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', function($s
                 $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Left slats."), color: 'magenta' });
                 $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
                 $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+                $scope.speakText("Left slats");
 
                 $scope.scrollToBottom(); // Scroll to the bottom after sending a message
             }
@@ -302,6 +346,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', function($s
                 $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Left fuel and vent ports."), color: 'magenta' });
                 $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
                 $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+                $scope.speakText("Left fuel and vent ports");
 
                 $scope.scrollToBottom(); // Scroll to the bottom after sending a message
             }
@@ -311,6 +356,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', function($s
                 $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Left engine fan blades."), color: 'magenta' });
                 $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
                 $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+                $scope.speakText("Left engine fan blades");
 
                 $scope.scrollToBottom(); // Scroll to the bottom after sending a message
             }
@@ -320,6 +366,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', function($s
                 $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Left engine intakes."), color: 'magenta' });
                 $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
                 $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+                $scope.speakText("Left engine intakes");
 
                 $scope.scrollToBottom(); // Scroll to the bottom after sending a message
             }
@@ -329,6 +376,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', function($s
                 $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Left engine exhaust."), color: 'magenta' });
                 $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
                 $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+                $scope.speakText("Left engine exhaust");
 
                 $scope.scrollToBottom(); // Scroll to the bottom after sending a message
             }
@@ -338,6 +386,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', function($s
                 $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Tail horizontal stabilizers."), color: 'magenta' });
                 $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
                 $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+                $scope.speakText("Tail horizontal stabilizers");
 
                 $scope.scrollToBottom(); // Scroll to the bottom after sending a message
             }
@@ -347,15 +396,17 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', function($s
                 $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Tail vertical stabilizer."), color: 'magenta' });
                 $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
                 $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+                $scope.speakText("Tail vertical stabilizer");
 
                 $scope.scrollToBottom(); // Scroll to the bottom after sending a message
             }
             else if ($scope.state === 'Walkaround-16') {
                 $scope.state = 'Walkaround-17';
                 var timestamp = new Date().toLocaleTimeString(); // e.g., "12:35:47 PM"
-                $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: A.P.U Exhaust."), color: 'magenta' });
+                $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: APU Exhaust."), color: 'magenta' });
                 $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
                 $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+                $scope.speakText("A.P.U. Exhaust");
 
                 $scope.scrollToBottom(); // Scroll to the bottom after sending a message
             }
@@ -365,6 +416,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', function($s
                 $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Right engine fan blades."), color: 'magenta' });
                 $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
                 $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+                $scope.speakText("Right engine fan blades");
 
                 $scope.scrollToBottom(); // Scroll to the bottom after sending a message
             }
@@ -374,6 +426,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', function($s
                 $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Right engine intakes."), color: 'magenta' });
                 $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
                 $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+                $scope.speakText("Right engine intakes");
 
                 $scope.scrollToBottom(); // Scroll to the bottom after sending a message
             }
@@ -383,6 +436,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', function($s
                 $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Right engine exhaust."), color: 'magenta' });
                 $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
                 $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+                $scope.speakText("Right Engine Exhaust");
 
                 $scope.scrollToBottom(); // Scroll to the bottom after sending a message
             }
@@ -392,6 +446,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', function($s
                 $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Right wing leading and trailing edges."), color: 'magenta' });
                 $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
                 $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+                $scope.speakText("Right wing leading and trailing edges");
 
                 $scope.scrollToBottom(); // Scroll to the bottom after sending a message
             }
@@ -401,6 +456,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', function($s
                 $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Right flaps."), color: 'magenta' });
                 $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
                 $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+                $scope.speakText("Right Flaps");
 
                 $scope.scrollToBottom(); // Scroll to the bottom after sending a message
             }
@@ -410,6 +466,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', function($s
                 $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Right slats."), color: 'magenta' });
                 $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
                 $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+                $scope.speakText("Right slats");
 
                 $scope.scrollToBottom(); // Scroll to the bottom after sending a message
             }
@@ -419,6 +476,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', function($s
                 $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Right wing fuel and vent ports."), color: 'magenta' });
                 $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
                 $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+                $scope.speakText("Right wing fuel and vent ports");
 
                 $scope.scrollToBottom(); // Scroll to the bottom after sending a message
             }
@@ -428,6 +486,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', function($s
                 $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Nose Tires."), color: 'magenta' });
                 $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
                 $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+                $scope.speakText("Nose tires");
 
                 $scope.scrollToBottom(); // Scroll to the bottom after sending a message
             }
@@ -437,6 +496,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', function($s
                 $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Right tires."), color: 'magenta' });
                 $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
                 $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+                $scope.speakText("Right Tires");
 
                 $scope.scrollToBottom(); // Scroll to the bottom after sending a message
             }
@@ -446,6 +506,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', function($s
                 $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Right struts."), color: 'magenta' });
                 $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
                 $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+                $scope.speakText("Right struts");
 
                 $scope.scrollToBottom(); // Scroll to the bottom after sending a message
             }
@@ -455,6 +516,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', function($s
                 $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Right brake wear indicators."), color: 'magenta' });
                 $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
                 $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+                $scope.speakText("Righ brake wear indicators");
 
                 $scope.scrollToBottom(); // Scroll to the bottom after sending a message
             }
@@ -464,6 +526,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', function($s
                 $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Windows."), color: 'magenta' });
                 $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
                 $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+                $scope.speakText("Windows");
 
                 $scope.scrollToBottom(); // Scroll to the bottom after sending a message
             }
@@ -473,19 +536,29 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', function($s
                 $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Doors."), color: 'magenta' });
                 $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
                 $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+                $scope.speakText("Doors");
 
                 $scope.scrollToBottom(); // Scroll to the bottom after sending a message
             }
             else if ($scope.state === 'Walkaround-30') {
                 $scope.state = 'Walkaround-31';
                 var timestamp = new Date().toLocaleTimeString(); // e.g., "12:35:47 PM"
-                $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Emergency Exists."), color: 'magenta' });
+                $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Emergency Exits."), color: 'magenta' });
                 $scope.messages.push({ text: $sce.trustAsHtml("A - Look good."), color: 'success' });
                 $scope.messages.push({ text: $sce.trustAsHtml("D - Exit"), color: 'danger' });
+                $scope.speakText("Emergency Exits");
 
                 $scope.scrollToBottom(); // Scroll to the bottom after sending a message
             }
             else if ($scope.state === 'Walkaround-31') {
+                $scope.state = 'Idle';
+                var timestamp = new Date().toLocaleTimeString(); // e.g., "12:35:47 PM"
+                $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Walkaround Complete."), color: 'magenta' });
+                $scope.speakText("Walkaround complete");
+
+                $scope.scrollToBottom(); // Scroll to the bottom after sending a message
+            }
+            else if ($scope.state === 'Pre-Power Checklist') {
                 $scope.state = 'Idle';
                 var timestamp = new Date().toLocaleTimeString(); // e.g., "12:35:47 PM"
                 $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Walkaround Complete."), color: 'magenta' });
@@ -513,6 +586,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', function($s
         if (button === 'Reset') {
             $scope.state = 'Idle';
             $scope.walkaroundStarted = false;
+            $scope.prePowerChecklistStarted = false;
 
         }
     
@@ -532,6 +606,21 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', function($s
         $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Let's begin the walkaround"), color: 'magenta' });
         $scope.messages.push({ text: $sce.trustAsHtml("A - Begin"), color: 'success' });
         $scope.messages.push({ text: $sce.trustAsHtml("D - Cancel"), color: 'danger' });
+        $scope.speakText("Let's begin the walkaround");
+
+        $scope.scrollToBottom(); // Scroll to the bottom after sending a message
+    };
+
+    $scope.startPrePowerChecklist = function() {
+
+        $scope.prePowerChecklistStarted = true;
+        var timestamp = new Date().toLocaleTimeString(); // e.g., "12:35:47 PM"
+        
+        // Append messages
+        $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Let's check the cockpit before powering up."), color: 'magenta' });
+        $scope.messages.push({ text: $sce.trustAsHtml("A - Begin"), color: 'success' });
+        $scope.messages.push({ text: $sce.trustAsHtml("D - Cancel"), color: 'danger' });
+        $scope.speakText("Let's begin the walkaround");
 
         $scope.scrollToBottom(); // Scroll to the bottom after sending a message
     };

@@ -51,7 +51,12 @@
                             ng-disabled="walkaroundStarted">
                             Walkaround
                         </button>
-                        <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Pre-Power Checklist')">Pre-Power Checklist</button>
+                        <button class="btn mb-2 uniform-width small-text slim-button" 
+                            ng-class="{'btn-primary': prePowerChecklistStarted, 'btn-secondary': !prePowerChecklistStarted}"
+                            ng-click="setState('Pre-Power Checklist'); startPrePowerChecklist()"
+                            ng-disabled="prePowerChecklistStarted">
+                            Pre-Power Checklist
+                        </button>
                         <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Cockpit Prep Checklist')">Cockpit Prep Checklist</button>
                         <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Pre-Boarding')">Pre-Boarding</button>
                         <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('MCDU: Init A')">MCDU: Init A</button>
