@@ -164,20 +164,18 @@
                 <!-- Airports Tab -->
                 <div ng-show="activeTab === 'airports'">
                     <!-- Content for Airports -->
-                    <div class="row mt-5 clearfix icao-row">
-                        <div class="gray-banner text-center py-2">
-                            <h5>Airport Data</h5>
-                        </div>            
-                    </div>
+                    <h5>Airport Data</h5>
                     <div class="row">
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label for="icaoCode">ICAO</label>
-                                <input type="text" class="form-control" id="icaoCode" ng-model="icao" maxlength="4" ng-change="convertToUpperCase()">
+                        <div class="col-md-4">
+                            <div class="form-group d-flex align-items-center">
+                                <input type="text" class="form-control mr-2" id="icaoCode" ng-model="icao" maxlength="4" ng-change="convertToUpperCase()" placeholder="ICAO">
+                                <button class="btn btn-primary">Request</button>
                             </div>
                         </div>
                     </div>
                 </div>
+                
+                
 
                 <!-- Flight Plan Tab -->
                 <div ng-show="activeTab === 'flightPlan'">
