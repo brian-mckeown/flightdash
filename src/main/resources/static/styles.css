@@ -195,3 +195,7 @@ body, div, section {
 .footer a:hover {
     text-decoration: none; /* Ensures no underlines on hover */
 }
+
+hr {
+    margin: 2px auto;  /* Center the line and provide space above and below */
+}
