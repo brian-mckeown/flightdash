@@ -24,3 +24,15 @@
 .slim-button {
     padding: 5px 12px;  /* adjust to your desired padding */
 }
+#icaoCode {
+    text-transform: uppercase;
+}
+.icao-row {
+    margin-top: 150px !important;
+}
+.gray-banner {
+    background-color: #e9ecef; /* Gray color similar to Bootstrap's Jumbotron */
+    margin-top: 20px; /* Space from the top, you can adjust as per your requirement */
+    margin-bottom: 20px; /* Space from the bottom, adjust if needed */
+    border-radius: 5px; /* Rounded corners, adjust if needed */
+}

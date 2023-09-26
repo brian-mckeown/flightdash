@@ -10,6 +10,8 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', fu
     $scope.walkaroundStarted = false;
     $scope.prePowerChecklistStarted = false;
 
+    $scope.icao = '';
+
     $scope.buttonMessages = {
         'Walkaround': {
             'A': { text: 'Begin', color: 'success' },
@@ -202,6 +204,10 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', fu
             var chatContentDiv = document.getElementById('chat-content');
             chatContentDiv.scrollTop = chatContentDiv.scrollHeight;
         });
+    };
+
+    $scope.convertToUpperCase = function() {
+        $scope.icao = $scope.icao.toUpperCase();
     };
 
     $scope.voices = [];
@@ -620,7 +626,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', fu
         $scope.messages.push({ text: $sce.trustAsHtml("<strong>[" + timestamp + "]</strong>: Let's check the cockpit before powering up."), color: 'magenta' });
         $scope.messages.push({ text: $sce.trustAsHtml("A - Begin"), color: 'success' });
         $scope.messages.push({ text: $sce.trustAsHtml("D - Cancel"), color: 'danger' });
-        $scope.speakText("Let's begin the walkaround");
+        $scope.speakText("Let's check the cockpit before powering up");
 
         $scope.scrollToBottom(); // Scroll to the bottom after sending a message
     };

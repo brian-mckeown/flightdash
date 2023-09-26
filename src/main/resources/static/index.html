@@ -15,7 +15,7 @@
 </head>
 <body ng-app="checklistApp" ng-controller="ChecklistController">
     <div class="container mt-4">
-        <div class="row">
+        <div class="row mb-5 clearfix">
             <!-- Chat Window -->
             <div class="col-md-4">
                 <div class="border bg-light p-3" style="height: 500px;">
@@ -102,6 +102,19 @@
                         <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Parking')">Parking</button>
                         <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Shutdown')">Shutdown</button>
                     </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-5 clearfix icao-row">
+            <div class="gray-banner text-center py-2">
+                <h5>Airport Data</h5>
+            </div>            
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label for="icaoCode">ICAO</label>
+                    <input type="text" class="form-control" id="icaoCode" ng-model="icao" maxlength="4" ng-change="convertToUpperCase()">
                 </div>
             </div>
         </div>
