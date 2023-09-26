@@ -59,7 +59,8 @@
                             <span ng-bind-html="message.text"></span>
                         </div>
                     </div>
-                    <textarea class="form-control mt-3" ng-model="chatMessage" ng-keypress="sendMessage($event)" id="chat-message" placeholder="Type your message..."></textarea>
+                    <input type="text" class="form-control mt-3" ng-model="chatMessage" ng-keypress="sendMessage($event)" id="chat-message" placeholder="Type your message...">
+
                     <div class="d-flex mt-2 justify-content-start align-items-center">
                         <button class="btn btn-primary" ng-click="sendMessage()" id="send-button">Send</button>
                         <!-- New Colored Buttons -->

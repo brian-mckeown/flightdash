@@ -3,7 +3,7 @@
 /**************************** */
 var app = angular.module('checklistApp', []);
 
-app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', function($scope, $sce, $timeout, $http) {
+app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$document', function($scope, $sce, $timeout, $http, $document) {
     
     $scope.versionNumber = '1.0.0'; 
     $scope.state = 'Idle';
@@ -14,6 +14,34 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', fu
 
     $scope.icao = '';
 
+    $scope.handleKeyPress = function(event) {
+        switch (event.key.toLowerCase()) {
+            case 'a':
+                $scope.handleButtonPress('A');
+                break;
+            case 'b':
+                $scope.handleButtonPress('B');
+                break;
+            case 'c':
+                $scope.handleButtonPress('C');
+                break;
+            case 'd':
+                $scope.handleButtonPress('D');
+                break;
+            default:
+                // handle other keys if necessary
+                break;
+        }
+        $scope.$apply();
+    };
+
+    $document.bind('keydown', $scope.handleKeyPress);
+
+    // Cleanup listener when scope is destroyed
+    $scope.$on('$destroy', function() {
+        $document.unbind('keydown', $scope.handleKeyPress);
+    });
+    
     $scope.buttonMessages = {
         'Walkaround': {
             'A': { text: 'Begin', color: 'success' },
