@@ -7,6 +7,10 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>   
+    <!-- Include FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts-->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <!-- Optional AngularJS -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
     <!-- Custom files-->
@@ -14,15 +18,44 @@
 
 </head>
 <body ng-app="checklistApp" ng-controller="ChecklistController">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <!-- Branding Text -->
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-plane"></i> flightdash.io
+            </a>
+            
+            <!-- Toggler for mobile -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+    
+            <!-- Navbar content -->
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <!-- Settings Icon -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-cog"></i> Settings</a>
+                    </li>
+                    <!-- Info Icon -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-info-circle"></i> About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
     <div class="container mt-4">
         <div class="row mb-5 clearfix">
             <!-- Chat Window -->
             <div class="col-md-4">
                 <div class="border bg-light p-3" style="height: 500px;">
                     <div class="bg-primary text-white p-2">Pilot Log</div>
-                    <div class="mt-3 chat-content" id="chat-content" ng-ref="chatContentDiv" style="height: 400px; overflow-y: scroll;">
+                    <div class="mt-3 chat-content chat-bg" id="chat-content" ng-ref="chatContentDiv" style="height: 400px; overflow-y: scroll;">
                         <!-- Rendering Messages with ng-repeat -->
-                        <div ng-repeat="message in messages" class="text-{{message.color}}">
+                        <div ng-repeat="message in messages" class="text-{{message.color}} chat-msg-bg">
                             <span ng-bind-html="message.text"></span>
                         </div>
                     </div>
@@ -41,81 +74,116 @@
             </div>
             <!-- Panel of Buttons -->
             <div class="col-md-8">
-                <div class="row no-gutter">
-                    <!-- Preflight -->
-                    <div class="col d-flex flex-column align-items-center">
-                        <h5 class="custom-header text-center">Preflight</h5>
-                        <button class="btn mb-2 uniform-width small-text slim-button" 
-                            ng-class="{'btn-primary': walkaroundStarted, 'btn-secondary': !walkaroundStarted}" 
-                            ng-click="setState('Walkaround'); startWalkaround()" 
-                            ng-disabled="walkaroundStarted">
-                            Walkaround
-                        </button>
-                        <button class="btn mb-2 uniform-width small-text slim-button" 
-                            ng-class="{'btn-primary': prePowerChecklistStarted, 'btn-secondary': !prePowerChecklistStarted}"
-                            ng-click="setState('Pre-Power Checklist'); startPrePowerChecklist()"
-                            ng-disabled="prePowerChecklistStarted">
-                            Pre-Power Checklist
-                        </button>
-                        <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Cockpit Prep Checklist')">Cockpit Prep Checklist</button>
-                        <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Pre-Boarding')">Pre-Boarding</button>
-                        <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('MCDU: Init A')">MCDU: Init A</button>
-                        <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('EFB')">EFB</button>
-                        <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('MCDU: Flight Plan')">MCDU: Flight Plan</button>
-                        <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Flight Director')">Flight Director</button>
-                        <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('MCDU: Init B')">MCDU: Init B</button>
-                        <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('MCDU: Radnav')">MCDU: Radnav</button>
-                        <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('MCDU: Perf')">MCDU: Perf</button>
-                        <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('IFR Clearance')">IFR Clearance</button>
-                    </div>
-            
-                    <!-- Taxi -->
-                    <div class="col d-flex flex-column align-items-center">
-                        <h5 class="custom-header text-center">Taxi</h5>
-                        <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Pushback & Engines')">Pushback & Engines</button>
-                        <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Taxi')">Taxi</button>
-                        <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Pre-Takeoff')">Pre-Takeoff</button>
-                        <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Takeoff')">Takeoff</button>
-                    </div>
-            
-                    <!-- Flight -->
-                    <div class="col d-flex flex-column align-items-center">
-                        <h5 class="custom-header text-center">Flight</h5>
-                        <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('After Takeoff')">After Takeoff</button>
-                        <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Cruise')">Cruise</button>
-                        <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Descent Prep')">Descent Prep</button>
-                        <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Descent')">Descent</button>
-                    </div>
-            
-                    <!-- Landing -->
-                    <div class="col d-flex flex-column align-items-center">
-                        <h5 class="custom-header text-center">Landing</h5>
-                        <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Approach')">Approach</button>
-                        <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Landing')">Landing</button>
-                    </div>
-            
-                    <!-- After-Landing -->
-                    <div class="col d-flex flex-column align-items-center">
-                        <h5 class="custom-header text-center">After-Landing</h5>
-                        <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('After Landing Checklist')">After Landing Checklist</button>
-                        <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Taxi-2')">Taxi</button>
-                        <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Parking')">Parking</button>
-                        <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Shutdown')">Shutdown</button>
+                <!-- Tabs Header -->
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link" ng-click="activeTab='checklists'" ng-class="{'active': activeTab === 'checklists'}">Checklists</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" ng-click="activeTab='airports'" ng-class="{'active': activeTab === 'airports'}">Airports</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" ng-click="activeTab='flightPlan'" ng-class="{'active': activeTab === 'flightPlan'}">Flight Plan</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" ng-click="activeTab='charts'" ng-class="{'active': activeTab === 'charts'}">Charts</a>
+                    </li>
+                </ul>
+
+                <!-- Checklists Tab -->
+                <div ng-show="activeTab === 'checklists'">
+                    <div class="row no-gutter">
+                        <!-- Preflight -->
+                        <div class="col d-flex flex-column align-items-center">
+                            <h5 class="custom-header text-center">Preflight</h5>
+                            <button class="btn mb-2 uniform-width small-text slim-button" 
+                                ng-class="{'btn-primary': walkaroundStarted, 'btn-secondary': !walkaroundStarted}" 
+                                ng-click="setState('Walkaround'); startWalkaround()" 
+                                ng-disabled="walkaroundStarted">
+                                Walkaround
+                            </button>
+                            <button class="btn mb-2 uniform-width small-text slim-button" 
+                                ng-class="{'btn-primary': prePowerChecklistStarted, 'btn-secondary': !prePowerChecklistStarted}"
+                                ng-click="setState('Pre-Power Checklist'); startPrePowerChecklist()"
+                                ng-disabled="prePowerChecklistStarted">
+                                Pre-Power Checklist
+                            </button>
+                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Cockpit Prep Checklist')">Cockpit Prep Checklist</button>
+                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Pre-Boarding')">Pre-Boarding</button>
+                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('MCDU: Init A')">MCDU: Init A</button>
+                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('EFB')">EFB</button>
+                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('MCDU: Flight Plan')">MCDU: Flight Plan</button>
+                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Flight Director')">Flight Director</button>
+                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('MCDU: Init B')">MCDU: Init B</button>
+                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('MCDU: Radnav')">MCDU: Radnav</button>
+                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('MCDU: Perf')">MCDU: Perf</button>
+                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('IFR Clearance')">IFR Clearance</button>
+                        </div>
+                
+                        <!-- Taxi -->
+                        <div class="col d-flex flex-column align-items-center">
+                            <h5 class="custom-header text-center">Taxi</h5>
+                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Pushback & Engines')">Pushback & Engines</button>
+                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Taxi')">Taxi</button>
+                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Pre-Takeoff')">Pre-Takeoff</button>
+                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Takeoff')">Takeoff</button>
+                        </div>
+                
+                        <!-- Flight -->
+                        <div class="col d-flex flex-column align-items-center">
+                            <h5 class="custom-header text-center">Flight</h5>
+                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('After Takeoff')">After Takeoff</button>
+                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Cruise')">Cruise</button>
+                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Descent Prep')">Descent Prep</button>
+                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Descent')">Descent</button>
+                        </div>
+                
+                        <!-- Landing -->
+                        <div class="col d-flex flex-column align-items-center">
+                            <h5 class="custom-header text-center">Landing</h5>
+                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Approach')">Approach</button>
+                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Landing')">Landing</button>
+                        </div>
+                
+                        <!-- After-Landing -->
+                        <div class="col d-flex flex-column align-items-center">
+                            <h5 class="custom-header text-center">After-Landing</h5>
+                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('After Landing Checklist')">After Landing Checklist</button>
+                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Taxi-2')">Taxi</button>
+                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Parking')">Parking</button>
+                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Shutdown')">Shutdown</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="row mt-5 clearfix icao-row">
-            <div class="gray-banner text-center py-2">
-                <h5>Airport Data</h5>
-            </div>            
-        </div>
-        <div class="row">
-            <div class="col-md-2">
-                <div class="form-group">
-                    <label for="icaoCode">ICAO</label>
-                    <input type="text" class="form-control" id="icaoCode" ng-model="icao" maxlength="4" ng-change="convertToUpperCase()">
+
+                <!-- Airports Tab -->
+                <div ng-show="activeTab === 'airports'">
+                    <!-- Content for Airports -->
+                    <div class="row mt-5 clearfix icao-row">
+                        <div class="gray-banner text-center py-2">
+                            <h5>Airport Data</h5>
+                        </div>            
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="icaoCode">ICAO</label>
+                                <input type="text" class="form-control" id="icaoCode" ng-model="icao" maxlength="4" ng-change="convertToUpperCase()">
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+                <!-- Flight Plan Tab -->
+                <div ng-show="activeTab === 'flightPlan'">
+                    <!-- Content for Flight Plan -->
+                </div>
+
+                <!-- Charts Tab -->
+                <div ng-show="activeTab === 'charts'">
+                    <!-- Content for Charts -->
+                </div>
+                
             </div>
         </div>
     </div>

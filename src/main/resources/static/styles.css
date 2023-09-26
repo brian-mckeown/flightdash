@@ -1,6 +1,48 @@
+body, div, section {
+    background-color: #E5E5E5;
+}
+
+.navbar-brand {
+    font-family: 'Roboto', sans-serif;
+}
+
+.navbar, .navbar * {
+    background-color: #000 !important;
+}
+
+.navbar .fas {
+    color: white;
+}
+
+.navbar .nav-link {
+    color: white !important;
+}
+
+.navbar .nav-link:hover {
+    color: #cccccc !important; /* Slightly lighter color on hover, adjust as needed */
+    text-decoration: none !important;
+}
+
+.navbar .navbar-brand {
+    color: white;  /* Makes the text color white */
+    pointer-events: none;  /* Disables all pointer events, so it won't be clickable or hoverable */
+}
+.navbar .navbar-brand:hover {
+    text-decoration: none;  /* Removes underline on hover */
+}
+
 #chat-content {
     height: 300px; /* Adjust to your preferred height */
     overflow-y: auto;
+}
+
+.chat-bg {
+    background-color: #FAFAFA;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);  /* Optional subtle shadow */
+}
+
+.chat-msg-bg {
+    background-color: #FAFAFA;
 }
 .text-magenta {
     color: magenta;
@@ -35,4 +77,89 @@
     margin-top: 20px; /* Space from the top, you can adjust as per your requirement */
     margin-bottom: 20px; /* Space from the bottom, adjust if needed */
     border-radius: 5px; /* Rounded corners, adjust if needed */
+}
+.nav-link:hover {
+    cursor: pointer;
+}
+
+/* Override Bootstrap variables for a more professional look */
+
+:root {
+    --my-primary-color: #34577c;
+    --my-secondary-color: #6c757d;
+    --my-warning-color: #d49b00;
+    --my-danger-color: #b5191f;
+    /* Add/modify other colors as necessary */
+}
+
+/* Additional styles to give buttons, alerts, etc. a more professional appearance */
+
+.btn-primary {
+    background-color: var(--my-primary-color) !important;
+    border-color: var(--my-primary-color) !important;
+}
+
+.btn-secondary {
+    background-color: var(--my-secondary-color) !important;
+    border-color: var(--my-secondary-color) !important;
+}
+
+.btn-warning {
+    background-color: var(--my-warning-color) !important;
+    border-color: var(--my-warning-color) !important;
+}
+
+.btn-danger {
+    background-color: var(--my-danger-color) !important;
+    border-color: var(--my-danger-color) !important;
+}
+
+.bg-primary {
+    background-color: var(--my-primary-color) !important;
+}
+
+.bg-secondary {
+    background-color: var(--my-secondary-color) !important;
+}
+
+.bg-warning {
+    background-color: var(--my-warning-color) !important;
+}
+
+.bg-danger {
+    background-color: var(--my-danger-color) !important;
+}
+
+/* Using Custom Properties for Text Colors */
+
+.text-primary {
+    color: var(--my-primary-color) !important;
+}
+
+.text-secondary {
+    color: var(--my-secondary-color) !important;
+}
+
+.text-warning {
+    color: var(--my-warning-color) !important;
+}
+
+.text-danger {
+    color: var(--my-danger-color) !important;
+}
+
+/* Using Custom Properties for Nav Link Colors */
+
+.nav-link {
+    color: var(--my-primary-color) !important;
+}
+
+.nav-link:hover, .nav-link:focus {
+    color: darken(var(--my-primary-color), 10%) !important; /* Adjust darken percentage to your liking */
+    text-decoration: none !important;  /* Remove underline on hover/focus */
+}
+
+.nav-link.active {
+    color: darken(var(--my-primary-color), 15%) !important; /* Adjust darken percentage to your liking */
+    background-color: lighten(var(--my-primary-color), 30%) !important; /* Adjust lighten percentage to your liking */
 }
