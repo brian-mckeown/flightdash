@@ -4,6 +4,8 @@
 var app = angular.module('checklistApp', []);
 
 app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', function($scope, $sce, $timeout, $http) {
+    
+    $scope.versionNumber = '1.0.0'; 
     $scope.state = 'Idle';
     $scope.messages = [];
 

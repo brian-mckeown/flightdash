@@ -19,7 +19,7 @@ body, div, section {
 }
 
 .navbar .nav-link:hover {
-    color: #cccccc !important; /* Slightly lighter color on hover, adjust as needed */
+    color: #ffffff !important; 
     text-decoration: none !important;
 }
 
@@ -29,6 +29,19 @@ body, div, section {
 }
 .navbar .navbar-brand:hover {
     text-decoration: none;  /* Removes underline on hover */
+}
+
+.navbar-dark .navbar-nav .nav-link.active,
+.navbar-dark .navbar-nav .nav-link:focus,
+.navbar-dark .navbar-nav .nav-link:active {
+    color: #fff !important;
+}
+
+
+
+.chat-container {
+    max-height: calc(90vh - 60px);  /* 90% of the viewport height minus a fixed amount for the footer */
+    overflow: hidden;
 }
 
 #chat-content {
@@ -43,6 +56,11 @@ body, div, section {
 
 .chat-msg-bg {
     background-color: #FAFAFA;
+}
+
+#chat-content {
+    height: 300px;  /* 75% of the original 400px */
+    overflow-y: scroll;
 }
 .text-magenta {
     color: magenta;
@@ -162,4 +180,18 @@ body, div, section {
 .nav-link.active {
     color: darken(var(--my-primary-color), 15%) !important; /* Adjust darken percentage to your liking */
     background-color: lighten(var(--my-primary-color), 30%) !important; /* Adjust lighten percentage to your liking */
+}
+
+.footer {
+    padding: 10px 0;
+    width: 100%;
+}
+.footer a {
+    margin: 0 10px;
+    color: black;
+    text-decoration: none; /* Removes underlines */
+    font-size: 0.8rem; /* Sets a smaller font size */
+}
+.footer a:hover {
+    text-decoration: none; /* Ensures no underlines on hover */
 }
