@@ -13,6 +13,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <!-- Optional AngularJS -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <!-- Simbrief script-->
+    <script type="text/javascript" src="simbrief.apiv1.js"></script>
     <!-- Custom files-->
     <link href="./styles.css" rel="stylesheet">
 
@@ -179,7 +181,17 @@
 
                 <!-- Flight Plan Tab -->
                 <div ng-show="activeTab === 'flightPlan'">
-                    <!-- Content for Flight Plan -->
+                    <form id="sbapiform">
+                        <input type="text" name="orig" placeholder="Origin ICAO">
+                        <input type="text" name="dest" placeholder="Destination ICAO">
+                        <input type="text" name="type" placeholder="Aircraft Type">
+                        <!-- You can add more input fields based on available options. -->
+                    
+                        <!-- Adjust "referral_page" to the link where you want users to be redirected after generating the flight plan. -->
+                        <input type="button" onclick="simbriefsubmit('referral_page');" value="Generate Flight Plan">
+                    </form>
+                    <?php include 'simbrief.apiv1.php'; ?>
+                    
                 </div>
 
                 <!-- Charts Tab -->
