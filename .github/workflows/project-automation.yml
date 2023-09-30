@@ -9,8 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Move closed issues to Done column
-      uses: alex-page/github-project-automation-plus@v0.8.1
+      uses: alex-page/github-project-automation-plus@v0.8.3
       with:
-        project: 'Your project name'
-        column: 'Closed'
+        project: 'FlightDash'
+        column: 'Done'
         repo-token: ${{ secrets.GITHUB_TOKEN }}
