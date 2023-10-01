@@ -26,6 +26,9 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$
 
     $scope.airportRequested = false;
 
+    $scope.windSpeed = 0;
+    $scope.windDirection = 0;
+
     $scope.handleKeyPress = function(event) {
         switch (event.key.toLowerCase()) {
             case 'a':
@@ -731,7 +734,135 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$
         return (celsius * 9/5) + 32;
     };
     
+    //Runway Wind Calculations
+    // Compute and return the offset angle between wind direction and runway heading
+    $scope.getOffsetAngle = function(runwayHeading, windDirection) {
+        if (isNaN(runwayHeading) || isNaN(windDirection)) {
+            console.error("Invalid runway heading or wind direction:", runwayHeading, windDirection);
+            return 0; // or another default value
+        }
     
+        let offset = windDirection - runwayHeading;
+        if (offset < 0) offset += 360;  // Adjust for negative offsets
+        return Math.min(offset, 360 - offset);  // Ensure the angle is between 0 and 180
+    };
+    
+    $scope.getHeadwind = function(runwayHeading, windSpeed, windDirection) {
+        let offsetAngle = $scope.getOffsetAngle(runwayHeading, windDirection);
+        let offsetAngleRad = offsetAngle * (Math.PI / 180);  // Convert to radians
+        let headwindValue = windSpeed * Math.cos(offsetAngleRad);
+        return parseFloat(headwindValue.toFixed(1));  // Rounded to 1 decimal place and parsed back to float
+    };
+    
+    $scope.getCrosswind = function(runwayHeading, windSpeed, windDirection) {
+        let offsetAngle = $scope.getOffsetAngle(runwayHeading, windDirection);
+        let offsetAngleRad = offsetAngle * (Math.PI / 180);  // Convert to radians
+        let crosswindValue = windSpeed * Math.sin(offsetAngleRad);
+        return parseFloat(crosswindValue.toFixed(1));  // Rounded to 1 decimal place and parsed back to float
+    };
+    
+    $scope.getCrosswindDirection = function(runwayHeading, windDirection) {
+        let diff = windDirection - runwayHeading;
+        
+        // Normalize the difference to the range [-180, 180]
+        while (diff > 180) diff -= 360;
+        while (diff <= -180) diff += 360;
+    
+        return (diff > 0) ? 'from the right' : 'from the left';
+    };
+    
+
+$scope.getHeading = function(end, runway) {
+    return (end === runway.le_ident) ? runway.le_heading_degT : runway.he_heading_degT;
+};
+
+$scope.sortRunwaysByHeadwind = function() {
+    // Parsing wind direction and speed from $scope.metarWind
+    $scope.windDirection = parseInt($scope.metarWind.substring(0, 3));
+    $scope.windSpeed = parseInt($scope.metarWind.substring(3, $scope.metarWind.length - 2)); // Assuming 'KT' is always at the end
+
+    // Calculating headwind for each runway and storing in the same object for later sorting
+    for(let runway of $scope.airportData.runways) {
+        runway.le_headwind = $scope.getHeadwind(runway.le_heading_degT, $scope.windSpeed, $scope.windDirection);
+        runway.he_headwind = $scope.getHeadwind(runway.he_heading_degT, $scope.windSpeed, $scope.windDirection);
+    }
+
+    // Sorting runways by highest headwind (You might adjust this if you split le and he runways)
+    $scope.airportData.runways.sort((a, b) => {
+        return Math.max(b.le_headwind, b.he_headwind) - Math.max(a.le_headwind, a.he_headwind);
+    });
+};
+
+$scope.sortRunwaysForDisplay = function() {
+    let flattenedRunways = $scope.getFlattenedRunways();
+    
+    $scope.flattenedRunways = flattenedRunways.sort((a, b) => {
+        let aHeadwind = $scope.getHeadwind(a.heading_degT, $scope.windSpeed, $scope.windDirection);
+        let bHeadwind = $scope.getHeadwind(b.heading_degT, $scope.windSpeed, $scope.windDirection);
+
+        let aCrosswind = Math.abs($scope.getCrosswind(a.heading_degT, $scope.windSpeed, $scope.windDirection));
+        let bCrosswind = Math.abs($scope.getCrosswind(b.heading_degT, $scope.windSpeed, $scope.windDirection));
+
+        // Classify each runway
+        let aClass = aHeadwind > 0 ? (aHeadwind > aCrosswind ? "green" : "yellow") : "red";
+        let bClass = bHeadwind > 0 ? (bHeadwind > bCrosswind ? "green" : "yellow") : "red";
+
+        // If they belong to the same class, then compare based on specific class criteria
+        if (aClass === bClass) {
+            switch (aClass) {
+                case "green":
+                    return bHeadwind - aHeadwind; // Highest headwind first
+                case "yellow":
+                    return aCrosswind - bCrosswind; // Smallest crosswind first
+                case "red":
+                    return bHeadwind - aHeadwind; // Least negative (or most positive) headwind first
+            }
+        }
+
+        // Otherwise, order by class: green > yellow > red
+        return (aClass === "green" ? 0 : (aClass === "yellow" ? 1 : 2)) - 
+               (bClass === "green" ? 0 : (bClass === "yellow" ? 1 : 2));
+    });
+};
+
+
+$scope.getCardHeaderColor = function(runway, ident) {
+    const heading = (ident === runway.le_ident) ? runway.le_heading_degT : runway.he_heading_degT;
+    const headwind = $scope.getHeadwind(heading, $scope.windSpeed, $scope.windDirection);
+    const crosswind = $scope.getCrosswind(heading, $scope.windSpeed, $scope.windDirection);
+    
+    if (headwind > 0) {
+        if (headwind > crosswind) {
+            return 'success'; // green
+        } else {
+            return 'warning'; // yellow/orange
+        }
+    } else {
+        return 'danger'; // red
+    }
+};
+
+$scope.updateRunwayData = function() {
+    $scope.sortRunwaysByHeadwind();
+    $scope.sortRunwaysForDisplay();
+};
+
+$scope.getFlattenedRunways = function() {
+    let flattened = [];
+    for(let runway of $scope.airportData.runways) {
+        flattened.push({
+            ident: runway.le_ident,
+            heading_degT: runway.le_heading_degT,
+            ...runway // Spread the rest of the properties
+        });
+        flattened.push({
+            ident: runway.he_ident,
+            heading_degT: runway.he_heading_degT,
+            ...runway // Spread the rest of the properties
+        });
+    }
+    return flattened;
+};
     
 
     /*** API CALLS */
@@ -792,9 +923,12 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$
                 $scope.frequencies = $scope.airportData.freqs;
                 console.log($scope.airportData);
                 console.log($scope.airportData.freqs);
+                console.log($scope.airportData.runways);
 
                 $scope.parseMetar($scope.airportInfo.metar);
-
+                $scope.sortRunwaysByHeadwind();
+                $scope.sortRunwaysForDisplay();
+                $scope.updateRunwayData();
                 $scope.airportRequested = true;
             })
             .catch(function(error) {

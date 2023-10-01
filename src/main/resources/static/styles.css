@@ -166,6 +166,24 @@ body, div, section {
     color: var(--my-danger-color) !important;
 }
 
+.success {
+    background-color: #28a745; /* Success green */
+    color: #fff; /* White text */
+}
+
+.warning {
+    background-color: #ffc107; /* Warning orange/yellow */
+    color: #fff; /* White text */
+}
+
+.danger {
+    background-color: #dc3545; /* Danger red */
+    color: #fff; /* White text */
+}
+
+.card-body {
+    background-color: white;
+}
 /* Using Custom Properties for Nav Link Colors */
 
 .nav-link {

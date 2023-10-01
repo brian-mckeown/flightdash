@@ -297,6 +297,43 @@
                             </div>
                             </div>
 
+                            <!-- Runways section -->
+                            <div class="container mt-4">
+                                <div class="alert alert-secondary" role="alert" data-bs-toggle="collapse" href="#runwaysSection">
+                                    <h4 class="mb-3 d-inline">
+                                        Runways <i class="fas fa-caret-right" aria-hidden="true" id="runwaysCaret"></i>
+                                    </h4>
+                                </div>
+
+                                <div class="collapse" id="runwaysSection">
+                                    <div class="row">
+                                        <!-- Iterate for each flattened runway -->
+                                        <div class="col-md-3" ng-repeat="runway in flattenedRunways">
+                                            <div class="card mb-3">
+                                                <div class="card-header small" ng-class="getCardHeaderColor(runway, runway.ident)">
+                                                    {{runway.ident}}
+                                                </div>
+                                                <div class="card-body small">
+                                                    <p><strong>Runway Heading:</strong> {{runway.heading_degT}}°</p>
+                                                    <p><strong>Length:</strong> {{runway.length_ft}} ft</p>
+                                                    <p><strong>Width:</strong> {{runway.width_ft}} ft</p>
+                                                    <p><strong>Headwind:</strong> {{getHeadwind(runway.heading_degT, windSpeed, windDirection)}} kts</p>
+                                                    <p><strong>Crosswind:</strong> {{getCrosswind(runway.heading_degT, windSpeed, windDirection)}} kts ({{getCrosswindDirection(runway.heading_degT, windDirection)}})</p>
+                                                    <p ng-if="runway.ils"><strong>ILS:</strong> {{runway.ils.freq}} / {{runway.ils.course}}°</p>
+                                                    <p><strong>Surface:</strong> {{runway.surface}}</p>
+                                                    <p>
+                                                        <strong>Lighted:</strong>
+                                                        <span ng-if="runway.lighted == '1'">🟡</span>
+                                                        <span ng-if="runway.lighted == '0'">⚫</span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
                         </div>
                     
                 </div>

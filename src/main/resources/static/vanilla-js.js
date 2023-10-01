@@ -31,6 +31,9 @@ fetch('/support')
         
         const weatherCaret = document.getElementById('weatherCaret');
         const frequenciesCaret = document.getElementById('frequenciesCaret');
+
+        const runwaysSection = document.getElementById('runwaysSection');
+        const runwaysCaret = document.getElementById('runwaysCaret');
     
         // Event listener for Weather section
         weatherSection.addEventListener('show.bs.collapse', function () {
@@ -52,5 +55,16 @@ fetch('/support')
         frequenciesSection.addEventListener('hide.bs.collapse', function () {
             frequenciesCaret.classList.remove('fa-caret-down');
             frequenciesCaret.classList.add('fa-caret-right');
+        });
+
+        // Event listener for Runways section
+        runwaysSection.addEventListener('show.bs.collapse', function () {
+            runwaysCaret.classList.remove('fa-caret-right');
+            runwaysCaret.classList.add('fa-caret-down');
+        });
+
+        runwaysSection.addEventListener('hide.bs.collapse', function () {
+            runwaysCaret.classList.remove('fa-caret-down');
+            runwaysCaret.classList.add('fa-caret-right');
         });
     });
