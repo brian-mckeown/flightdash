@@ -853,11 +853,13 @@ $scope.getFlattenedRunways = function() {
         flattened.push({
             ident: runway.le_ident,
             heading_degT: runway.le_heading_degT,
+            ils: runway.le_ils,  // <-- Adjusted here
             ...runway // Spread the rest of the properties
         });
         flattened.push({
             ident: runway.he_ident,
             heading_degT: runway.he_heading_degT,
+            ils: runway.he_ils,  // <-- Adjusted here
             ...runway // Spread the rest of the properties
         });
     }
