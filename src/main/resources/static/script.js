@@ -16,6 +16,15 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$
     $scope.simbriefPilotId = '';
     $scope.flightPlanData = '';
     $scope.flightPlanTrustedHtml = '';
+    $scope.airportData = {};
+    $scope.airportInfo = {};
+    
+    $scope.runways = '';
+    $scope.frequencies = '';
+
+    $scope.metarSource='beta_aviationweather_gov';
+
+    $scope.airportRequested = false;
 
     $scope.handleKeyPress = function(event) {
         switch (event.key.toLowerCase()) {
@@ -664,6 +673,61 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$
         $scope.scrollToBottom(); // Scroll to the bottom after sending a message
     };
 
+    $scope.parseMetar = function(metarText) {
+        const parts = metarText.split(' ');
+    
+        $scope.metarIcao = parts[0];
+        $scope.metarDateTime = parts[1];
+    
+        // Convert UTC timestamp to local date and time
+        const utcDate = new Date(Date.UTC(
+            new Date().getUTCFullYear(),
+            new Date().getUTCMonth(),
+            parseInt($scope.metarDateTime.substring(0, 2)),
+            parseInt($scope.metarDateTime.substring(2, 4)),
+            parseInt($scope.metarDateTime.substring(4, 6))
+        ));
+
+        // Fetch the local timezone
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        
+        // Format the UTC date to a local string with timezone
+        $scope.localDateTime = utcDate.toLocaleString("en-US", { timeZoneName: "short" }) + " (" + timezone + ")";
+    
+        let index = 2; // Starting from wind or AUTO
+    
+        if (parts[index] === "AUTO") {
+            $scope.metarAuto = parts[index];
+            index++; // Skip to the next part if AUTO is found
+        }
+    
+        $scope.metarWind = parts[index++];
+        $scope.metarVisibility = parts[index++];
+    
+        $scope.metarWeather = "";
+        while (index < parts.length && !parts[index].match(/^(SKC|CLR|FEW|SCT|BKN|OVC|\d{2}\/\d{2}|A\d{4}|Q\d{4}|RMK)/)) {
+            $scope.metarWeather += parts[index++] + " ";
+        }
+    
+        $scope.metarClouds = "";
+        while (index < parts.length && parts[index].match(/^(SKC|CLR|FEW|SCT|BKN|OVC)/)) {
+            $scope.metarClouds += parts[index++] + " ";
+        }
+    
+        if (parts[index].match(/\d{2}\/\d{2}/)) {
+            $scope.metarTemperatureDewpoint = parts[index++];
+        }
+    
+        if (parts[index].match(/^(A|Q)\d{4}/)) {
+            $scope.metarAltimeter = parts[index++];
+        }
+    
+        // The remaining parts are treated as remarks
+        $scope.metarRemarks = parts.slice(index).join(' ');
+    };
+    
+    
+    
 
     /*** API CALLS */
     $scope.fetchFlightPlan = function() {
@@ -694,6 +758,57 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$
             </div>
             <div class="toast-body">
                 Please check <strong>Settings</strong> and ensure your SimBrief Pilot ID is correct.
+            </div>
+        </div>`;
+    
+        var toastElement = angular.element(toastHTML);
+        angular.element(document.body).append(toastElement);
+    
+        var toast = new bootstrap.Toast(toastElement[0]);
+        toast.show();
+    }
+
+    $scope.fetchAirportInfo = function() {
+        $http.get('/api/v1/airport/' + $scope.icao + '/' + $scope.metarSource)
+            .then(function(response) {
+                // Handle the returned data here
+                $scope.airportData = response.data;
+                $scope.airportInfo = {
+                    name: $scope.airportData.name,
+                    municipality: $scope.airportData.municipality,
+                    icao: $scope.airportData.ident,
+                    type: $scope.airportData.type,
+                    metar: $scope.airportData.metar,
+                    metarSource: $scope.airportData.metarSource,
+                    wikipedia: $scope.airportData.wikipedia_link
+                };
+                
+                $scope.runways = $scope.airportData.runways;
+                $scope.frequencies = $scope.airportData.freqs;
+                console.log($scope.airportData);
+
+                $scope.parseMetar($scope.airportInfo.metar);
+
+                $scope.airportRequested = true;
+            })
+            .catch(function(error) {
+                console.error('Error fetching airport info:', error);
+                
+                // Display the toast with an error message
+                displayAirportErrorToast();
+            });
+    };
+
+    // Function to display a toast
+    function displayAirportErrorToast() {
+        var toastHTML = `
+        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1050; min-width: 300px;">
+            <div class="toast-header">
+                <strong class="me-auto">Error</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                Please check the <strong>ICAO</strong> and ensure it is correct. If correct, then this airport may not be available. 
             </div>
         </div>`;
     
