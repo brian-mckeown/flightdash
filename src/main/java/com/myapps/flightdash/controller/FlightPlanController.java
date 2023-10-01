@@ -1,4 +1,4 @@
-package com.myapps.checklisttool.controller;
+package com.myapps.flightdash.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

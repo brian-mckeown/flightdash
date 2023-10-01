@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.my-apps</groupId>
-	<artifactId>checklist-tool</artifactId>
+	<artifactId>flightdash</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>checklist-tool</name>
-	<description>Text to Speech tool with flight checklist capabilities</description>
+	<name>flightdash</name>
+	<description>Flight Simulator Dashboard Tool</description>
 	<properties>
 		<java.version>20</java.version>
 	</properties>

@@ -1,4 +1,4 @@
-package com.myapps.checklisttool.controller;
+package com.myapps.flightdash.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
