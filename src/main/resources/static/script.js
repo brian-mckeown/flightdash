@@ -13,6 +13,9 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$
     $scope.prePowerChecklistStarted = false;
 
     $scope.icao = '';
+    $scope.simbriefPilotId = '';
+    $scope.flightPlanData = '';
+    $scope.flightPlanTrustedHtml = '';
 
     $scope.handleKeyPress = function(event) {
         switch (event.key.toLowerCase()) {
@@ -660,4 +663,45 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$
 
         $scope.scrollToBottom(); // Scroll to the bottom after sending a message
     };
+
+
+    /*** API CALLS */
+    $scope.fetchFlightPlan = function() {
+        $http.get('/api/v1/flightplan/' + $scope.simbriefPilotId)
+            .then(function(response) {
+                // Handle the returned data here
+                $scope.flightPlanData = response.data;
+                console.log($scope.flightPlanData);
+                if ($scope.flightPlanData && $scope.flightPlanData.text) {
+                    $scope.flightPlanTrustedHtml = $sce.trustAsHtml($scope.flightPlanData.text.plan_html);
+                }
+            })
+            .catch(function(error) {
+                console.error('Error fetching flight plan:', error);
+                
+                // Display the toast with an error message
+                displaySimbriefErrorToast();
+            });
+    };
+    
+    // Function to display a toast
+    function displaySimbriefErrorToast() {
+        var toastHTML = `
+        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1050; min-width: 300px;">
+            <div class="toast-header">
+                <strong class="me-auto">Error</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                Please check <strong>Settings</strong> and ensure your SimBrief Pilot ID is correct.
+            </div>
+        </div>`;
+    
+        var toastElement = angular.element(toastHTML);
+        angular.element(document.body).append(toastElement);
+    
+        var toast = new bootstrap.Toast(toastElement[0]);
+        toast.show();
+    }
+    
 }]);

@@ -199,3 +199,8 @@ body, div, section {
 hr {
     margin: 2px auto;  /* Center the line and provide space above and below */
 }
+
+.fp-scrollable-content {
+    max-height: 500px;
+    overflow-y: scroll;
+}
