@@ -687,7 +687,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$
             parseInt($scope.metarDateTime.substring(2, 4)),
             parseInt($scope.metarDateTime.substring(4, 6))
         ));
-
+    
         // Fetch the local timezone
         const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
         
@@ -696,9 +696,8 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$
     
         let index = 2; // Starting from wind or AUTO
     
-        if (parts[index] === "AUTO") {
-            $scope.metarAuto = parts[index];
-            index++; // Skip to the next part if AUTO is found
+        while (parts[index] === "AUTO" || parts[index] === "COR") {
+            index++; // Skip special terms
         }
     
         $scope.metarWind = parts[index++];
@@ -724,6 +723,12 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$
     
         // The remaining parts are treated as remarks
         $scope.metarRemarks = parts.slice(index).join(' ');
+    };
+    
+
+    $scope.convertCelsiusToFahrenheit = function(celsius) {
+        if (celsius === null || celsius === undefined) return null;
+        return (celsius * 9/5) + 32;
     };
     
     

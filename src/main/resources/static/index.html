@@ -249,7 +249,11 @@
                                     </div>
                                     <div class="col-md-3">
                                         <label class="fw-bold">Temperature / Dewpoint:</label>
-                                        <p class="small">{{metarTemperatureDewpoint}}</p>
+                                        <span class="small">
+                                            {{metarTemperatureDewpoint.split('/')[0]}}°C / {{metarTemperatureDewpoint.split('/')[1]}}°C
+                                            <br>
+                                            {{convertCelsiusToFahrenheit(metarTemperatureDewpoint.split('/')[0]) | number:1}}°F / {{convertCelsiusToFahrenheit(metarTemperatureDewpoint.split('/')[1]) | number:1}}°F
+                                        </span>
                                     </div>
                                     <div class="col-md-3">
                                         <label class="fw-bold">Altimeter:</label>
