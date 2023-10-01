@@ -206,8 +206,12 @@
 
                         <!-- Weather section -->
                             <div class="container mt-4">
-                                <h4 class="mb-3">Weather Information</h4>
-                                
+                                <div class="alert alert-secondary" role="alert" data-bs-toggle="collapse" href="#weatherSection">
+                                    <h4 class="mb-3 d-inline">
+                                        Weather Information <i class="fas fa-caret-right" aria-hidden="true" id="weatherCaret"></i>
+                                    </h4>
+                                </div>
+                                <div class="collapse" id="weatherSection">
                                 <div class="row mb-2">
                                     <div class="col-md-8">
                                         <label class="fw-bold">METAR:</label>
@@ -267,6 +271,30 @@
                                         <p class="small">{{metarRemarks}}</p>
                                     </div>
                                 </div>
+                            </div>
+                            </div>
+
+                            <!-- Frequencies section -->
+                            <div class="container mt-4">
+                                <div class="alert alert-secondary" role="alert" data-bs-toggle="collapse" href="#frequenciesSection">
+                                    <h4 class="mb-3 d-inline">
+                                        Frequencies <i class="fas fa-caret-right" aria-hidden="true" id="frequenciesCaret"></i>
+                                    </h4>
+                                </div>
+                                <div class="collapse" id="frequenciesSection">
+                                
+                                <form>
+                                    <div class="row mb-2" ng-repeat="freq in airportData.freqs">
+                                        <div class="col-md-3">
+                                            <label class="fw-bold small">{{freq.description}}:</label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <p class="small">{{freq.frequency_mhz}}</p>
+                                        </div>
+                                        <!-- You can add more columns if needed. For now, I've reserved space for two columns per frequency -->
+                                    </div>
+                                </form>
+                            </div>
                             </div>
 
                         </div>

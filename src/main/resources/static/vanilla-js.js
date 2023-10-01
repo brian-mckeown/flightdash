@@ -24,3 +24,33 @@ fetch('/support')
     .then(content => {
         document.getElementById('support').innerHTML = content;
     });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const weatherSection = document.getElementById('weatherSection');
+        const frequenciesSection = document.getElementById('frequenciesSection');
+        
+        const weatherCaret = document.getElementById('weatherCaret');
+        const frequenciesCaret = document.getElementById('frequenciesCaret');
+    
+        // Event listener for Weather section
+        weatherSection.addEventListener('show.bs.collapse', function () {
+            weatherCaret.classList.remove('fa-caret-right');
+            weatherCaret.classList.add('fa-caret-down');
+        });
+    
+        weatherSection.addEventListener('hide.bs.collapse', function () {
+            weatherCaret.classList.remove('fa-caret-down');
+            weatherCaret.classList.add('fa-caret-right');
+        });
+    
+        // Event listener for Frequencies section
+        frequenciesSection.addEventListener('show.bs.collapse', function () {
+            frequenciesCaret.classList.remove('fa-caret-right');
+            frequenciesCaret.classList.add('fa-caret-down');
+        });
+    
+        frequenciesSection.addEventListener('hide.bs.collapse', function () {
+            frequenciesCaret.classList.remove('fa-caret-down');
+            frequenciesCaret.classList.add('fa-caret-right');
+        });
+    });

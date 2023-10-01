@@ -791,6 +791,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$
                 $scope.runways = $scope.airportData.runways;
                 $scope.frequencies = $scope.airportData.freqs;
                 console.log($scope.airportData);
+                console.log($scope.airportData.freqs);
 
                 $scope.parseMetar($scope.airportInfo.metar);
 
