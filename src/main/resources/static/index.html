@@ -6,6 +6,8 @@
     <title>flightdash.io</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css" rel="stylesheet">
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>   
     <!-- Include FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -364,29 +366,14 @@
     <!-- Modals-->
     <!-- Settings Modal -->
 <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="settingsModalLabel">Settings</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <div class="form-group">
-                <label for="checklistDropdown">Aircraft Checklist</label>
-                <select class="form-select" id="checklistDropdown">
-                    <option>Airbus A320 - Default</option>
-                    <option>Cessna 172 - mentoneflyingclub.org</option>
-                </select>
-                <div class="form-check form-switch mt-3">
-                    <input class="form-check-input" type="checkbox" id="customChecklistToggle">
-                    <label class="form-check-label" for="customChecklistToggle">Custom Checklist</label>
-                </div>
-                <div id="customChecklistUploader" style="display: none;">
-                    <label for="customChecklistUpload" class="mt-3">Custom Checklist CSV</label>
-                    <input type="file" class="form-control" id="customChecklistUpload">
-                    <a href="#" class="mt-2 d-block">CSV Template</a>
-                </div>
-                <label for="metarSourceDropdown" class="mt-3">METAR Source</label>
+            <label for="metarSourceDropdown" class="mt-3">METAR Source</label>
                 <select class="form-select" id="metarSourceDropdown" ng-model="metarSource">
                     <option>beta_aviationweather_gov</option>
                     <option>metar_vatsim_net</option>
@@ -395,6 +382,72 @@
                     <label for="simbriefPilotId">SimBrief Pilot ID</label>
                     <input type="text" class="form-control" id="simbriefPilotId" ng-model="simbriefPilotId">
                 </div>
+            <div class="form-group">
+                <label for="checklistDropdown">Aircraft Checklist</label>
+                <select class="form-select" id="checklistDropdown">
+                    <option>Airbus A320 - Default</option>
+                    <option>Cessna 172 - mentoneflyingclub.org</option>
+                </select>
+                <div class="form-check form-switch mt-3">
+                    <input class="form-check-input" type="checkbox" id="customChecklistToggle">
+                    <label class="form-check-label" for="customChecklistToggle">New Custom Checklist Bundle</label>
+                </div>
+                <div id="customChecklistUploader" style="display: none;">
+                    <div class="mb-3">
+                        <label for="bundleName" class="form-label">Checklist Bundle Name:</label>
+                        <input type="text" id="bundleName" class="form-control" ng-model="bundleName">
+                    </div>
+                    <div class="container mt-5">
+                        <div ng-repeat="table in tables">
+                            <h3>{{table.name}}</h3>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Checklist</th>
+                                        <th><button class="btn btn-success" ng-click="addRow(table)"><i class="bi bi-plus-lg"></i></button></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat-start="row in table.rows">
+                                        <td><input type="text" ng-model="row.checklist" class="form-control"></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-danger" ng-click="removeRow(table, $index)"><i class="bi bi-dash-lg"></i></button>
+                                            <button class="btn btn-sm btn-outline-primary" ng-click="row.expanded = !row.expanded">{{ row.expanded ? 'Collapse' : 'Expand' }}</button>
+                                        </td>
+                                    </tr>
+                                    <tr ng-repeat-end ng-if="row.expanded">
+                                        <td colspan="2">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Checklist Prompt</th>
+                                                        <th>Positive Answer</th>
+                                                        <th>Neutral Answer 1</th>
+                                                        <th>Neutral Answer 2</th>
+                                                        <th>Cancel Answer</th>
+                                                        <th><button class="btn btn-sm btn-outline-success" ng-click="addSubRow(row)"><i class="bi bi-plus-lg"></i></button></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr ng-repeat="subRow in row.subRows">
+                                                        <td><input type="text" ng-model="subRow.prompt" class="form-control"></td>
+                                                        <td><input type="text" ng-model="subRow.positive" class="form-control"></td>
+                                                        <td><input type="text" ng-model="subRow.neutral1" class="form-control"></td>
+                                                        <td><input type="text" ng-model="subRow.neutral2" class="form-control"></td>
+                                                        <td><input type="text" ng-model="subRow.cancel" class="form-control"></td>
+                                                        <td><button class="btn btn-sm btn-outline-danger" ng-click="removeSubRow(row, $index)"><i class="bi bi-dash-lg"></i></button></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary mt-3" ng-click="saveChecklist()">Save Checklists</button>
+                </div>
+                
             </div>
         </div>
         <div class="modal-footer">

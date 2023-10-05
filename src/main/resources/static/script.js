@@ -18,6 +18,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$
     $scope.flightPlanTrustedHtml = '';
     $scope.airportData = {};
     $scope.airportInfo = {};
+    $scope.savedChecklistData = {};
     
     $scope.runways = '';
     $scope.frequencies = '';
@@ -866,8 +867,71 @@ $scope.getFlattenedRunways = function() {
     return flattened;
 };
     
+/*Checklist Editor Code*/
+    $scope.tables = [{
+        name: 'Preflight',
+        rows: []
+    },
+    {
+        name: 'Taxi',
+        rows: []
+    },
+    {
+        name: 'In-flight',
+        rows: []
+    },
+    {
+        name: 'Landing',
+        rows: []
+    },
+    {
+        name: 'After-landing',
+        rows: []
+    },
+    {
+        name: 'Emergency',
+        rows: []
+    }
+];
 
-    /*** API CALLS */
+$scope.addRow = function(table) {
+    table.rows.push({
+        checklist: '',
+        subRows: [],
+        expanded: false
+    });
+};
+
+$scope.removeRow = function(table, index) {
+    table.rows.splice(index, 1);
+};
+
+$scope.addSubRow = function(row) {
+    row.subRows.push({
+        prompt: '',
+        positive: 'Check',
+        neutral1: '',
+        neutral2: '',
+        cancel: 'Cancel'
+    });
+};
+
+$scope.removeSubRow = function(row, index) {
+    row.subRows.splice(index, 1);
+};
+
+$scope.saveChecklist = function() {
+    $scope.savedChecklistData = {
+        bundleName: $scope.bundleName,
+        tables: angular.copy($scope.tables)
+    };
+    console.log($scope.savedChecklistData);
+};
+
+    /*** API CALLS *****************/
+    /**
+     * 
+     */
     $scope.fetchFlightPlan = function() {
         $http.get('/api/v1/flightplan/' + $scope.simbriefPilotId)
             .then(function(response) {
