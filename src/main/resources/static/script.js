@@ -114,15 +114,110 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$
         }
     };
 
+    //** Voice/Speech Recognition section **/
+    $scope.isListening = false;
+    $scope.toggleMicrophone = function() {
+        $scope.isListening = !$scope.isListening;
+    
+        // If listening state is turned on
+        if ($scope.isListening) {
+            // Update the button style to active
+            document.getElementById("microphoneButton").classList.remove('btn-outline-primary');
+            document.getElementById("microphoneButton").classList.add('btn-primary');
+        } else {
+            // Update the button style to default
+            document.getElementById("microphoneButton").classList.add('btn-outline-primary');
+            document.getElementById("microphoneButton").classList.remove('btn-primary');
+    
+            // Stop the speech recognition (assuming you have a stop function in your service)
+            $scope.stopSpeechRecognition();
+        }
+    };
+
+    // Check for browser support
+    if ('webkitSpeechRecognition' in window) {
+        $scope.recognition = new webkitSpeechRecognition();
+    } else if ('SpeechRecognition' in window) {
+        $scope.recognition = new SpeechRecognition();
+    } else {
+        alert('Your browser does not support the Web Speech API. Please switch to Chrome or another supported browser.');
+        return;
+    }
+
+    $scope.recognitionStarted = false; // initialize it to false
+
+    $scope.startSpeechRecognition = function() {
+        if ($scope.recognition && !$scope.recognitionStarted) {
+            $scope.recognition.start();
+            $scope.recognitionStarted = true; // Set the flag to true when recognition starts
+        }
+    };
+    
+    $scope.stopSpeechRecognition = function() {
+        if ($scope.recognition && $scope.recognitionStarted) {
+            $scope.recognition.stop();
+            $scope.recognitionStarted = false; // Set the flag to false when recognition stops
+        }
+    };
+
+    $scope.recognition.continuous = false; // We want to recognize one command at a time
+    $scope.recognition.interimResults = false; // We only want the final result
+    $scope.recognition.lang = 'en-US'; // Set to your preferred language
+
+    $scope.recognition.onstart = function() {
+        console.log('Voice recognition started. Try speaking into the microphone.');
+    };
+
+    $scope.recognition.onerror = function(event) {
+        console.error('Speech recognition error detected: ' + event.error);
+    };
+
+    $scope.recognition.onend = function() {
+        console.log('Voice recognition ended.');
+        $scope.recognitionStarted = false;
+    };
+
+    $scope.recognition.onresult = function(event) {
+        var last = event.results.length - 1;
+        var command = event.results[last][0].transcript;
+        $scope.processVoiceCommand(command.trim());
+    };
+
+    $scope.processVoiceCommand = function(command) {
+        console.log("Recognized command:", command);
+    
+        var subRow = $scope.currentChecklist.subRows[$scope.currentSubRowIndex];
+    
+        if (command.includes(subRow.positive.toLowerCase()) || command.includes("check")) {
+            $scope.scrollToBottom();
+            $scope.handleButtonPress('A');
+        } else if (subRow.neutral1 && command.includes(subRow.neutral1.toLowerCase())) { 
+            // Only check if neutral1 is not empty
+            $scope.scrollToBottom();
+            $scope.handleButtonPress('B');
+        } else if (subRow.neutral2 && command.includes(subRow.neutral2.toLowerCase())) {
+            // Only check if neutral2 is not empty
+            $scope.scrollToBottom();
+            $scope.handleButtonPress('C');
+        } else if (command.includes(subRow.cancel.toLowerCase())) {
+            $scope.scrollToBottom();
+            $scope.handleButtonPress('D');
+        }
+    };
+    
+    //**End speech voice recognition section  */
+
+
     $scope.handleChecklistButtonPress = function(checklist) {
         var message = checklist.checklist + " checklist";
         $scope.chatMessage = message;  // Assign the message to chatMessage
         $scope.sendMessage();  // Send the message
         $scope.currentChecklist = checklist;  // Store current checklist
         $scope.currentSubRowIndex = 0;  // Start from the first subRow
+        // Start the voice recognition later, after the first item of the checklist is read out.
         $timeout(function() {
             $scope.processSubRow();
-        }, 2000); 
+        }, 2000);
     };
 
     $scope.processSubRow = function() {
@@ -156,9 +251,16 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$
             // Clear the chatMessage to make sure the message box is ready for user input
             $scope.chatMessage = '';  
             $scope.scrollToBottom(); // Ensure the messages are scrolled to the bottom
+            
+            // Start voice recognition after a delay (e.g., 2 seconds after displaying the last option)
+            setTimeout(function() {
+            if ($scope.isListening) {
+                $scope.recognition.start();
+            }
+            }, 2000);
+            $scope.scrollToBottom();
         }
-    };
-    
+    };    
 
     $scope.handleButtonPress = function(button) {
         if ($scope.currentSubRowIndex >= 0 && $scope.currentSubRowIndex < $scope.currentChecklist.subRows.length) {
@@ -202,12 +304,20 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$
                     $scope.$apply(function() {
                         $scope.processSubRow();  // Process next subRow if 'A' is pressed
                         $scope.speakText($scope.chatMessage); // Speak the next message
+                        
+                        // Start the voice recognition here if the microphone button is enabled.
+                        setTimeout(function() {
+                            if ($scope.isListening) {
+                                $scope.startSpeechRecognition();
+                            }
+                        }, 2000);  // 2-second delay
                     });
                 }, 2000);  // 2-second delay
             }
             $scope.scrollToBottom();
         }
     };
+    
 
     $scope.parseMetar = function(metarText) {
         const parts = metarText.split(' ');
