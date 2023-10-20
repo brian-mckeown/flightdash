@@ -70,7 +70,6 @@
                         <button class="btn btn-warning ml-2" ng-click="handleButtonPress('B')">B</button>
                         <button class="btn btn-warning ml-2" ng-click="handleButtonPress('C')">C</button>
                         <button class="btn btn-danger ml-2"  ng-click="handleButtonPress('D')">D</button>
-                        <button class="btn btn-secondary ml-2"  ng-click="handleButtonPress('Reset')">Reset</button>
                     </div>
                     <div>State: {{ state }}</div>
                     </div>
@@ -99,65 +98,14 @@
                 <div ng-show="activeTab === 'checklists'">
                     <div class="row no-gutter">
                         <!-- Preflight -->
-                        <div class="col d-flex flex-column align-items-center">
-                            <h5 class="custom-header text-center">Preflight</h5>
-                            <button class="btn mb-2 uniform-width small-text slim-button" 
-                                ng-class="{'btn-primary': walkaroundStarted, 'btn-secondary': !walkaroundStarted}" 
-                                ng-click="setState('Walkaround'); startWalkaround()" 
-                                ng-disabled="walkaroundStarted">
-                                Walkaround
+                        <div class="col d-flex flex-column align-items-center" ng-repeat="table in tables">
+                            <h5 class="custom-header text-center">{{table.name}}</h5>
+                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" 
+                                ng-repeat="checklist in table.rows"
+                                ng-click="handleChecklistButtonPress(checklist)">
+                                {{checklist.checklist}}
                             </button>
-                            <button class="btn mb-2 uniform-width small-text slim-button" 
-                                ng-class="{'btn-primary': prePowerChecklistStarted, 'btn-secondary': !prePowerChecklistStarted}"
-                                ng-click="setState('Pre-Power Checklist'); startPrePowerChecklist()"
-                                ng-disabled="prePowerChecklistStarted">
-                                Pre-Power Checklist
-                            </button>
-                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Cockpit Prep Checklist')">Cockpit Prep Checklist</button>
-                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Pre-Boarding')">Pre-Boarding</button>
-                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('MCDU: Init A')">MCDU: Init A</button>
-                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('EFB')">EFB</button>
-                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('MCDU: Flight Plan')">MCDU: Flight Plan</button>
-                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Flight Director')">Flight Director</button>
-                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('MCDU: Init B')">MCDU: Init B</button>
-                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('MCDU: Radnav')">MCDU: Radnav</button>
-                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('MCDU: Perf')">MCDU: Perf</button>
-                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('IFR Clearance')">IFR Clearance</button>
-                        </div>
-                
-                        <!-- Taxi -->
-                        <div class="col d-flex flex-column align-items-center">
-                            <h5 class="custom-header text-center">Taxi</h5>
-                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Pushback & Engines')">Pushback & Engines</button>
-                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Taxi')">Taxi</button>
-                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Pre-Takeoff')">Pre-Takeoff</button>
-                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Takeoff')">Takeoff</button>
-                        </div>
-                
-                        <!-- Flight -->
-                        <div class="col d-flex flex-column align-items-center">
-                            <h5 class="custom-header text-center">Flight</h5>
-                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('After Takeoff')">After Takeoff</button>
-                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Cruise')">Cruise</button>
-                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Descent Prep')">Descent Prep</button>
-                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Descent')">Descent</button>
-                        </div>
-                
-                        <!-- Landing -->
-                        <div class="col d-flex flex-column align-items-center">
-                            <h5 class="custom-header text-center">Landing</h5>
-                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Approach')">Approach</button>
-                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Landing')">Landing</button>
-                        </div>
-                
-                        <!-- After-Landing -->
-                        <div class="col d-flex flex-column align-items-center">
-                            <h5 class="custom-header text-center">After-Landing</h5>
-                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('After Landing Checklist')">After Landing Checklist</button>
-                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Taxi-2')">Taxi</button>
-                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Parking')">Parking</button>
-                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" ng-click="setState('Shutdown')">Shutdown</button>
-                        </div>
+                        </div>  
                     </div>
                 </div>
 
@@ -373,6 +321,10 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
+            <div class="mb-3">
+                <label for="importFile" class="form-label">Import Config File:</label>
+                <input type="file" id="importFile" class="form-control" onchange="angular.element(this).scope().importConfig(this)">
+            </div>
             <label for="metarSourceDropdown" class="mt-3">METAR Source</label>
                 <select class="form-select" id="metarSourceDropdown" ng-model="metarSource">
                     <option>beta_aviationweather_gov</option>
@@ -390,7 +342,7 @@
                 </select>
                 <div class="form-check form-switch mt-3">
                     <input class="form-check-input" type="checkbox" id="customChecklistToggle">
-                    <label class="form-check-label" for="customChecklistToggle">New Custom Checklist Bundle</label>
+                    <label class="form-check-label" for="customChecklistToggle">Customize Checklist Bundle</label>
                 </div>
                 <div id="customChecklistUploader" style="display: none;">
                     <div class="mb-3">
@@ -445,12 +397,12 @@
                             </table>
                         </div>
                     </div>
-                    <button class="btn btn-primary mt-3" ng-click="saveChecklist()">Save Checklists</button>
                 </div>
                 
             </div>
         </div>
         <div class="modal-footer">
+          <button class="btn btn-primary mt-3" ng-click="saveConfig()">Export Config File</button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Save and Close</button>
         </div>
       </div>
