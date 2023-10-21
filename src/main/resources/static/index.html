@@ -76,6 +76,7 @@
                         <button class="btn btn-danger ml-2"  ng-click="handleButtonPress('D')">D</button>
                         <button class="btn btn-outline-primary ml-2" ng-click="toggleMicrophone()" id="microphoneButton">
                             <i class="fas fa-microphone"></i>
+                            <i class="fas fa-dot-circle text-danger" ng-show="recognitionSignalStarted"></i>
                         </button>
                     </div>
                     <div>State: {{ state }}</div>
@@ -321,7 +322,7 @@
                         </p>
                         <p class="text-danger">
                             Per Navigraph's Developer Restrictions, displaying their charts on physical EFBs or Desktop Applications is 
-                            <a href="https://developers.navigraph.com/docs/general/restrictions" target="_blank" rel="noopener noreferrer">prohibited at this time</a>.
+                            <a href="https://developers.navigraph.com/docs/general/restrictions" target="_blank" rel="noopener noreferrer">prohibited by Navigraph at this time</a>.
                         </p>
                         <p>We will look into options in the future.</p>
                     </div> 

@@ -114,7 +114,9 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$
 
     //** Voice/Speech Recognition section **/
     $scope.isListening = false;
+    $scope.preventRecognitionRestart = false;
     $scope.toggleMicrophone = function() {
+        $scope.preventRecognitionRestart = false;
         $scope.isListening = !$scope.isListening;
     
         // If listening state is turned on
@@ -162,8 +164,13 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$
     $scope.recognition.interimResults = false; // We only want the final result
     $scope.recognition.lang = 'en-US'; // Set to your preferred language
 
+    $scope.recognitionSignalStarted = false; // Initialize the variable
+
     $scope.recognition.onstart = function() {
         console.log('Voice recognition started. Try speaking into the microphone.');
+        $scope.$apply(function() {
+            $scope.recognitionSignalStarted = true; // Show the red dot
+        });
     };
 
     $scope.recognition.onerror = function(event) {
@@ -173,6 +180,9 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$
     $scope.recognition.onend = function() {
         console.log('Voice recognition ended.');
         $scope.recognitionStarted = false;
+        $scope.$apply(function() {
+            $scope.recognitionSignalStarted = false; // Hide the red dot
+        });
     };
 
     $scope.recognition.onresult = function(event) {
@@ -262,6 +272,9 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$
             var completionMessage = $scope.currentChecklist.checklist + " checklist complete.";
             $scope.chatMessage = completionMessage;
             $scope.sendMessage();
+            // Set the flag to true to prevent automatic restarting of recognition
+            $scope.preventRecognitionRestart = true;
+            $scope.stopSpeechRecognition();
         }
     };    
 
@@ -310,7 +323,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$
                         
                         // Start the voice recognition here if the microphone button is enabled.
                         setTimeout(function() {
-                            if ($scope.isListening) {
+                            if ($scope.isListening && $scope.currentSubRowIndex !== $scope.currentChecklist.subRows.length) {
                                 $scope.startSpeechRecognition();
                             }
                         }, 2000);  // 2-second delay
