@@ -8,10 +8,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$
     $scope.versionNumber = '1.0.0 Alpha'; 
     $scope.state = 'Idle';
     $scope.messages = [];
-
-    $scope.walkaroundStarted = false;
-    $scope.prePowerChecklistStarted = false;
-
+    $scope.selectedChecklist = '';
     $scope.icao = '';
     $scope.simbriefPilotId = '';
     $scope.flightPlanData = '';
@@ -19,6 +16,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$
     $scope.airportData = {};
     $scope.airportInfo = {};
     $scope.savedConfigData = {};
+    $scope.defaultChecklists = {};
     
     $scope.runways = '';
     $scope.frequencies = '';
@@ -567,6 +565,19 @@ $scope.removeSubRow = function(row, index) {
     row.subRows.splice(index, 1);
 };
 
+$scope.updateSelectedChecklistBundle = function() {
+    // Find the selected checklist by its bundleName in the defaultChecklists array
+    var selected = $scope.defaultChecklists.find(function(checklist) {
+        return checklist.bundleName === $scope.selectedChecklist;
+    });
+    
+    // If a matching checklist is found, update tables and bundleName
+    if (selected) {
+        $scope.tables = selected.tables;
+        $scope.bundleName = selected.bundleName;
+    }
+};
+
 $scope.saveConfig = function() {
         // Building the object conditionally
         var dataToSave = {};
@@ -720,5 +731,20 @@ $scope.clearConfigValues = function() {
         var toast = new bootstrap.Toast(toastElement[0]);
         toast.show();
     }
+
+    $scope.fetchDefaultChecklists = function() {
+        $http.get('/api/v1/default-checklists')
+            .then(function(response) {
+                // Handle the returned data here
+                $scope.defaultChecklists = response.data;
+            })
+            .catch(function(error) {
+                console.error('Error fetching default checklist info:', error);
+                
+                // Display the toast with an error message
+                displayAirportErrorToast();
+            });
+    };
+    $scope.fetchDefaultChecklists();
     
 }]);

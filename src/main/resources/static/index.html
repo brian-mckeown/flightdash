@@ -338,10 +338,9 @@
                     <input type="text" class="form-control" id="simbriefPilotId" ng-model="simbriefPilotId">
                 </div>
             <div class="form-group">
-                <label for="checklistDropdown">Aircraft Checklist</label>
-                <select class="form-select" id="checklistDropdown">
-                    <option>Airbus A320 - Default</option>
-                    <option>Cessna 172 - mentoneflyingclub.org</option>
+                <label for="checklistDropdown">Aircraft Checklist Bundle</label>
+                <select class="form-select" id="checklistDropdown" ng-model="selectedChecklist" ng-change="updateSelectedChecklistBundle()">
+                    <option ng-repeat="checklist in defaultChecklists" value="{{checklist.bundleName}}">{{checklist.bundleName}}</option>
                 </select>
                 <div class="form-check form-switch mt-3">
                     <input class="form-check-input" type="checkbox" id="customChecklistToggle">
@@ -405,8 +404,8 @@
             </div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-primary mt-3" ng-click="saveConfig()">Export Config File</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Save and Close</button>
+          <button class="btn btn-primary mt-3 me-auto" ng-click="saveConfig()">Export Config File</button>
+          <button type="button" class="btn btn-success" data-bs-dismiss="modal">Save and Close</button>
         </div>
       </div>
     </div>
