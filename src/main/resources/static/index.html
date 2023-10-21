@@ -79,7 +79,6 @@
                             <i class="fas fa-dot-circle text-danger" ng-show="recognitionSignalStarted"></i>
                         </button>
                     </div>
-                    <div>State: {{ state }}</div>
                     </div>
             </div>
             <!-- Panel of Buttons -->
@@ -329,16 +328,25 @@
                 </div>
 
                     <!-- Flight Stats Tab -->
-                <div ng-show="activeTab === 'flightStats'">
-                    <div class="container mt-4">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="flightStatBannerCheckbox" ng-model="showFlightStatBanner">
-                            <label class="form-check-label" for="flightStatBannerCheckbox">
-                              Show Flight Stats Banner
-                            </label>
-                          </div>
-                          <hr>
-                        <form>
+                <div ng-show="activeTab === 'flightStats' || activeTab === 'dataEntry' || activeTab === 'controller' || activeTab === 'report'">
+
+                    <!-- Tabs Header -->
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link" ng-click="activeTab='dataEntry'" ng-class="{'active': activeTab === 'dataEntry'}">Data Entry</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" ng-click="activeTab='controller'" ng-class="{'active': activeTab === 'controller'}">Controller</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" ng-click="activeTab='report'" ng-class="{'active': activeTab === 'report'}">Report</a>
+                    </li>
+                </ul>
+
+                <hr>
+                    <!-- Data Entry Sub Tab-->
+                    <div class="container mt-4" ng-show="activeTab === 'flightStats' || activeTab === 'dataEntry'">
+                          <form>
                             <!-- Row 1 -->
                             <div class="row mb-3">
                                 <!-- Call Sign Input -->
@@ -346,54 +354,159 @@
                                     <label for="callSignInput" class="form-label">Call Sign</label>
                                     <input type="text" class="form-control" id="callSignInput" placeholder="Enter Call Sign" ng-model="callSign">
                                 </div>
-                    
+                        
                                 <!-- Departure ICAO Input -->
                                 <div class="col-md-4">
                                     <label for="departureICAOInput" class="form-label">Departure ICAO</label>
                                     <input type="text" class="form-control" id="departureICAOInput" maxlength="4" oninput="this.value = this.value.toUpperCase()" placeholder="Enter Departure ICAO" ng-model="departureIcao">
                                 </div>
-                    
+                        
                                 <!-- Arrival ICAO Input -->
                                 <div class="col-md-4">
                                     <label for="arrivalICAOInput" class="form-label">Arrival ICAO</label>
                                     <input type="text" class="form-control" id="arrivalICAOInput" maxlength="4" oninput="this.value = this.value.toUpperCase()" placeholder="Enter Arrival ICAO" ng-model="arrivalIcao">
                                 </div>
                             </div>
-                    
+                        
                             <!-- Row 2 -->
                             <div class="row mb-3">
-                                <!-- Departure Date and Time Input -->
-                                <div class="col-md-4">
-                                    <label for="departureDateTimeInput" class="form-label">Departure Date and Time</label>
-                                    <input type="datetime-local" class="form-control" id="departureDateTimeInput" ng-model="departureDateTime">
-                                    <span class="badge bg-success mt-2" ng-class="{'bg-success': departureStatus === 'On-Time', 'bg-danger': departureStatus === 'Delayed'}" mt-2>{{departureStatus}}</span>
+                                <!-- Scheduled Boarding Input -->
+                                <div class="col-md-6">
+                                    <label for="boardingDateTime" class="form-label">Scheduled Boarding</label>
+                                    <input type="datetime-local" class="form-control" id="boardingDateTime" ng-model="scheduledBoardingDateTime">
                                 </div>
-                    
-                                <!-- Boarding Time in Minutes Input -->
-                                <div class="col-md-4">
-                                    <label for="boardingTimeInput" class="form-label">Boarding Time (in minutes)</label>
-                                    <input type="number" class="form-control" id="boardingTimeInput" placeholder="Enter Boarding Time in minutes" ng-model="boardingTime">
-                                </div>
-                    
-                                <!-- Arrival Date and Time Input -->
-                                <div class="col-md-4">
-                                    <label for="arrivalDateTimeInput" class="form-label">Arrival Date and Time</label>
-                                    <input type="datetime-local" class="form-control" id="arrivalDateTimeInput" ng-model="arrivalDateTime">
-                                    <span class="badge bg-success mt-2">On-Time</span>
+                                
+                                <!-- Scheduled Departure Input -->
+                                <div class="col-md-6">
+                                    <label for="departureDateTimeInput" class="form-label">Scheduled Departure</label>
+                                    <input type="datetime-local" class="form-control" id="departureDateTimeInput" ng-model="scheduledDepartureDateTime">
                                 </div>
                             </div>
-                    
+                        
                             <!-- Row 3 -->
-                            <div class="row">
-                                <!-- Calculated Boarding Date and Time Field -->
-                                <div class="col-md-4">
-                                    <label for="calculatedBoardingDateTime" class="form-label">Calculated Boarding Date and Time</label>
-                                    <input type="text" class="form-control" id="calculatedBoardingDateTime" ng-model="boardingDateTime"readonly>
-                                    <span class="badge bg-success mt-2">On-Time</span>
+                            <div class="row mb-3">
+                                <!-- Scheduled Arrival Input -->
+                                <div class="col-md-6">
+                                    <label for="arrivalDateTimeInput" class="form-label">Scheduled Arrival</label>
+                                    <input type="datetime-local" class="form-control" id="arrivalDateTimeInput" ng-model="scheduledArrivalDateTime">
+                                </div>
+                                
+                                <!-- Scheduled Gate Arrival Input -->
+                                <div class="col-md-6">
+                                    <label for="gateArrivalDateTimeInput" class="form-label">Scheduled Gate Arrival</label>
+                                    <input type="datetime-local" class="form-control" id="gateArrivalDateTimeInput" ng-model="scheduledGateArrivalDateTime">
                                 </div>
                             </div>
                         </form>
-                    </div>                                     
+                        
+                    </div>  
+                    
+                    <!-- Controller SubTab -->
+                <div ng-show="activeTab === 'controller'">
+                    <div class="container mt-4">
+                          <form>
+                            <!-- Current Flight Status Label and Buttons -->
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <label class="form-label">Current Flight Status</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="button" class="btn btn-sm btn-outline-primary" ng-class="{'btn-primary text-white': currentFlightStatus == 'Boarding'}" ng-click="setFlightStatus('Boarding')">Boarding</button>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="button" class="btn btn-sm btn-outline-primary" ng-class="{'btn-primary text-white': currentFlightStatus == 'Departed'}" ng-click="setFlightStatus('Departed')">Departed</button>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="button" class="btn btn-sm btn-outline-primary" ng-class="{'btn-primary text-white': currentFlightStatus == 'Landed'}" ng-click="setFlightStatus('Landed')">Landed</button>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="button" class="btn btn-sm btn-outline-primary" ng-class="{'btn-primary text-white': currentFlightStatus == 'Arrived'}" ng-click="setFlightStatus('Arrived')">Arrived</button>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" ng-click="setFlightStatus('Idle')">Reset</button>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="flightStatBannerCheckbox" ng-model="showFlightStatBanner">
+                            <label class="form-check-label" for="flightStatBannerCheckbox">
+                              Show Flight Stats Banner
+                            </label>
+                          </div>
+                    </div> 
+                </div>
+
+                   <!-- Report SubTab -->
+                   <div ng-show="activeTab === 'report'">
+                    <div class="container mt-4">
+                        <form>
+                            <!-- Row for Boarding Time -->
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">Scheduled Boarding Time</label>
+                                    <p>{{ scheduledBoardingDateTime | toLocalTime}}</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">Actual Boarding Time</label>
+                                    <p>{{ actualBoardingDateTime | toLocalTime }}</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">Difference</label>
+                                    <p ng-style="getDifferenceStyle(scheduledBoardingDateTime, actualBoardingDateTime)">{{ getDifference(scheduledBoardingDateTime, actualBoardingDateTime) }}</p>
+                                </div>
+                            </div>
+                    
+                            <!-- Row for Departure Time -->
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">Scheduled Departure Time</label>
+                                    <p>{{ scheduledDepartureDateTime | toLocalTime }}</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">Actual Departure Time</label>
+                                    <p>{{ actualDepartedDateTime | toLocalTime }}</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">Difference</label>
+                                    <p ng-style="getDifferenceStyle(scheduledDepartureDateTime, actualDepartedDateTime)">{{ getDifference(scheduledDepartureDateTime, actualDepartedDateTime) }}</p>
+                                </div>
+                            </div>
+                    
+                            <!-- Row for Arrival Time -->
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">Scheduled Arrival Time</label>
+                                    <p>{{ scheduledArrivalDateTime | toLocalTime }}</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">Actual Arrival Time</label>
+                                    <p>{{ actualArrivalDateTime | toLocalTime }}</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">Difference</label>
+                                    <p ng-style="getDifferenceStyle(scheduledArrivalDateTime, actualArrivalDateTime)">{{ getDifference(scheduledArrivalDateTime, actualArrivalDateTime) }}</p>
+                                </div>
+                            </div>
+                    
+                            <!-- Row for Gate Arrival Time -->
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">Scheduled Gate Arrival Time</label>
+                                    <p>{{ scheduledGateArrivalDateTime | toLocalTime }}</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">Actual Gate Arrival Time</label>
+                                    <p>{{ actualGateArrivalDateTime | toLocalTime }}</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">Difference</label>
+                                    <p ng-style="getDifferenceStyle(scheduledGateArrivalDateTime, actualGateArrivalDateTime)">{{ getDifference(scheduledGateArrivalDateTime, actualGateArrivalDateTime) }}</p>
+                                </div>
+                            </div>
+                    
+                        </form>
+                    </div> 
+                </div>
                 </div>
                 </div>
                 
@@ -573,12 +686,15 @@
   <footer class="footer">
     <div class="container">
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-6">
                 <a href="#" data-bs-toggle="modal" data-bs-target="#termsOfUseModal">Terms of Use</a> |
                 <a href="#" data-bs-toggle="modal" data-bs-target="#privacyPolicyModal">Privacy Policy</a> |
                 <a href="#" data-bs-toggle="modal" data-bs-target="#supportModal">Support & Contact</a>
             </div>
-            <div class="col-md-4 text-end">
+            <div class="col-md-3 text-danger">
+                Flight Simulation Use Only
+            </div>
+            <div class="col-md-3 text-end">
                 Version: {{ versionNumber }}
             </div>
         </div>

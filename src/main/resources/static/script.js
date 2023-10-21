@@ -653,14 +653,84 @@ $scope.clearConfigValues = function() {
 $scope.callSign = '';
 $scope.departureIcao = '';
 $scope.arrivalIcao = '';
-$scope.departureDateTime = '';
-$scope.boardingTime = '';
-$scope.arrivalDateTime = '';
-$scope.boardingDateTime = '';
 $scope.showFlightStatBanner = false;
-$scope.departureStatus = "On-Time";
-$scope.arrivalStatus = "On-Time";
-$scope.boardingStatus = "On-Time";
+$scope.currentFlightStatus = 'Idle';
+$scope.scheduledBoardingDateTime = '';
+$scope.scheduledDepartureDateTime = '';
+$scope.scheduledArrivalDateTime = '';
+$scope.scheduledGateArrivalDateTime = '';
+$scope.actualBoardingDateTime = '';
+$scope.actualDepartedDateTime = '';
+$scope.actualArrivalDateTime = '';
+$scope.actualGateArrivalDateTime = '';
+
+
+$scope.setFlightStatus = function(status) {
+    $scope.currentFlightStatus = status;
+
+    let currentTimestamp = new Date().toISOString();
+
+    switch(status) {
+        case 'Boarding':
+            $scope.actualBoardingDateTime = currentTimestamp;
+            break;
+        case 'Departed':
+            $scope.actualDepartedDateTime = currentTimestamp;
+            break;
+        case 'Landed':
+            $scope.actualArrivalDateTime = currentTimestamp;
+            break;
+        case 'Arrived':
+            $scope.actualGateArrivalDateTime = currentTimestamp;
+            break;
+        case 'Idle':
+            $scope.actualBoardingDateTime = '';
+            $scope.actualDepartedDateTime = '';
+            $scope.actualArrivalDateTime = '';
+            $scope.actualGateArrivalDateTime = '';
+            break;
+        default:
+            break;
+    }
+};
+
+$scope.getDifference = function(scheduled, actual) {
+
+    if (!scheduled || !actual) {
+        return '--';
+    }
+    var scheduledDateLocal = new Date(scheduled); 
+    var actualDateLocal = new Date(actual); 
+
+    var diff = (actualDateLocal - scheduledDateLocal) / (1000 * 60); // difference in minutes
+
+    diff = Math.round(diff); // Round to nearest minute
+
+    var isNegative = diff < 0;
+    diff = Math.abs(diff); // Always work with positive values for calculation
+
+    var hours = Math.floor(diff / 60);
+    var minutes = diff % 60;
+
+    // Format the output with a negative sign if the actual time is before the scheduled time
+    var formattedDifference = hours + 'h ' + minutes + 'm';
+    if (isNegative) {
+        formattedDifference = '-' + formattedDifference;
+    }
+    return formattedDifference;
+};
+
+$scope.getDifferenceStyle = function(scheduled, actual) {
+    var scheduledDate = new Date(scheduled);
+    var actualDate = new Date(actual);
+    var diff = (actualDate - scheduledDate) / (1000 * 60); // difference in minutes
+    
+    if (diff <= 0) {
+        return {color: 'green'};
+    } else {
+        return {color: 'red'};
+    }
+};
 
 $scope.$watch('showFlightStatBanner', function(newValue) {
     console.log('showFlightStatBanner changed to:', newValue);
@@ -821,7 +891,13 @@ $scope.$watch('calculatedBoardingDateTime', function(newVal, oldVal) {
 
 app.filter('toLocalTime', function() {
     return function(input) {
+        if (!input) {
+            return '--';
+        }
         var date = new Date(input);
+        if (isNaN(date.getTime())) {
+            return '--';
+        }
         return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); // returns "hh:mm AM/PM" format
     };
 });
