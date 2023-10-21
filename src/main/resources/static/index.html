@@ -28,8 +28,11 @@
                 <i class="fas fa-plane"></i> flightdash.io
             </a>
             <div ng-show="showFlightStatBanner" class="text-white d-flex align-items-center ms-2">
-                <p class="mb-0">{{callSign}} {{departureIcao}}/{{arrivalIcao}} | BOARDING {{boardingDateTime | toLocalTime}} | DEPARTURE {{departureDateTime | toLocalTime}} <span class="badge" ng-class="{'bg-success': departureStatus === 'On-Time', 'bg-danger': departureStatus === 'Delayed'}">{{departureStatus}}</span>
-                    | ARRIVAL {{arrivalDateTime | toLocalTime}}</p>
+                <p class="mb-0">
+                    {{callSign}} {{departureIcao}}/{{arrivalIcao}}
+                <a ng-show="currentFlightStatus == 'Idle'"> | Boarding in: <span id="countdown">{{boardingHours}}h {{boardingMinutes}}m {{boardingSeconds}}s</span>
+                    <span class="badge" ng-class="{'bg-success': boardingStatus == 'ON TIME', 'bg-warning': boardingStatus == 'DELAYED'}">{{ boardingStatus }}</span></a>
+                </p>
             </div>
             
             <!-- Toggler for mobile -->

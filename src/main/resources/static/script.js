@@ -3,7 +3,7 @@
 /**************************** */
 var app = angular.module('checklistApp', []);
 
-app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$document', function($scope, $sce, $timeout, $http, $document) {
+app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$document', '$interval', function($scope, $sce, $timeout, $http, $document, $interval) {
     
     $scope.versionNumber = '1.0.0 Alpha'; 
     $scope.state = 'Idle';
@@ -731,6 +731,47 @@ $scope.getDifferenceStyle = function(scheduled, actual) {
         return {color: 'red'};
     }
 };
+
+$scope.updateBoardingCountdown = function() {
+    var now = new Date();
+    var scheduledDate = new Date($scope.scheduledBoardingDateTime);
+    var diff = scheduledDate - now;
+
+    var totalSeconds = Math.floor(diff / 1000);
+    $scope.boardingHours = Math.floor(totalSeconds / 3600);
+    totalSeconds %= 3600;
+    $scope.boardingMinutes = Math.floor(totalSeconds / 60);
+    $scope.boardingSeconds = totalSeconds % 60;
+
+    // If all components are non-positive, cap them at zero
+    if ($scope.boardingHours <= 0 && $scope.boardingMinutes <= 0 && $scope.boardingSeconds <= 0) {
+        $scope.boardingHours = 0;
+        $scope.boardingMinutes = 0;
+        $scope.boardingSeconds = 0;
+    }
+
+    // Set boardingStatus based on the time values
+    if($scope.boardingHours === 0 && $scope.boardingMinutes === 0 && $scope.boardingSeconds === 0) {
+        $scope.boardingStatus = "DELAYED";
+    } else {
+        $scope.boardingStatus = "ON TIME";
+    }
+};
+
+
+
+
+$interval(function() {
+    $scope.updateBoardingCountdown();
+}, 1000);
+
+var countdownInterval = $interval(function() {
+    $scope.updateBoardingCountdown();
+}, 1000);
+
+$scope.$on('$destroy', function() {
+    $interval.cancel(countdownInterval);
+});
 
 $scope.$watch('showFlightStatBanner', function(newValue) {
     console.log('showFlightStatBanner changed to:', newValue);

@@ -148,6 +148,10 @@ body, div, section {
     background-color: var(--my-danger-color) !important;
 }
 
+.badge.bg-success {
+    background-color: #28a745 !important; /* Bootstrap's default green for success */
+}
+
 /* Using Custom Properties for Text Colors */
 
 .text-primary {
