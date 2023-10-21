@@ -259,6 +259,11 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$
             }
             }, 2000);
             $scope.scrollToBottom();
+        } else if ($scope.currentSubRowIndex === $scope.currentChecklist.subRows.length) {
+            // All sub-rows are complete. Announce the checklist completion.
+            var completionMessage = $scope.currentChecklist.checklist + " checklist complete.";
+            $scope.chatMessage = completionMessage;
+            $scope.sendMessage();
         }
     };    
 
