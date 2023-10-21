@@ -27,6 +27,10 @@
             <a class="navbar-brand" href="#">
                 <i class="fas fa-plane"></i> flightdash.io
             </a>
+            <div ng-show="showFlightStatBanner" class="text-white d-flex align-items-center ms-2">
+                <p class="mb-0">{{callSign}} {{departureIcao}}/{{arrivalIcao}} | BOARDING {{boardingDateTime | toLocalTime}} | DEPARTURE {{departureDateTime | toLocalTime}} <span class="badge" ng-class="{'bg-success': departureStatus === 'On-Time', 'bg-danger': departureStatus === 'Delayed'}">{{departureStatus}}</span>
+                    | ARRIVAL {{arrivalDateTime | toLocalTime}}</p>
+            </div>
             
             <!-- Toggler for mobile -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -92,6 +96,9 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" ng-click="activeTab='charts'" ng-class="{'active': activeTab === 'charts'}">Charts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" ng-click="activeTab='flightStats'" ng-class="{'active': activeTab === 'flightStats'}">Flight Stats</a>
                     </li>
                 </ul>
 
@@ -317,7 +324,76 @@
                             <a href="https://developers.navigraph.com/docs/general/restrictions" target="_blank" rel="noopener noreferrer">prohibited at this time</a>.
                         </p>
                         <p>We will look into options in the future.</p>
-                    </div>
+                    </div> 
+                </div>
+
+                    <!-- Flight Stats Tab -->
+                <div ng-show="activeTab === 'flightStats'">
+                    <div class="container mt-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="flightStatBannerCheckbox" ng-model="showFlightStatBanner">
+                            <label class="form-check-label" for="flightStatBannerCheckbox">
+                              Show Flight Stats Banner
+                            </label>
+                          </div>
+                          <hr>
+                        <form>
+                            <!-- Row 1 -->
+                            <div class="row mb-3">
+                                <!-- Call Sign Input -->
+                                <div class="col-md-4">
+                                    <label for="callSignInput" class="form-label">Call Sign</label>
+                                    <input type="text" class="form-control" id="callSignInput" placeholder="Enter Call Sign" ng-model="callSign">
+                                </div>
+                    
+                                <!-- Departure ICAO Input -->
+                                <div class="col-md-4">
+                                    <label for="departureICAOInput" class="form-label">Departure ICAO</label>
+                                    <input type="text" class="form-control" id="departureICAOInput" maxlength="4" oninput="this.value = this.value.toUpperCase()" placeholder="Enter Departure ICAO" ng-model="departureIcao">
+                                </div>
+                    
+                                <!-- Arrival ICAO Input -->
+                                <div class="col-md-4">
+                                    <label for="arrivalICAOInput" class="form-label">Arrival ICAO</label>
+                                    <input type="text" class="form-control" id="arrivalICAOInput" maxlength="4" oninput="this.value = this.value.toUpperCase()" placeholder="Enter Arrival ICAO" ng-model="arrivalIcao">
+                                </div>
+                            </div>
+                    
+                            <!-- Row 2 -->
+                            <div class="row mb-3">
+                                <!-- Departure Date and Time Input -->
+                                <div class="col-md-4">
+                                    <label for="departureDateTimeInput" class="form-label">Departure Date and Time</label>
+                                    <input type="datetime-local" class="form-control" id="departureDateTimeInput" ng-model="departureDateTime">
+                                    <span class="badge bg-success mt-2" ng-class="{'bg-success': departureStatus === 'On-Time', 'bg-danger': departureStatus === 'Delayed'}" mt-2>{{departureStatus}}</span>
+                                </div>
+                    
+                                <!-- Boarding Time in Minutes Input -->
+                                <div class="col-md-4">
+                                    <label for="boardingTimeInput" class="form-label">Boarding Time (in minutes)</label>
+                                    <input type="number" class="form-control" id="boardingTimeInput" placeholder="Enter Boarding Time in minutes" ng-model="boardingTime">
+                                </div>
+                    
+                                <!-- Arrival Date and Time Input -->
+                                <div class="col-md-4">
+                                    <label for="arrivalDateTimeInput" class="form-label">Arrival Date and Time</label>
+                                    <input type="datetime-local" class="form-control" id="arrivalDateTimeInput" ng-model="arrivalDateTime">
+                                    <span class="badge bg-success mt-2">On-Time</span>
+                                </div>
+                            </div>
+                    
+                            <!-- Row 3 -->
+                            <div class="row">
+                                <!-- Calculated Boarding Date and Time Field -->
+                                <div class="col-md-4">
+                                    <label for="calculatedBoardingDateTime" class="form-label">Calculated Boarding Date and Time</label>
+                                    <input type="text" class="form-control" id="calculatedBoardingDateTime" ng-model="boardingDateTime"readonly>
+                                    <span class="badge bg-success mt-2">On-Time</span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>                                     
+                </div>
                 </div>
                 
             </div>

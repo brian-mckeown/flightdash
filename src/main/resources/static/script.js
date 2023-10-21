@@ -635,6 +635,63 @@ $scope.clearConfigValues = function() {
     $scope.tables = [];
 };
 
+//** Flight Status Section */
+// Default values for the badges
+$scope.callSign = '';
+$scope.departureIcao = '';
+$scope.arrivalIcao = '';
+$scope.departureDateTime = '';
+$scope.boardingTime = '';
+$scope.arrivalDateTime = '';
+$scope.boardingDateTime = '';
+$scope.showFlightStatBanner = false;
+$scope.departureStatus = "On-Time";
+$scope.arrivalStatus = "On-Time";
+$scope.boardingStatus = "On-Time";
+
+$scope.$watch('showFlightStatBanner', function(newValue) {
+    console.log('showFlightStatBanner changed to:', newValue);
+});
+
+$scope.updateStatus = function(dateTimeField) {
+    // Get the current time
+    let currentTime = new Date().toISOString();
+
+    // Convert datetime-local input to ISO format for comparison
+    let inputDateTime = new Date(dateTimeField).toISOString();
+
+    if (inputDateTime < currentTime) {
+        // If the input date-time is less than the current time, it's delayed
+        return "Delayed";
+    } else {
+        return "On-Time";
+    }
+};
+
+// Watch the Departure Date and Time input for changes
+$scope.$watch('departureDateTime', function(newVal, oldVal) {
+    if (newVal !== oldVal) {
+        $scope.departureStatus = $scope.updateStatus(newVal);
+    }
+});
+
+// Watch the Arrival Date and Time input for changes
+$scope.$watch('arrivalDateTime', function(newVal, oldVal) {
+    if (newVal !== oldVal) {
+        $scope.arrivalStatus = $scope.updateStatus(newVal);
+    }
+});
+
+// Watch the Calculated Boarding Date and Time field for changes
+$scope.$watch('calculatedBoardingDateTime', function(newVal, oldVal) {
+    if (newVal !== oldVal) {
+        $scope.boardingStatus = $scope.updateStatus(newVal);
+    }
+});
+
+// Add logic here to calculate and set the 'calculatedBoardingDateTime' based on the provided Departure Date-Time and Boarding Time in minutes
+/** End Flight Status Section */
+
     /*** API CALLS *****************/
     /**
      * 
@@ -748,3 +805,10 @@ $scope.clearConfigValues = function() {
     $scope.fetchDefaultChecklists();
     
 }]);
+
+app.filter('toLocalTime', function() {
+    return function(input) {
+        var date = new Date(input);
+        return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); // returns "hh:mm AM/PM" format
+    };
+});
