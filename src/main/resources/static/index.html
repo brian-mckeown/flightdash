@@ -36,6 +36,9 @@
                 <a ng-show="currentFlightStatus == 'Boarding'" class="text-white text-decoration-none"> | <span class="badge bg-info" >BOARDING</span> | Departing in: <span id="departureCountdown">{{departureHours}}h {{departureMinutes}}m {{departureSeconds}}s</span>
                     <span class="badge" ng-class="{'bg-success': departureStatus == 'ON TIME', 'bg-warning': departureStatus == 'DELAYED'}">{{ departureStatus }}</span>
                 </a>
+                <a ng-show="currentFlightStatus == 'Departed'" class="text-white text-decoration-none"> | <span class="badge bg-primary" >DEPARTED</span> | Landing in: <span id="landingCountdown">{{landingHours}}h {{landingMinutes}}m {{landingSeconds}}s</span>
+                    <span class="badge" ng-class="{'bg-success': landingStatus == 'ON TIME', 'bg-warning': landingStatus == 'DELAYED'}">{{ landingStatus }}</span>
+                </a>
                 </p>
             </div>
             
