@@ -12,6 +12,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$
     $scope.icao = '';
     $scope.simbriefPilotId = '';
     $scope.flightPlanData = '';
+    $scope.flightPlanJSONData = '';
     $scope.flightPlanTrustedHtml = '';
     $scope.airportData = {};
     $scope.airportInfo = {};
@@ -909,10 +910,28 @@ $scope.$watch('calculatedBoardingDateTime', function(newVal, oldVal) {
             .then(function(response) {
                 // Handle the returned data here
                 $scope.flightPlanData = response.data;
-                console.log($scope.flightPlanData);
                 if ($scope.flightPlanData && $scope.flightPlanData.text) {
                     $scope.flightPlanTrustedHtml = $sce.trustAsHtml($scope.flightPlanData.text.plan_html);
                 }
+            })
+            .catch(function(error) {
+                console.error('Error fetching flight plan:', error);
+                
+                // Display the toast with an error message
+                displaySimbriefErrorToast();
+            });
+            $http.get('/api/v1/flightplan-json/' + $scope.simbriefPilotId)
+            .then(function(response) {
+                // Handle the returned data here
+                $scope.flightPlanJSONData = response.data;
+                $scope.callSign = $scope.flightPlanJSONData.atc.callsign;
+                $scope.departureIcao = $scope.flightPlanJSONData.origin.icao_code;
+                $scope.arrivalIcao = $scope.flightPlanJSONData.destination.icao_code;
+                $scope.scheduledBoardingDateTime = moment.unix($scope.flightPlanJSONData.times.sched_out).toDate();
+                $scope.scheduledDepartureDateTime = moment.unix($scope.flightPlanJSONData.times.sched_off).toDate();
+                $scope.scheduledArrivalDateTime = moment.unix($scope.flightPlanJSONData.times.sched_on).toDate();
+                $scope.scheduledGateArrivalDateTime = moment.unix($scope.flightPlanJSONData.times.sched_in).toDate();
+
             })
             .catch(function(error) {
                 console.error('Error fetching flight plan:', error);

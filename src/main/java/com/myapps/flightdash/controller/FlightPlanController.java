@@ -14,7 +14,7 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 @RestController
-@RequestMapping("/api/v1/flightplan")
+@RequestMapping("/api/v1")
 public class FlightPlanController {
 
     private final RestTemplate restTemplate;
@@ -27,7 +27,7 @@ public class FlightPlanController {
         this.xmlMapper = new XmlMapper();
     }
 
-    @GetMapping("/{pilotID}")
+    @GetMapping("flightplan/{pilotID}")
     public ResponseEntity<?> getFlightPlan(@PathVariable String pilotID) {
         if (pilotID == null || pilotID.isEmpty()) {
             return ResponseEntity.badRequest().body("Invalid pilot ID");
@@ -42,6 +42,29 @@ public class FlightPlanController {
             String json = jsonMapper.writeValueAsString(jsonNode);
 
             return ResponseEntity.ok(jsonMapper.readTree(json));
+
+        } catch (HttpStatusCodeException e) {
+            // This will handle errors returned from the Simbrief API (e.g., 404, 500, etc.)
+            return ResponseEntity.status(e.getStatusCode()).body(e.getResponseBodyAsString());
+
+        } catch (Exception e) {
+            // For other exceptions
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while processing your request.");
+        }
+    }
+
+    @GetMapping("/flightplan-json/{pilotID}")
+    public ResponseEntity<?> getFlightPlanJSON(@PathVariable String pilotID) {
+        if (pilotID == null || pilotID.isEmpty()) {
+            return ResponseEntity.badRequest().body("Invalid pilot ID");
+        }
+
+        try {
+            // Fetch JSON data directly from Simbrief using the "&json=1" parameter
+            String jsonData = restTemplate.getForObject("https://www.simbrief.com/api/xml.fetcher.php?userid=" + pilotID + "&json=1", String.class);
+            
+            // Return the JSON data
+            return ResponseEntity.ok(jsonMapper.readTree(jsonData));
 
         } catch (HttpStatusCodeException e) {
             // This will handle errors returned from the Simbrief API (e.g., 404, 500, etc.)
