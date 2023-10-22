@@ -758,15 +758,43 @@ $scope.updateBoardingCountdown = function() {
     }
 };
 
+$scope.updateDepartureCountdown = function() {
+    var now = new Date();
+    var scheduledDate = new Date($scope.scheduledDepartureDateTime);
+    var diff = scheduledDate - now;
+
+    var totalSeconds = Math.floor(diff / 1000);
+    $scope.departureHours = Math.floor(totalSeconds / 3600);
+    totalSeconds %= 3600;
+    $scope.departureMinutes = Math.floor(totalSeconds / 60);
+    $scope.departureSeconds = totalSeconds % 60;
+
+    // If all components are non-positive, cap them at zero
+    if ($scope.departureHours <= 0 && $scope.departureMinutes <= 0 && $scope.departureSeconds <= 0) {
+        $scope.departureHours = 0;
+        $scope.departureMinutes = 0;
+        $scope.departureSeconds = 0;
+    }
+
+    // Set boardingStatus based on the time values
+    if($scope.departureHours === 0 && $scope.departureMinutes === 0 && $scope.departureSeconds === 0) {
+        $scope.departureStatus = "DELAYED";
+    } else {
+        $scope.departureStatus = "ON TIME";
+    }
+};
+
 
 
 
 $interval(function() {
     $scope.updateBoardingCountdown();
+    $scope.updateDepartureCountdown();
 }, 1000);
 
 var countdownInterval = $interval(function() {
     $scope.updateBoardingCountdown();
+    $scope.updateDepartureCountdown();
 }, 1000);
 
 $scope.$on('$destroy', function() {

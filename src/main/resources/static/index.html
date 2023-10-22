@@ -30,8 +30,12 @@
             <div ng-show="showFlightStatBanner" class="text-white d-flex align-items-center ms-2">
                 <p class="mb-0">
                     {{callSign}} {{departureIcao}}/{{arrivalIcao}}
-                <a ng-show="currentFlightStatus == 'Idle'"> | Boarding in: <span id="countdown">{{boardingHours}}h {{boardingMinutes}}m {{boardingSeconds}}s</span>
-                    <span class="badge" ng-class="{'bg-success': boardingStatus == 'ON TIME', 'bg-warning': boardingStatus == 'DELAYED'}">{{ boardingStatus }}</span></a>
+                <a ng-show="currentFlightStatus == 'Idle'" class="text-white text-decoration-none"> | Boarding in: <span id="boardingCountdown">{{boardingHours}}h {{boardingMinutes}}m {{boardingSeconds}}s</span>
+                    <span class="badge" ng-class="{'bg-success': boardingStatus == 'ON TIME', 'bg-warning': boardingStatus == 'DELAYED'}">{{ boardingStatus }}</span>
+                </a>
+                <a ng-show="currentFlightStatus == 'Boarding'" class="text-white text-decoration-none"> | <span class="badge bg-info" >BOARDING</span> | Departing in: <span id="departureCountdown">{{departureHours}}h {{departureMinutes}}m {{departureSeconds}}s</span>
+                    <span class="badge" ng-class="{'bg-success': departureStatus == 'ON TIME', 'bg-warning': departureStatus == 'DELAYED'}">{{ departureStatus }}</span>
+                </a>
                 </p>
             </div>
             

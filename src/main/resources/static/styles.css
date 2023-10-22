@@ -152,6 +152,11 @@ body, div, section {
     background-color: #28a745 !important; /* Bootstrap's default green for success */
 }
 
+.badge.bg-info {
+    background-color: #17a2b8 !important; /* Bootstrap's default blue for info */
+}
+
+
 /* Using Custom Properties for Text Colors */
 
 .text-primary {
