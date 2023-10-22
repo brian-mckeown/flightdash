@@ -810,6 +810,32 @@ $scope.updateLandingCountdown = function() {
     }
 };
 
+$scope.updateArrivalCountdown = function() {
+    var now = new Date();
+    var scheduledDate = new Date($scope.scheduledGateArrivalDateTime);
+    var diff = scheduledDate - now;
+
+    var totalSeconds = Math.floor(diff / 1000);
+    $scope.arrivalHours = Math.floor(totalSeconds / 3600);
+    totalSeconds %= 3600;
+    $scope.arrivalMinutes = Math.floor(totalSeconds / 60);
+    $scope.arrivalSeconds = totalSeconds % 60;
+
+    // If all components are non-positive, cap them at zero
+    if ($scope.arrivalHours <= 0 && $scope.arrivalMinutes <= 0 && $scope.arrivalSeconds <= 0) {
+        $scope.arrivalHours = 0;
+        $scope.arrivalMinutes = 0;
+        $scope.arrivalSeconds = 0;
+    }
+
+    // Set arrivalStatus based on the time values
+    if($scope.arrivalHours === 0 && $scope.arrivalMinutes === 0 && $scope.arrivalSeconds === 0) {
+        $scope.arrivalStatus = "DELAYED";
+    } else {
+        $scope.arrivalStatus = "ON TIME";
+    }
+};
+
 
 
 
@@ -817,12 +843,14 @@ $interval(function() {
     $scope.updateBoardingCountdown();
     $scope.updateDepartureCountdown();
     $scope.updateLandingCountdown();
+    $scope.updateArrivalCountdown();
 }, 1000);
 
 var countdownInterval = $interval(function() {
     $scope.updateBoardingCountdown();
     $scope.updateDepartureCountdown();
     $scope.updateLandingCountdown();
+    $scope.updateArrivalCountdown();
 }, 1000);
 
 $scope.$on('$destroy', function() {
