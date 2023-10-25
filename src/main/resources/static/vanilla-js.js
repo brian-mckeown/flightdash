@@ -25,6 +25,12 @@ fetch('/support')
         document.getElementById('support').innerHTML = content;
     });
 
+fetch('/about')
+    .then(response => response.text())
+    .then(content => {
+        document.getElementById('about').innerHTML = content;
+    });
+
     document.addEventListener('DOMContentLoaded', function() {
         const weatherSection = document.getElementById('weatherSection');
         const frequenciesSection = document.getElementById('frequenciesSection');

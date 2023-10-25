@@ -21,4 +21,9 @@ public class ThymeleafController {
     public String supportContent() {
         return "support"; // This refers to support.html in src/main/resources/templates
     }
+
+    @GetMapping("/about")
+    public String aboutContent() {
+        return "about"; // This refers to about.html in src/main/resources/templates
+    }
 }
