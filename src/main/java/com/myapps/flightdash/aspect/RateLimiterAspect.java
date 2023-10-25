@@ -14,8 +14,8 @@ public class RateLimiterAspect {
     private final Bucket bucket;
 
     public RateLimiterAspect() {
-        Refill refill = Refill.greedy(20, Duration.ofMinutes(1));
-        Bandwidth limit = Bandwidth.classic(20, refill).withInitialTokens(1);
+        Refill refill = Refill.greedy(100, Duration.ofMinutes(1));
+        Bandwidth limit = Bandwidth.classic(100, refill).withInitialTokens(1);
         this.bucket = Bucket4j.builder().addLimit(limit).build();
     }
 
