@@ -1,3 +1,15 @@
+/* Hide warning by default */
+#warning-message {
+    display: none;
+}
+
+/* Show warning for screens below 1488 pixels wide */
+@media (max-width: 1200px) {
+    #warning-message {
+        display: block;
+    }
+}
+
 body, div, section {
     background-color: #E5E5E5;
 }
