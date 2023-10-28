@@ -7,6 +7,14 @@ document.getElementById('customChecklistToggle').addEventListener('change', func
     }
 });
 
+window.onload = function() {
+    var toastElList = [].slice.call(document.querySelectorAll('.toast'));
+    var toastList = toastElList.map(function(toastEl) {
+        return new bootstrap.Toast(toastEl);
+    });
+    toastList.forEach(toast => toast.show());
+}
+
 fetch('/privacy-policy')
     .then(response => response.text())
     .then(content => {
