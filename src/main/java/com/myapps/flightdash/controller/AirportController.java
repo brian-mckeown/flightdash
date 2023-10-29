@@ -8,11 +8,30 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.File;
+
 @RestController
 public class AirportController {
 
-    private static final Dotenv dotenv = Dotenv.load();
-    private final String apiToken = dotenv.get("AIRPORTDB_API_TOKEN");
+    private static final Dotenv dotenv;
+    private final String apiToken;
+
+    static {
+        if (new File("./.env").exists()) {
+            dotenv = Dotenv.load();
+        } else {
+            dotenv = null;
+        }
+    }
+
+    {
+        if (dotenv != null) {
+            apiToken = dotenv.get("AIRPORTDB_API_TOKEN");
+        } else {
+            apiToken = System.getenv("AIRPORTDB_API_TOKEN");
+        }
+    }
+
     private static final String AIRPORTDB_ENDPOINT = "https://airportdb.io/api/v1/airport/{ICAO}?apiToken={apiToken}";
 
     // Map of METAR sources with identifiers as keys and URLs as values
