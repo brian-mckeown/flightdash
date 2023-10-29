@@ -1,4 +1,4 @@
-# Use a JDK 20 base image
+# Use a JDK 20 base image for building
 FROM openjdk:20-slim as build
 
 # Install Maven
@@ -21,8 +21,8 @@ COPY src/ src/
 # Build the application
 RUN mvn clean install -DskipTests
 
-# Use the official OpenJDK image as the base image for the runtime environment
-FROM openjdk:11-jre-slim
+# Use an OpenJDK 20 JRE base image for running
+FROM openjdk:20-jre-slim
 
 # Set the working directory in the container
 WORKDIR /app
@@ -32,3 +32,4 @@ COPY --from=build /app/target/flightdash-0.0.1-SNAPSHOT.jar /app/flightdash-0.0.
 
 # Command to run the application
 CMD ["java", "-jar", "/app/flightdash-0.0.1-SNAPSHOT.jar"]
+
