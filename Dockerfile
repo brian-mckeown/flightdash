@@ -1,5 +1,5 @@
 # Use the official Maven image as the base image
-FROM maven:3.8.3-jdk-11-slim as build
+FROM maven:3.8.3-jdk-20-slim as build
 
 # Set the working directory in the container
 WORKDIR /app
@@ -27,4 +27,4 @@ WORKDIR /app
 COPY --from=build /app/target/myapp.jar /app/flightdash-0.0.1-SNAPSHOT.jar
 
 # Command to run the application
-CMD ["java", "-jar", "/app/myapp.jar"]
+CMD ["java", "-jar", "/app/flightdash-0.0.1-SNAPSHOT.jar"]
