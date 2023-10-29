@@ -1,5 +1,5 @@
-# Use a JDK 20 base image for both building and running
-FROM openjdk:20-slim as build
+# Use a JDK 20 base image for building
+FROM openjdk:20-slim as builder
 
 # Install Maven
 RUN apt-get update && \
@@ -21,11 +21,14 @@ COPY src/ src/
 # Build the application
 RUN mvn clean install -DskipTests
 
-# Since we're using the same JDK 20 base image for runtime, no need to use a different FROM directive
+# Use the JDK 20 base image for runtime
+FROM openjdk:20-slim
+
+# Set the working directory in the runtime image
 WORKDIR /app
 
-# Copy the built jar file from the build stage into the current stage
-COPY --from=build /app/target/flightdash-0.0.1-SNAPSHOT.jar /app/flightdash-0.0.1-SNAPSHOT.jar
+# Copy the built jar file from the builder stage into the current stage
+COPY --from=builder /app/target/flightdash-0.0.1-SNAPSHOT.jar /app/flightdash-0.0.1-SNAPSHOT.jar
 
 # Command to run the application
 CMD ["java", "-jar", "/app/flightdash-0.0.1-SNAPSHOT.jar"]
