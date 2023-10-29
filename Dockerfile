@@ -1,5 +1,9 @@
-# Use the official Maven image as the base image
-FROM maven:3.8.3-jdk-20-slim as build
+# Use a JDK 20 base image
+FROM openjdk:20-slim as build
+
+# Install Maven
+RUN apt-get update && \
+    apt-get install -y maven
 
 # Set the working directory in the container
 WORKDIR /app
