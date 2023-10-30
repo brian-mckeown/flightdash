@@ -15,6 +15,13 @@ window.onload = function() {
     toastList.forEach(toast => toast.show());
 }
 
+document.addEventListener('DOMContentLoaded', function() {
+    var modal = new bootstrap.Modal(document.getElementById('welcomeModal'), {
+      keyboard: false
+    });
+    modal.show();
+});
+
 fetch('/privacy-policy')
     .then(response => response.text())
     .then(content => {
@@ -37,6 +44,12 @@ fetch('/about')
     .then(response => response.text())
     .then(content => {
         document.getElementById('about').innerHTML = content;
+    });
+
+fetch('/welcome')
+    .then(response => response.text())
+    .then(content => {
+        document.getElementById('welcome').innerHTML = content;
     });
 
     document.addEventListener('DOMContentLoaded', function() {

@@ -123,6 +123,19 @@ body, div, section {
 }
 
 /* Additional styles to give buttons, alerts, etc. a more professional appearance */
+.btn-cyan {
+    background-color: cyan;
+    border-color: cyan;
+    color: #000;  /* Text color */
+}
+
+.btn-cyan:hover, .btn-cyan:focus, .btn-cyan:active {
+    background-color: #00b3b3;
+    border-color: #00b3b3;
+    color: #000;  /* Text color on hover/focus/active states */
+}
+
+
 
 .btn-primary {
     background-color: var(--my-primary-color) !important;
@@ -242,4 +255,8 @@ hr {
 .fp-scrollable-content {
     max-height: 500px;
     overflow-y: scroll;
+}
+
+.full-width {
+    width: 100%;
 }

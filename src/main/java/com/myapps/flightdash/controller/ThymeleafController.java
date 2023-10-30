@@ -26,4 +26,9 @@ public class ThymeleafController {
     public String aboutContent() {
         return "about"; // This refers to about.html in src/main/resources/templates
     }
+
+    @GetMapping("/welcome")
+    public String welcomeContent() {
+        return "welcome"; // This refers to welcome.html in src/main/resources/templates
+    }
 }
