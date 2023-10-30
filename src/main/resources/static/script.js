@@ -22,7 +22,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$
     $scope.runways = '';
     $scope.frequencies = '';
 
-    $scope.metarSource='beta_aviationweather_gov';
+    $scope.metarSource='aviationweather_gov';
 
     $scope.airportRequested = false;
 

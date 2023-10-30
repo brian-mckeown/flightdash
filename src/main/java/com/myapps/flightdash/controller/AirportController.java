@@ -36,7 +36,7 @@ public class AirportController {
 
     // Map of METAR sources with identifiers as keys and URLs as values
     private static final java.util.Map<String, String> METAR_ENDPOINT = java.util.Map.of(
-        "beta_aviationweather_gov", "https://beta.aviationweather.gov/cgi-bin/data/metar.php?ids={icao}",
+        "aviationweather_gov", "https://aviationweather.gov/cgi-bin/data/metar.php?ids={icao}",
         "metar_vatsim_net", "https://metar.vatsim.net/metar.php?id={icao}"
     );
 
