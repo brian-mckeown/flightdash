@@ -260,3 +260,8 @@ hr {
 .full-width {
     width: 100%;
 }
+
+.video-container {
+    width: 90%; /* Adjust as needed */
+    margin: 0 auto; /* Center the container */
+}
