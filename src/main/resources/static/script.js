@@ -5,7 +5,7 @@ var app = angular.module('checklistApp', []);
 
 app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$document', '$interval', function($scope, $sce, $timeout, $http, $document, $interval) {
     
-    $scope.versionNumber = '1.0.2 Beta'; 
+    $scope.versionNumber = '1.0.3 Beta'; 
     $scope.state = 'Idle';
     $scope.messages = [];
     $scope.selectedChecklist = '';
@@ -376,7 +376,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$
             $scope.metarClouds += parts[index++] + " ";
         }
     
-        if (parts[index].match(/\d{2}\/\d{2}/)) {
+        if (parts[index].match(/M?\d{2}\/M?\d{2}/)) {
             $scope.metarTemperatureDewpoint = parts[index++];
         }
     
@@ -391,6 +391,16 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$
 
     $scope.convertCelsiusToFahrenheit = function(celsius) {
         if (celsius === null || celsius === undefined) return null;
+        
+        // Check for 'M' which denotes a negative temperature in METAR
+        if (celsius.charAt(0) === 'M') {
+            // Convert the rest of the string (after 'M') into a negative number
+            celsius = -parseFloat(celsius.substring(1));
+        } else {
+            // Convert string to number normally if no 'M' is present
+            celsius = parseFloat(celsius);
+        }
+        
         return (celsius * 9/5) + 32;
     };
     
