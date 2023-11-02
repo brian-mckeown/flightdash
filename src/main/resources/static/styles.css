@@ -1,12 +1,28 @@
 /* Hide warning by default */
-#warning-message {
-    display: none;
+#overlay {
+    position: fixed;
+    display: none; /* Hidden by default */
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
+    z-index: 1040; /* Below the alert but above other items */
 }
 
-/* Show warning for screens below 1488 pixels wide */
-@media (max-width: 1200px) {
-    #warning-message {
-        display: block;
+#warning-message {
+    position: fixed;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1050; /* Above the overlay */
+}
+
+@media (min-width: 1200px) {
+    #warning-message, #overlay {
+        display: none; /* Hide alert and overlay on larger screens */
     }
 }
 
