@@ -143,6 +143,9 @@
                     <li class="nav-item">
                         <a class="nav-link" ng-click="activeTab='flightStats'" ng-class="{'active': activeTab === 'flightStats'}">Flight Stats</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" ng-click="activeTab='passengers'" ng-class="{'active': activeTab === 'passengers'}">Passengers</a>
+                    </li>
                 </ul>
 
                 <hr>
@@ -550,6 +553,50 @@
                         </form>
                     </div> 
                 </div>
+                </div>
+
+                <!-- Passengers Tab -->
+                <div ng-show="activeTab === 'passengers'">
+                    <div class="container mt-4">
+                        <button class="btn btn-success">Load Manifest</button>
+                        <p>Passengers</p>
+                        <div class="container mt-4">
+                            <h4>Flight Manifest</h4>
+                            <table class="table table-sm table-bordered table-dark text-xs text-nowrap">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Seat</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col">Bags</th>
+                                        <th scope="col">Bag Details</th>
+                                        <th scope="col">Destination</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="passenger in passengers">
+                                        <th scope="row">{{ passenger.seat }}</th>
+                                        <td>{{ passenger.name }}</td>
+                                        <td>
+                                            <span class="badge" ng-class="passengerStatusClass(passenger.status)">
+                                                {{ passenger.status }}
+                                            </span>
+                                        </td>
+                                        <td>{{ passenger.bags.length }}</td>
+                                        <td>
+                                            <div class="bg-dark" ng-repeat="bag in passenger.bags"> <!-- Add bg-dark here -->
+                                                Bag {{ $index + 1 }}: 
+                                                <span class="badge" ng-class="bagStatusClass(bag.status)">
+                                                    {{ bag.status }}
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td>{{ passenger.destination }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>                                                
+                    </div> 
                 </div>
                 </div>
                 

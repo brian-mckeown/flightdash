@@ -911,6 +911,106 @@ $scope.$watch('calculatedBoardingDateTime', function(newVal, oldVal) {
 // Add logic here to calculate and set the 'calculatedBoardingDateTime' based on the provided Departure Date-Time and Boarding Time in minutes
 /** End Flight Status Section */
 
+/*** PASSENGERS */
+/** ************/
+$scope.passengers = generateRandomPassengers(180);
+
+$scope.passengerStatusClass = function(status) {
+    switch(status) {
+        case "Not checked in": return "bg-secondary";
+        case "Checked In": return "bg-primary";
+        case "Boarded": return "bg-info";
+        case "Deboarded": return "bg-danger";
+        default: return "";
+    }
+};
+
+$scope.bagStatusClass = function(status) {
+    switch(status) {
+        case "Checked In": return "bg-primary";
+        case "Loaded": return "bg-info";
+        case "Unloaded": return "bg-warning";
+        case "Baggage Claim": return "bg-success";
+        default: return "";
+    }
+};
+
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+  
+  function getRandomFromArray(array) {
+    return array[Math.floor(Math.random() * array.length)];
+  }
+  
+  function getRandomName() {
+    const firstNames = [
+      "John", "Jane", "Alex", "Laura", "Chris", "Sara", "Mark", "Nina", "Paul", "Julia",
+      "Emily", "Daniel", "Luke", "Lily", "David", "Sophia", "Jack", "Olivia", "James", "Amelia",
+      "Michael", "Isabella", "Benjamin", "Mia", "Jacob", "Charlotte", "Carter", "Ava", "Ethan", "Abigail",
+      "Noah", "Emily", "Liam", "Harper", "Mason", "Evelyn", "Logan", "Madison", "Lucas", "Emma"
+    ];
+    const lastNames = [
+      "Doe", "Smith", "Johnson", "Lee", "Brown", "Wilson", "Martinez", "Davis", "Garcia", "Rodriguez",
+      "Taylor", "Thomas", "Harris", "Martin", "Jackson", "Thompson", "White", "Lopez", "Lee", "Gonzalez",
+      "Hill", "Scott", "Green", "Adams", "Baker", "Nelson", "Carter", "Mitchell", "Roberts", "Turner"
+    ];
+    return `${getRandomFromArray(firstNames)} ${getRandomFromArray(lastNames)}`;
+  }
+  
+  function getRandomStatus() {
+    const statuses = ["Not checked in", "Checked In", "Boarded", "Deboarded"];
+    return getRandomFromArray(statuses);
+  }
+  
+  function getRandomBagStatus() {
+    const bagStatuses = ["Checked In", "Loaded", "Unloaded", "Baggage Claim"];
+    return getRandomFromArray(bagStatuses);
+  }
+  
+  function getRandomDestination() {
+    const destinations = [
+      "Final Destination",
+      "AA1234, 18:45, Dallas, TX",
+      "AA2345, 20:00, New York, NY",
+      "AA3456, 22:30, Los Angeles, CA",
+      "AA4567, 09:00, Chicago, IL",
+      "AA5678, 07:30, Miami, FL",
+      "AA6789, 19:15, Phoenix, AZ",
+      "AA7890, 21:45, Las Vegas, NV",
+      "AA8901, 16:00, Atlanta, GA",
+      "AA9012, 14:50, Seattle, WA",
+      "AA0123, 12:30, San Francisco, CA",
+      "AA0987, 08:15, Denver, CO",
+      "AA8765, 10:25, Boston, MA",
+      "AA7654, 05:50, New Orleans, LA",
+      "AA6543, 13:45, Austin, TX",
+      "AA5432, 11:00, Portland, OR"
+    ];
+    return getRandomFromArray(destinations);
+  }
+  
+  function generateRandomPassengers(numPassengers) {
+    const passengers = [];
+    for (let i = 0; i < numPassengers; i++) {
+      const numBags = getRandomInt(0, 3); // Assuming a max of 3 bags
+      const bags = [];
+      for (let j = 0; j < numBags; j++) {
+        bags.push({ "status": getRandomBagStatus() });
+      }
+      passengers.push({
+        "seat": `${getRandomInt(1, 30)}${['A', 'B', 'C', 'D', 'E', 'F'][getRandomInt(0, 5)]}`, // Assuming rows 1-30 and seats A-F
+        "name": getRandomName(),
+        "status": getRandomStatus(),
+        "bags": bags,
+        "destination": getRandomDestination()
+      });
+    }
+    return passengers;
+  }
+
+  $scope.passengers = generateRandomPassengers(180);
+
     /*** API CALLS *****************/
     /**
      * 
