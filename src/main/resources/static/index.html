@@ -428,15 +428,15 @@
                         
                             <!-- Row 3 -->
                             <div class="row mb-3">
-                                <!-- Scheduled Arrival Input -->
+                                <!-- Estimated Arrival Input -->
                                 <div class="col-md-6">
-                                    <label for="arrivalDateTimeInput" class="form-label">Scheduled Arrival</label>
+                                    <label for="arrivalDateTimeInput" class="form-label">Estimated Arrival</label>
                                     <input type="datetime-local" class="form-control" id="arrivalDateTimeInput" ng-model="estimateArrivalDateTime">
                                 </div>
                                 
-                                <!-- Scheduled Gate Arrival Input -->
+                                <!-- Estimated Gate Arrival Input -->
                                 <div class="col-md-6">
-                                    <label for="gateArrivalDateTimeInput" class="form-label">Scheduled Gate Arrival</label>
+                                    <label for="gateArrivalDateTimeInput" class="form-label">Estimated Gate Arrival</label>
                                     <input type="datetime-local" class="form-control" id="gateArrivalDateTimeInput" ng-model="estimateGateArrivalDateTime">
                                 </div>
                             </div>
@@ -518,7 +518,7 @@
                             <!-- Row for Arrival Time -->
                             <div class="row mb-3">
                                 <div class="col-md-4">
-                                    <label class="form-label fw-bold">Scheduled Arrival Time</label>
+                                    <label class="form-label fw-bold">Estimated Arrival Time</label>
                                     <p>{{ estimateArrivalDateTime | toLocalTime }}</p>
                                 </div>
                                 <div class="col-md-4">
@@ -534,7 +534,7 @@
                             <!-- Row for Gate Arrival Time -->
                             <div class="row mb-3">
                                 <div class="col-md-4">
-                                    <label class="form-label fw-bold">Scheduled Gate Arrival Time</label>
+                                    <label class="form-label fw-bold">Estimated Gate Arrival Time</label>
                                     <p>{{ estimateGateArrivalDateTime | toLocalTime }}</p>
                                 </div>
                                 <div class="col-md-4">
