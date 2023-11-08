@@ -928,7 +928,6 @@ $scope.bagsCheckedIn = [];
 $scope.bagsLoaded = [];
 $scope.bagsUnloaded = [];
 $scope.bagsBaggageClaim = [];
-$scope.bagsPickedUp = [];
 
 //create a seat label based on the passenger index
 function createSeat(passengerIndex) {
@@ -938,7 +937,7 @@ function createSeat(passengerIndex) {
 }
 
 // Function to create manifest
-$scope.createManifest = function(numberOfPassengers) {
+$scope.createManifest = function(numberOfPassengers, scheduledBoardingDateTime) {
     for (let i = 0; i < numberOfPassengers; i++) {
         // Creating passenger name with random first and last names
         let randomFirstNameIndex = Math.floor(Math.random() * $scope.firstNames.length);
@@ -974,6 +973,109 @@ $scope.createManifest = function(numberOfPassengers) {
     // After all passengers and bags are created, iterate through passengers to assign bags
     $scope.passengersNotCheckedIn.forEach(passenger => {
         passenger.bagsArray = $scope.bagsNotCheckedIn.filter(bag => bag.passengerId === passenger.passengerId);
+    });
+
+    // Calculate the time until boarding in milliseconds
+    var timeUntilBoarding = moment(scheduledBoardingDateTime).diff(moment(), 'milliseconds');
+    var checkInIntervalTime = timeUntilBoarding / numberOfPassengers;
+
+    // Function to move a random passenger and their bags to checked in
+    function checkInRandomPassenger() {
+        if ($scope.passengersNotCheckedIn.length > 0) {
+            // Select a random passenger from not checked in list
+            var randomIndex = Math.floor(Math.random() * $scope.passengersNotCheckedIn.length);
+            var passenger = $scope.passengersNotCheckedIn.splice(randomIndex, 1)[0];
+            passenger.status = 'Checked In';
+            $scope.passengersCheckedIn.push(passenger);
+
+            // Find and move the passenger's bags
+            var passengerBags = $scope.bagsNotCheckedIn.filter(bag => bag.passengerId === passenger.passengerId);
+            passengerBags.forEach(bag => {
+                bag.status = 'Checked In';
+                // Remove from not checked in list
+                var index = $scope.bagsNotCheckedIn.indexOf(bag);
+                $scope.bagsNotCheckedIn.splice(index, 1);
+                // Add to checked in list
+                $scope.bagsCheckedIn.push(bag);
+            });
+        } else {
+            // Cancel the interval if no passengers are left to check in
+            $interval.cancel(checkInPassengerInterval);
+        }
+    }
+
+    // Set up the interval to check in passengers at random
+    var checkInPassengerInterval = $interval(checkInRandomPassenger, checkInIntervalTime);
+
+    // Make sure to cancel the interval when the scope is destroyed
+    $scope.$on('$destroy', function() {
+        $interval.cancel(checkInPassengerInterval);
+    });
+
+};
+
+$scope.boardPassengersAndBags = function() {
+    var tenMinutes = 10 * 60 * 1000; // 10 minutes in milliseconds
+    var twoMinutes = 2 * 60 * 1000; // 2 minutes in milliseconds
+    var passengerIntervalTime = tenMinutes / $scope.passengersCheckedIn.length;
+    var bagIntervalTime = tenMinutes / $scope.bagsCheckedIn.length;
+
+    // Function to board a random passenger
+    var boardPassenger = function() {
+        if ($scope.passengersCheckedIn.length > 0) {
+            var randomIndex = Math.floor(Math.random() * $scope.passengersCheckedIn.length);
+            var passenger = $scope.passengersCheckedIn.splice(randomIndex, 1)[0];
+            passenger.status = 'Boarding';
+            $scope.passengersBoarded.push(passenger);
+
+            // Set a timeout to seat the passenger after 2 minutes
+            $timeout(function() {
+                passenger.status = 'Seated';
+                var index = $scope.passengersBoarded.indexOf(passenger);
+                $scope.passengersBoarded.splice(index, 1);
+                $scope.passengersSeated.push(passenger);
+            }, twoMinutes);
+        }
+    };
+
+    // Function to load a random bag
+    var loadBag = function() {
+        if ($scope.bagsCheckedIn.length > 0) {
+            var randomIndex = Math.floor(Math.random() * $scope.bagsCheckedIn.length);
+            var bag = $scope.bagsCheckedIn.splice(randomIndex, 1)[0];
+            bag.status = 'Loaded';
+            $scope.bagsLoaded.push(bag);
+        }
+    };
+
+    // Set intervals for boarding passengers and loading bags
+    var passengerBoardingInterval = $interval(boardPassenger, passengerIntervalTime);
+    var bagLoadingInterval = $interval(loadBag, bagIntervalTime);
+
+    // Cancel intervals when all passengers are boarded and bags are loaded
+    var checkIntervals = function() {
+        if ($scope.passengersCheckedIn.length === 0) {
+            $interval.cancel(passengerBoardingInterval);
+        }
+        if ($scope.bagsCheckedIn.length === 0) {
+            $interval.cancel(bagLoadingInterval);
+        }
+    };
+
+    // Regularly check if we need to cancel the intervals
+    var checkIntervalsInterval = $interval(checkIntervals, 1000);
+
+    // Make sure to cancel the intervals when the scope is destroyed
+    $scope.$on('$destroy', function() {
+        if (angular.isDefined(passengerBoardingInterval)) {
+            $interval.cancel(passengerBoardingInterval);
+        }
+        if (angular.isDefined(bagLoadingInterval)) {
+            $interval.cancel(bagLoadingInterval);
+        }
+        if (angular.isDefined(checkIntervalsInterval)) {
+            $interval.cancel(checkIntervalsInterval);
+        }
     });
 };
 
