@@ -913,103 +913,73 @@ $scope.$watch('calculatedBoardingDateTime', function(newVal, oldVal) {
 
 /*** PASSENGERS */
 /** ************/
-$scope.passengers = generateRandomPassengers(180);
+$scope.numberOfPassengers = 0; // initiate number of passengers to 0. 
+$scope.firstNames = ["Carlos", "Cristian", "Katrina", "Alicia", "Candice", "Christian", "Carrie", "Nina", "Miguel", "Evan", "Adam", "Shelby", "Ann", "Jenny", "Kristy", "Rick", "Jared", "Carolyn", "Heidi", "Grant", "Christina", "James", "Megan", "Beth", "Brendan", "Charlene", "Rachel", "Kari", "Nichole", "Alan", "Sheryl", "Madison", "Ralph", "Tyler", "Carol", "Amber", "Kevin", "Hailey", "Hector", "Erin", "Lindsey", "Bryan", "Dylan", "Garrett", "Ronald", "Sharon", "Tina", "Sue", "Dorothy", "Kendra", "Barbara", "Nathan", "Xavier", "Teresa", "Kurt", "Mackenzie", "Kara", "Tabitha", "Roberta", "Janet", "Nancy", "Jay", "Tristan", "Jorge", "Anita", "Clarence", "Katherine", "Bailey", "Krista", "Jim", "Joseph", "Matthew", "Amanda", "Brianna", "Travis", "Elizabeth", "Ariel", "Jacob", "Maria", "Olivia", "Shelley", "Mindy", "Jeffery", "Seth", "Martin", "Jaime", "Gabriel", "Amy", "Christine", "Peter", "Anthony", "Tanner", "Briana", "Katie", "Tiffany", "Joshua", "Sierra", "Jeremy", "Annette", "Christopher", "Donald", "Bruce", "Jennifer", "Keith", "Tamara", "Bianca", "Tyrone", "Caleb", "Jerry", "Bobby", "Sabrina", "Jasmine", "Phillip", "Kenneth", "Cindy", "Jo", "Thomas", "Jeffrey", "Aimee", "Marcus", "Gina", "Molly", "Tammie", "Oscar", "Gerald", "Melissa", "Leonard", "Steven", "Sheila", "Leah", "Kayla", "Don", "Janice", "Holly", "Levi", "Casey", "Sonya", "Vanessa", "Corey", "Diana", "Frances", "Lynn", "Joyce", "Melanie", "Douglas", "Kathleen", "Connor", "Bonnie", "Ethan", "Nicole", "Richard", "Dillon", "Cassie", "Kaitlin", "Austin", "Hunter", "Gregory", "Vicki", "Julie", "Dana", "Cory", "Jillian", "Randy", "Isaiah", "Anna", "Meagan", "Francisco", "Zachary", "Alice", "Brandon", "Dean", "Krystal", "Glenda", "Manuel", "Kerri", "Lawrence", "Michael", "Sylvia", "Judith", "Judy", "Carla", "Kylie", "Autumn", "Kristie", "Candace", "Eric", "Justin", "Sean", "Marilyn", "Dakota", "Jesus", "Nathaniel", "Joanna", "Terry", "Philip", "Savannah", "Brandy", "Rachael", "Chris", "Ray", "Catherine", "Victor", "Jeff", "Laurie", "Scott", "Leslie", "Brandi", "Melinda", "Lauren", "Bridget", "Elaine", "Kathryn", "Ryan", "Brian", "Raymond", "Angel", "Clinton", "Derrick", "Margaret", "William", "Arthur", "Caitlin", "Devin", "Tara", "Andrew", "Donna", "Kyle", "Kellie", "Veronica", "Vincent", "Cole", "Pamela", "Debra", "Joan", "Clayton", "Steve", "Andres", "Dale", "Mathew", "Jimmy", "George", "Paige", "Laura", "Sandra", "Penny", "Bryce", "Johnny", "Patricia", "Brenda", "Melvin", "Tom", "Alyssa", "Dustin", "Michelle", "Spencer", "Shirley", "Evelyn", "Jerome", "Louis", "Ashley", "Fred", "Antonio", "Jaclyn", "Chase", "Meghan", "Renee", "Aaron", "Curtis", "Bethany", "Kristen", "Mason", "Julia", "Craig", "Misty", "Brooke", "Jon", "Theresa", "Allison", "Karen", "Roberto", "Raven", "Dawn", "Anne", "Jessica", "Cheyenne", "Luke", "Abigail", "Morgan", "Sally", "Marissa", "Deborah", "Alejandro", "Blake", "Billy", "Sandy", "Luis", "Whitney", "Loretta", "Gloria", "Jean", "Angelica", "Tami", "Karina", "Miranda", "Erika", "Jill", "Carl", "Cathy", "Angela", "Alexis", "Bradley", "Dennis", "Joe", "Stacey", "Rita", "Shane", "Latoya", "Devon", "Duane", "Robert", "Sonia", "Roy", "Jeanette", "Alex", "Emily", "Rhonda", "Kaitlyn", "Shannon", "Alexandria", "Jack", "Gail", "Darren", "Stephen", "Willie", "Valerie", "Mark", "Natasha", "Clifford", "Alexander", "Wesley", "Patrick", "Daniel", "Rose", "Tammy", "Courtney", "Theodore", "Howard", "Natalie", "Linda", "Kristina", "Jason", "Sarah", "Darryl", "Christy", "Lisa", "Frederick", "Kathy", "Darrell", "Cody", "Colleen", "Jacqueline", "Albert", "Troy", "Kelsey", "Deanna", "Wendy", "Barry", "Erik", "Suzanne", "Cynthia", "Hannah", "Marc", "Kerry", "Malik", "Guy", "Denise", "Pam", "Shawn", "Robin", "Ronnie", "Dalton", "Ruben", "Katelyn", "Sherri", "Brent", "Paul", "Samantha", "Monica", "Beverly", "Ellen", "Stanley", "Lindsay", "Tracy", "Andrea", "Jodi", "Ian", "Jesse", "Kelly", "Isabel", "Danny", "Sherry", "Lorraine", "Carly", "Mike", "Paula", "Jenna", "Virginia", "Susan", "Mary", "John", "Allen", "Sophia", "Sheri", "Charles", "Brett", "Kelli", "Darlene", "Gary", "Wanda", "Angie", "Martha", "Marie", "Betty", "Rodney", "Marisa", "Diane", "Juan", "Jose", "Monique", "Felicia", "Frank", "Nicholas", "Walter", "Tim", "Victoria", "Joel", "Kent", "Shelly", "Danielle", "Samuel", "Lee", "Kimberly", "Taylor", "Edward", "Edwin", "Cassandra", "Chad", "Destiny", "Yesenia", "Logan", "Kim", "Trevor", "Parker", "David", "Larry", "Henry", "Peggy", "Jamie", "Eugene", "Yolanda", "Haley", "Crystal", "Erica", "Lori", "Alexandra", "April", "Cheryl", "Randall", "Yvette", "Sergio", "Sara", "Tommy", "Brittany", "Harry", "Benjamin", "Stephanie", "Tracie", "Chelsea", "Mariah", "Edgar", "Jordan", "Heather", "Timothy", "Stacy", "Jonathan", "Brittney", "Connie", "Jake", "Vickie", "Dominic", "Daisy", "Todd", "Tony", "Gabriella", "Derek", "Kristin", "Rebecca", "Roger", "Debbie", "Javier"];
+$scope.lastNames = ["Ross", "Cruz", "Berry", "Dawson", "Jarvis", "Christian", "Hinton", "Williams", "Horton", "Fuentes", "Cunningham", "Bullock", "White", "Hodges", "Hill", "Caldwell", "Ferguson", "Mendoza", "Rich", "Rhodes", "Medina", "Robertson", "Griffin", "Quinn", "Brewer", "Mack", "Villarreal", "Marshall", "Booth", "Schultz", "Fernandez", "Cabrera", "James", "Peters", "Mclean", "Mcdonald", "Mitchell", "Wilkerson", "Hudson", "Massey", "Murphy", "Sparks", "Hoover", "Sandoval", "Madden", "Lane", "Bryan", "Fitzgerald", "Swanson", "Blanchard", "Garrett", "Simmons", "Norman", "Richards", "Yu", "Vaughn", "Rivera", "Mccarthy", "Walters", "Rush", "Arroyo", "Peterson", "Stephens", "Powers", "Mcguire", "Mccormick", "Schaefer", "Forbes", "Bailey", "Warren", "Woodard", "Burke", "Johnston", "Stout", "Johns", "Wheeler", "Delgado", "Alvarado", "Avery", "Martin", "Finley", "Lin", "Baker", "Montoya", "Marquez", "Henderson", "Bird", "Jimenez", "Kaufman", "Moreno", "King", "Roberts", "Shepherd", "Adkins", "Hartman", "Garcia", "Ward", "Bates", "Gaines", "Thomas", "Cortez", "Estes", "Miller", "Harper", "Case", "Ruiz", "Gomez", "Ho", "Chapman", "Leonard", "Dickerson", "Reyes", "Gordon", "Maddox", "Cannon", "Mckee", "Burch", "Perkins", "Lester", "Casey", "Lambert", "Underwood", "Morales", "Joyce", "Lynn", "Ramirez", "Cordova", "Drake", "Vasquez", "Daniels", "Frazier", "Walker", "Mclaughlin", "Hutchinson", "Bowers", "Richard", "Munoz", "Dillon", "Bauer", "Riggs", "Austin", "Hunter", "Webb", "Valenzuela", "Romero", "Humphrey", "Cross", "Robles", "Castro", "Jensen", "Marsh", "Pineda", "Warner", "Hobbs", "Patterson", "Moran", "Zhang", "Davila", "Schmidt", "Mills", "Decker", "Dean", "Coleman", "Franco", "Butler", "Wagner", "Pollard", "Lawrence", "Michael", "Davies", "Hughes", "Valentine", "Meyer", "Kelley", "Morris", "Vargas", "Estrada", "Perez", "Brennan", "Kline", "Stevens", "Sullivan", "Hardy", "Yang", "Whitaker", "Reed", "Riddle", "Kennedy", "Gutierrez", "Terry", "Walsh", "Malone", "Wood", "Ray", "Robinson", "Rice", "Hoffman", "Foster", "Hebert", "Scott", "Wise", "Mcpherson", "Beard", "Sharp", "Johnson", "Ryan", "Chavez", "Perry", "Atkins", "Hodge", "Lewis", "Garrison", "Clark", "Mann", "Ramsey", "Simon", "Bell", "Alvarez", "Garza", "Odonnell", "Elliott", "Vincent", "Cole", "Arias", "Beck", "Reid", "Blankenship", "Irwin", "Weber", "Morse", "Chambers", "Higgins", "Hansen", "Sanchez", "Welch", "Saunders", "Olson", "Kirk", "Brown", "Long", "Cline", "Ortiz", "Greene", "Spencer", "Wall", "Fletcher", "Valencia", "Hawkins", "Chase", "Davidson", "Curtis", "Kirby", "Young", "Moore", "Watkins", "Fitzpatrick", "Craig", "Spears", "Conner", "Snyder", "Little", "Crane", "Burgess", "Golden", "Watson", "Steele", "Burns", "Aguilar", "Morgan", "Cooper", "Cox", "Blake", "Knight", "Duncan", "Banks", "Dunn", "Pugh", "Torres", "Bright", "Nicholson", "Montgomery", "Powell", "Williamson", "Brock", "Lyons", "Phillips", "Barnett", "Wade", "Brooks", "Gibbs", "Dennis", "Martinez", "Shah", "Adams", "Fritz", "Cherry", "Collier", "Hanson", "Patton", "Hopkins", "Hahn", "Gibson", "Hernandez", "Delacruz", "Rollins", "Boyer", "Leon", "Green", "Pruitt", "Barnes", "Stark", "Woods", "Pittman", "Webster", "Newton", "Bridges", "Vazquez", "Russell", "Barr", "Morrison", "Merritt", "Vaughan", "Herrera", "Cohen", "Benton", "Macdonald", "Mccoy", "Alexander", "Cervantes", "Navarro", "Silva", "Daniel", "Murillo", "Lawson", "Rose", "Calderon", "Howard", "Miles", "Howell", "Edwards", "Baldwin", "Vega", "Holmes", "Flores", "Jones", "Davis", "Harrison", "Doyle", "Colon", "Woodward", "Barry", "Porter", "Holland", "Ballard", "Rowe", "Flynn", "Terrell", "Hicks", "Fox", "Hall", "Hurst", "Pena", "Gillespie", "Chandler", "Li", "Oliver", "Anderson", "Fleming", "Atkinson", "Ware", "Harris", "Mcgee", "Simpson", "Carrillo", "Stanley", "Arnold", "Sanders", "Dominguez", "Carlson", "Tate", "Huber", "Castillo", "Ali", "Galvan", "Shaffer", "Stewart", "Meyers", "Reynolds", "Singh", "Avila", "Kelly", "Velazquez", "Murray", "Wright", "Strickland", "Wallace", "Diaz", "Dunlap", "Short", "Jackson", "Ramos", "Ayers", "Allen", "Gill", "Turner", "Boyd", "Smith", "Sherman", "Orozco", "Chen", "Rodriguez", "Pitts", "Wiggins", "Carroll", "Mcbride", "Hayes", "Velasquez", "West", "Stokes", "Le", "Fowler", "Frank", "Gilmore", "Lutz", "Abbott", "Freeman", "Rocha", "Contreras", "Carpenter", "Brady", "Graham", "Byrd", "Kent", "Kaiser", "Jenkins", "Deleon", "Parrish", "Hardin", "Clay", "Mcmillan", "Lucas", "Lee", "Payne", "Ritter", "Campbell", "Carr", "Thornton", "Taylor", "Rios", "Mccall", "Richardson", "Santiago", "Park", "Phelps", "Wilson", "Kerr", "Gilbert", "Huff", "Duffy", "Kim", "Parker", "Ball", "Franklin", "Dixon", "Nguyen", "Becker", "Buchanan", "Wells", "Evans", "Fuller", "Calhoun", "Collins", "Kidd", "Thompson", "Parsons", "Choi", "Pearson", "Hart", "Randall", "Burton", "Cook", "Gonzalez", "Larson", "Mullins", "Stone", "Lopez", "Willis", "Pace", "Oneal", "Jordan", "Nichols", "Nelson", "Bryant", "Todd", "Carter", "Bennett", "Mathews", "Combs", "Oconnor", "Harrington"];
 
-$scope.passengerStatusClass = function(status) {
-    switch(status) {
-        case "Not checked in": return "bg-secondary";
-        case "Checked In": return "bg-primary";
-        case "Boarded": return "bg-info";
-        case "Deboarded": return "bg-danger";
-        default: return "";
+// Initializing the lists
+$scope.passengersNotCheckedIn = [];
+$scope.bagsNotCheckedIn = [];
+$scope.passengersCheckedIn = [];
+$scope.passengersBoarded = [];
+$scope.passengersSeated = [];
+$scope.passengersDeboarded = [];
+$scope.bagsCheckedIn = [];
+$scope.bagsLoaded = [];
+$scope.bagsUnloaded = [];
+$scope.bagsBaggageClaim = [];
+$scope.bagsPickedUp = [];
+
+//create a seat label based on the passenger index
+function createSeat(passengerIndex) {
+    let row = Math.floor(passengerIndex / 6) + 1;
+    let seatPosition = 'ABCDEF'.charAt(passengerIndex % 6);
+    return row + seatPosition;
+}
+
+// Function to create manifest
+$scope.createManifest = function(numberOfPassengers) {
+    for (let i = 0; i < numberOfPassengers; i++) {
+        // Creating passenger name with random first and last names
+        let randomFirstNameIndex = Math.floor(Math.random() * $scope.firstNames.length);
+        let randomLastNameIndex = Math.floor(Math.random() * $scope.lastNames.length);
+        let firstName = $scope.firstNames[randomFirstNameIndex];
+        let lastName = $scope.lastNames[randomLastNameIndex];
+        let passengerName = firstName + ' ' + lastName;
+
+        // Assigning a seat
+        let seat = createSeat(i);
+
+        // Creating passenger object
+        let passenger = {
+            passengerId: i + 1,
+            name: passengerName,
+            seat: seat,
+            status: 'Not Checked In',
+            bags: Math.floor(Math.random() * 4) // Randomly 0, 1, 2, or 3
+        };
+
+        // Adding passenger to the not checked in list
+        $scope.passengersNotCheckedIn.push(passenger);
+
+        // Creating bags if any
+        for (let b = 0; b < passenger.bags; b++) {
+            let bag = {
+                passengerId: passenger.passengerId,
+                status: 'Not Checked In'
+            };
+            $scope.bagsNotCheckedIn.push(bag);
+        }
     }
+    // After all passengers and bags are created, iterate through passengers to assign bags
+    $scope.passengersNotCheckedIn.forEach(passenger => {
+        passenger.bagsArray = $scope.bagsNotCheckedIn.filter(bag => bag.passengerId === passenger.passengerId);
+    });
 };
 
-$scope.bagStatusClass = function(status) {
-    switch(status) {
-        case "Checked In": return "bg-primary";
-        case "Loaded": return "bg-info";
-        case "Unloaded": return "bg-warning";
-        case "Baggage Claim": return "bg-success";
-        default: return "";
-    }
-};
 
-function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-  
-  function getRandomFromArray(array) {
-    return array[Math.floor(Math.random() * array.length)];
-  }
-  
-  function getRandomName() {
-    const firstNames = [
-      "John", "Jane", "Alex", "Laura", "Chris", "Sara", "Mark", "Nina", "Paul", "Julia",
-      "Emily", "Daniel", "Luke", "Lily", "David", "Sophia", "Jack", "Olivia", "James", "Amelia",
-      "Michael", "Isabella", "Benjamin", "Mia", "Jacob", "Charlotte", "Carter", "Ava", "Ethan", "Abigail",
-      "Noah", "Emily", "Liam", "Harper", "Mason", "Evelyn", "Logan", "Madison", "Lucas", "Emma"
-    ];
-    const lastNames = [
-      "Doe", "Smith", "Johnson", "Lee", "Brown", "Wilson", "Martinez", "Davis", "Garcia", "Rodriguez",
-      "Taylor", "Thomas", "Harris", "Martin", "Jackson", "Thompson", "White", "Lopez", "Lee", "Gonzalez",
-      "Hill", "Scott", "Green", "Adams", "Baker", "Nelson", "Carter", "Mitchell", "Roberts", "Turner"
-    ];
-    return `${getRandomFromArray(firstNames)} ${getRandomFromArray(lastNames)}`;
-  }
-  
-  function getRandomStatus() {
-    const statuses = ["Not checked in", "Checked In", "Boarded", "Deboarded"];
-    return getRandomFromArray(statuses);
-  }
-  
-  function getRandomBagStatus() {
-    const bagStatuses = ["Checked In", "Loaded", "Unloaded", "Baggage Claim"];
-    return getRandomFromArray(bagStatuses);
-  }
-  
-  function getRandomDestination() {
-    const destinations = [
-      "Final Destination",
-      "AA1234, 18:45, Dallas, TX",
-      "AA2345, 20:00, New York, NY",
-      "AA3456, 22:30, Los Angeles, CA",
-      "AA4567, 09:00, Chicago, IL",
-      "AA5678, 07:30, Miami, FL",
-      "AA6789, 19:15, Phoenix, AZ",
-      "AA7890, 21:45, Las Vegas, NV",
-      "AA8901, 16:00, Atlanta, GA",
-      "AA9012, 14:50, Seattle, WA",
-      "AA0123, 12:30, San Francisco, CA",
-      "AA0987, 08:15, Denver, CO",
-      "AA8765, 10:25, Boston, MA",
-      "AA7654, 05:50, New Orleans, LA",
-      "AA6543, 13:45, Austin, TX",
-      "AA5432, 11:00, Portland, OR"
-    ];
-    return getRandomFromArray(destinations);
-  }
-  
-  function generateRandomPassengers(numPassengers) {
-    const passengers = [];
-    for (let i = 0; i < numPassengers; i++) {
-      const numBags = getRandomInt(0, 3); // Assuming a max of 3 bags
-      const bags = [];
-      for (let j = 0; j < numBags; j++) {
-        bags.push({ "status": getRandomBagStatus() });
-      }
-      passengers.push({
-        "seat": `${getRandomInt(1, 30)}${['A', 'B', 'C', 'D', 'E', 'F'][getRandomInt(0, 5)]}`, // Assuming rows 1-30 and seats A-F
-        "name": getRandomName(),
-        "status": getRandomStatus(),
-        "bags": bags,
-        "destination": getRandomDestination()
-      });
-    }
-    return passengers;
-  }
 
-  $scope.passengers = generateRandomPassengers(180);
+
 
     /*** API CALLS *****************/
     /**
@@ -1037,6 +1007,7 @@ function getRandomInt(min, max) {
                 $scope.callSign = $scope.flightPlanJSONData.atc.callsign;
                 $scope.departureIcao = $scope.flightPlanJSONData.origin.icao_code;
                 $scope.arrivalIcao = $scope.flightPlanJSONData.destination.icao_code;
+                $scope.numberOfPassengers = Number($scope.flightPlanJSONData.weights.pax_count);
                 $scope.scheduledBoardingDateTime = moment.unix($scope.flightPlanJSONData.times.sched_out).toDate();
                 $scope.scheduledDepartureDateTime = moment.unix($scope.flightPlanJSONData.times.sched_off).toDate();
                 $scope.scheduledArrivalDateTime = moment.unix($scope.flightPlanJSONData.times.sched_on).toDate();

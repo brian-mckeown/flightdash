@@ -443,6 +443,16 @@
                                     <input type="datetime-local" class="form-control" id="gateArrivalDateTimeInput" ng-model="scheduledGateArrivalDateTime">
                                 </div>
                             </div>
+
+                            <!-- Row 3 -->
+                            <div class="row mb-3">
+                                <!-- Passengers Input -->
+                                <div class="col-md-6">
+                                    <label for="numberOfPassengers" class="form-label">Passengers</label>
+                                    <input type="number" class="form-control" id="numberOfPassengers" ng-model="numberOfPassengers">
+                                </div>
+
+                            </div>
                         </form>
                         
                     </div>  
@@ -470,6 +480,17 @@
                                 </div>
                                 <div class="col-md-2">
                                     <button type="button" class="btn btn-sm btn-outline-secondary" ng-click="setFlightStatus('Idle')">Reset</button>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <label class="form-label">Passenger Actions</label>
+                                </div>
+                                <div class="col-md-auto">
+                                    <button type="button" class="btn btn-sm btn-outline-success" ng-click="createManifest(numberOfPassengers)">Begin Check Ins</button>
+                                </div>
+                                <div class="col-md-auto">
+                                    <button type="button" class="btn btn-sm btn-outline-success" ng-click="setFlightStatus('Departed')">Begin Deboarding</button>
                                 </div>
                             </div>
                         </form>
@@ -558,11 +579,9 @@
                 <!-- Passengers Tab -->
                 <div ng-show="activeTab === 'passengers'">
                     <div class="container mt-4">
-                        <button class="btn btn-success">Load Manifest</button>
-                        <p>Passengers</p>
                         <div class="container mt-4">
                             <h4>Flight Manifest</h4>
-                            <table class="table table-sm table-bordered table-dark text-xs text-nowrap">
+                            <table class="table table-sm table-bordered table-dark text-nowrap fs-6">
                                 <thead>
                                     <tr>
                                         <th scope="col">Seat</th>
@@ -570,31 +589,33 @@
                                         <th scope="col">Status</th>
                                         <th scope="col">Bags</th>
                                         <th scope="col">Bag Details</th>
-                                        <th scope="col">Destination</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="passenger in passengers">
+                                    <tr ng-repeat="passenger in passengersNotCheckedIn">
                                         <th scope="row">{{ passenger.seat }}</th>
                                         <td>{{ passenger.name }}</td>
                                         <td>
-                                            <span class="badge" ng-class="passengerStatusClass(passenger.status)">
+                                            <span class="badge bg-light text-dark" ng-class="{'bg-secondary': passenger.status === 'Not Checked In'}">
                                                 {{ passenger.status }}
                                             </span>
                                         </td>
-                                        <td>{{ passenger.bags.length }}</td>
+                                        <td>{{ passenger.bagsArray.length }}</td>
                                         <td>
-                                            <div class="bg-dark" ng-repeat="bag in passenger.bags"> <!-- Add bg-dark here -->
+                                            <div class="bg-dark" ng-repeat="bag in passenger.bagsArray">
                                                 Bag {{ $index + 1 }}: 
-                                                <span class="badge" ng-class="bagStatusClass(bag.status)">
+                                                <span class="badge bg-light text-dark" ng-class="{'bg-secondary': bag.status === 'Not Checked In'}">
                                                     {{ bag.status }}
                                                 </span>
                                             </div>
                                         </td>
-                                        <td>{{ passenger.destination }}</td>
                                     </tr>
                                 </tbody>
                             </table>
+                            
+                            
+                            
+                            
                         </div>                                                
                     </div> 
                 </div>
