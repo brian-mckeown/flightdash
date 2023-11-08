@@ -1079,6 +1079,78 @@ $scope.boardPassengersAndBags = function() {
     });
 };
 
+$scope.deBoardPassengersAndBags = function() {
+    var tenMinutes = 10 * 60 * 1000; // 10 minutes in milliseconds
+    var twoMinutes = 2 * 60 * 1000; // 2 minutes in milliseconds
+    var passengerIntervalTime = tenMinutes / $scope.passengersSeated.length;
+    var bagIntervalTime = tenMinutes / $scope.bagsLoaded.length;
+
+    // Function to deboard passengers in order of their passengerId
+    var deBoardPassenger = function() {
+        if ($scope.passengersSeated.length > 0) {
+            // Passengers are already sorted by passengerId so take the first one
+            var passenger = $scope.passengersSeated.shift();
+            passenger.status = 'Deboarded';
+            $scope.passengersDeboarded.push(passenger);
+        }
+    };
+
+    // Function to unload a random bag and move it to baggage claim after 2 minutes
+    var unloadBag = function() {
+        if ($scope.bagsLoaded.length > 0) {
+            var randomIndex = Math.floor(Math.random() * $scope.bagsLoaded.length);
+            var bag = $scope.bagsLoaded.splice(randomIndex, 1)[0];
+            bag.status = 'Unloaded';
+            $scope.bagsUnloaded.push(bag);
+
+            // Set a timeout to move the bag to baggage claim after 2 minutes
+            $timeout(function() {
+                var index = $scope.bagsUnloaded.indexOf(bag);
+                if (index !== -1) {
+                    $scope.bagsUnloaded.splice(index, 1);
+                }
+                bag.status = 'Baggage Claim';
+                $scope.bagsBaggageClaim.push(bag);
+            }, twoMinutes);
+        }
+    };
+
+    // Ensure passengers are sorted by passengerId
+    $scope.passengersSeated.sort(function(a, b) {
+        return a.passengerId - b.passengerId;
+    });
+
+    // Set intervals for deboarding passengers and unloading bags
+    var passengerDeboardingInterval = $interval(deBoardPassenger, passengerIntervalTime);
+    var bagUnloadingInterval = $interval(unloadBag, bagIntervalTime);
+
+    // Cancel intervals when all passengers are deboarded and bags are unloaded
+    var checkIntervals = function() {
+        if ($scope.passengersSeated.length === 0) {
+            $interval.cancel(passengerDeboardingInterval);
+        }
+        if ($scope.bagsLoaded.length === 0) {
+            $interval.cancel(bagUnloadingInterval);
+        }
+    };
+
+    // Regularly check if we need to cancel the intervals
+    var checkIntervalsInterval = $interval(checkIntervals, 1000);
+
+    // Make sure to cancel the intervals when the scope is destroyed
+    $scope.$on('$destroy', function() {
+        if (angular.isDefined(passengerDeboardingInterval)) {
+            $interval.cancel(passengerDeboardingInterval);
+        }
+        if (angular.isDefined(bagUnloadingInterval)) {
+            $interval.cancel(bagUnloadingInterval);
+        }
+        if (angular.isDefined(checkIntervalsInterval)) {
+            $interval.cancel(checkIntervalsInterval);
+        }
+    });
+};
+
 
 
 

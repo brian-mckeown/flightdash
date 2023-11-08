@@ -490,7 +490,7 @@
                                     <button type="button" class="btn btn-sm btn-outline-success" ng-click="createManifest(numberOfPassengers, scheduledBoardingDateTime)">Begin Check Ins</button>
                                 </div>
                                 <div class="col-md-auto">
-                                    <button type="button" class="btn btn-sm btn-outline-success" ng-click="setFlightStatus('Departed')">Begin Deboarding</button>
+                                    <button type="button" class="btn btn-sm btn-outline-success" ng-click="setFlightStatus('Departed'); deBoardPassengersAndBags()">Begin Deboarding</button>
                                 </div>
                             </div>
                         </form>
@@ -593,7 +593,7 @@ Deboarded: {{ passengersDeboarded.length }}/{{ numberOfPassengers }}</pre>
     </div>
     <div class="col-md-6">
         <pre>Checked Bags
-----
+------------
 Not Checked In: {{ bagsNotCheckedIn.length }}
 Checked In: {{ bagsCheckedIn.length }}
 Loaded: {{ bagsLoaded.length }}
@@ -615,7 +615,7 @@ Baggage Claim: {{ bagsBaggageClaim.length }}
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="passenger in (passengersNotCheckedIn.concat(passengersCheckedIn).concat(passengersBoarded).concat(passengersSeated) | orderBy:'passengerId')">
+                                    <tr ng-repeat="passenger in (passengersNotCheckedIn.concat(passengersCheckedIn).concat(passengersBoarded).concat(passengersSeated).concat(passengersDeboarded) | orderBy:'passengerId')">
                                         <th scope="row">{{ passenger.seat }}</th>
                                         <td>{{ passenger.name }}</td>
                                         <td>
@@ -623,7 +623,8 @@ Baggage Claim: {{ bagsBaggageClaim.length }}
                                                 'bg-secondary': passenger.status === 'Not Checked In',
                                                 'bg-primary': passenger.status === 'Checked In',
                                                 'bg-magenta': passenger.status === 'Boarding',
-                                                'bg-success': passenger.status === 'Seated'
+                                                'bg-success': passenger.status === 'Seated',
+                                                'bg-danger': passenger.status === 'Deboarded'
                                             }">
                                                 {{ passenger.status }}
                                             </span>
@@ -635,7 +636,9 @@ Baggage Claim: {{ bagsBaggageClaim.length }}
                                                 <span class="badge bg-light text-dark" ng-class="{
                                                     'bg-secondary': bag.status === 'Not Checked In',
                                                     'bg-primary': bag.status === 'Checked In',
-                                                    'bg-success': bag.status === 'Loaded'
+                                                    'bg-success': bag.status === 'Loaded',
+                                                    'bg-warning': bag.status == 'Unloaded',
+                                                    'bg-information': bag.status === 'Baggage Claim'
                                                 }">
                                                     {{ bag.status }}
                                                 </span>
