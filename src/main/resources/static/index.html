@@ -70,7 +70,7 @@
                 <a ng-show="currentFlightStatus == 'Landed'" class="text-white text-decoration-none"> | <span class="badge bg-success" >LANDED</span> | Arriving at Gate in: <span id="arrivalCountdown">{{arrivalHours}}h {{arrivalMinutes}}m {{arrivalSeconds}}s</span>
                     <span class="badge" ng-class="{'bg-success': arrivalStatus == 'ON TIME', 'bg-warning': arrivalStatus == 'DELAYED'}">{{ arrivalStatus }}</span>
                 </a>
-                <a ng-show="currentFlightStatus == 'Arrived'" class="text-white text-decoration-none"> | <span class="badge bg-success" >ARRIVED AT GATE</span> | Scheduled: {{ scheduledGateArrivalDateTime | toLocalTime }} Actual: {{ actualGateArrivalDateTime | toLocalTime }} | {{ getDifference(scheduledGateArrivalDateTime, actualGateArrivalDateTime) }}         
+                <a ng-show="currentFlightStatus == 'Arrived'" class="text-white text-decoration-none"> | <span class="badge bg-success" >ARRIVED AT GATE</span> | Scheduled: {{ estimateGateArrivalDateTime | toLocalTime }} Actual: {{ actualGateArrivalDateTime | toLocalTime }} | {{ getDifference(estimateGateArrivalDateTime, actualGateArrivalDateTime) }}         
                     <span class="badge" ng-class="{'bg-success': arrivalStatus == 'ON TIME', 'bg-warning': arrivalStatus == 'DELAYED'}">{{ arrivalStatus }}</span> </a>
                 </p>
             </div>
@@ -431,16 +431,16 @@
                         
                             <!-- Row 3 -->
                             <div class="row mb-3">
-                                <!-- Scheduled Arrival Input -->
+                                <!-- Estimated Arrival Input -->
                                 <div class="col-md-6">
-                                    <label for="arrivalDateTimeInput" class="form-label">Scheduled Arrival</label>
-                                    <input type="datetime-local" class="form-control" id="arrivalDateTimeInput" ng-model="scheduledArrivalDateTime">
+                                    <label for="arrivalDateTimeInput" class="form-label">Estimated Arrival</label>
+                                    <input type="datetime-local" class="form-control" id="arrivalDateTimeInput" ng-model="estimateArrivalDateTime">
                                 </div>
                                 
-                                <!-- Scheduled Gate Arrival Input -->
+                                <!-- Estimated Gate Arrival Input -->
                                 <div class="col-md-6">
-                                    <label for="gateArrivalDateTimeInput" class="form-label">Scheduled Gate Arrival</label>
-                                    <input type="datetime-local" class="form-control" id="gateArrivalDateTimeInput" ng-model="scheduledGateArrivalDateTime">
+                                    <label for="gateArrivalDateTimeInput" class="form-label">Estimated Gate Arrival</label>
+                                    <input type="datetime-local" class="form-control" id="gateArrivalDateTimeInput" ng-model="estimateGateArrivalDateTime">
                                 </div>
                             </div>
 
@@ -542,8 +542,8 @@
                             <!-- Row for Arrival Time -->
                             <div class="row mb-3">
                                 <div class="col-md-4">
-                                    <label class="form-label fw-bold">Scheduled Arrival Time</label>
-                                    <p>{{ scheduledArrivalDateTime | toLocalTime }}</p>
+                                    <label class="form-label fw-bold">Estimated Arrival Time</label>
+                                    <p>{{ estimateArrivalDateTime | toLocalTime }}</p>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label fw-bold">Actual Arrival Time</label>
@@ -551,15 +551,15 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label fw-bold">Difference</label>
-                                    <p ng-style="getDifferenceStyle(scheduledArrivalDateTime, actualArrivalDateTime)">{{ getDifference(scheduledArrivalDateTime, actualArrivalDateTime) }}</p>
+                                    <p ng-style="getDifferenceStyle(estimateArrivalDateTime, actualArrivalDateTime)">{{ getDifference(estimateArrivalDateTime, actualArrivalDateTime) }}</p>
                                 </div>
                             </div>
                     
                             <!-- Row for Gate Arrival Time -->
                             <div class="row mb-3">
                                 <div class="col-md-4">
-                                    <label class="form-label fw-bold">Scheduled Gate Arrival Time</label>
-                                    <p>{{ scheduledGateArrivalDateTime | toLocalTime }}</p>
+                                    <label class="form-label fw-bold">Estimated Gate Arrival Time</label>
+                                    <p>{{ estimateGateArrivalDateTime | toLocalTime }}</p>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label fw-bold">Actual Gate Arrival Time</label>
@@ -567,7 +567,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label fw-bold">Difference</label>
-                                    <p ng-style="getDifferenceStyle(scheduledGateArrivalDateTime, actualGateArrivalDateTime)">{{ getDifference(scheduledGateArrivalDateTime, actualGateArrivalDateTime) }}</p>
+                                    <p ng-style="getDifferenceStyle(estimateGateArrivalDateTime, actualGateArrivalDateTime)">{{ getDifference(estimateGateArrivalDateTime, actualGateArrivalDateTime) }}</p>
                                 </div>
                             </div>
                     

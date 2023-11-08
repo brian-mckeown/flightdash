@@ -5,7 +5,9 @@ var app = angular.module('checklistApp', []);
 
 app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$document', '$interval', function($scope, $sce, $timeout, $http, $document, $interval) {
     
+
     $scope.versionNumber = '1.1.0'; 
+
     $scope.state = 'Idle';
     $scope.messages = [];
     $scope.selectedChecklist = '';
@@ -668,8 +670,8 @@ $scope.showFlightStatBanner = false;
 $scope.currentFlightStatus = 'Idle';
 $scope.scheduledBoardingDateTime = '';
 $scope.scheduledDepartureDateTime = '';
-$scope.scheduledArrivalDateTime = '';
-$scope.scheduledGateArrivalDateTime = '';
+$scope.estimateArrivalDateTime = '';
+$scope.estimateGateArrivalDateTime = '';
 $scope.actualBoardingDateTime = '';
 $scope.actualDepartedDateTime = '';
 $scope.actualArrivalDateTime = '';
@@ -797,7 +799,7 @@ $scope.updateDepartureCountdown = function() {
 
 $scope.updateLandingCountdown = function() {
     var now = new Date();
-    var scheduledDate = new Date($scope.scheduledArrivalDateTime);
+    var scheduledDate = new Date($scope.estimateArrivalDateTime);
     var diff = scheduledDate - now;
 
     var totalSeconds = Math.floor(diff / 1000);
@@ -823,7 +825,7 @@ $scope.updateLandingCountdown = function() {
 
 $scope.updateArrivalCountdown = function() {
     var now = new Date();
-    var scheduledDate = new Date($scope.scheduledGateArrivalDateTime);
+    var scheduledDate = new Date($scope.estimateGateArrivalDateTime);
     var diff = scheduledDate - now;
 
     var totalSeconds = Math.floor(diff / 1000);
@@ -1181,11 +1183,13 @@ $scope.deBoardPassengersAndBags = function() {
                 $scope.callSign = $scope.flightPlanJSONData.atc.callsign;
                 $scope.departureIcao = $scope.flightPlanJSONData.origin.icao_code;
                 $scope.arrivalIcao = $scope.flightPlanJSONData.destination.icao_code;
+
                 $scope.numberOfPassengers = Number($scope.flightPlanJSONData.weights.pax_count);
-                $scope.scheduledBoardingDateTime = moment.unix($scope.flightPlanJSONData.times.sched_out).toDate();
-                $scope.scheduledDepartureDateTime = moment.unix($scope.flightPlanJSONData.times.sched_off).toDate();
-                $scope.scheduledArrivalDateTime = moment.unix($scope.flightPlanJSONData.times.sched_on).toDate();
-                $scope.scheduledGateArrivalDateTime = moment.unix($scope.flightPlanJSONData.times.sched_in).toDate();
+
+                $scope.scheduledBoardingDateTime = moment.unix($scope.flightPlanJSONData.times.sched_out).subtract(30, 'minutes').toDate();
+                $scope.scheduledDepartureDateTime = moment.unix($scope.flightPlanJSONData.times.sched_out).toDate();
+                $scope.estimateArrivalDateTime = moment.unix($scope.flightPlanJSONData.times.est_on).toDate();
+                $scope.estimateGateArrivalDateTime = moment.unix($scope.flightPlanJSONData.times.est_in).toDate();
 
             })
             .catch(function(error) {
