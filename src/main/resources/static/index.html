@@ -143,6 +143,9 @@
                     <li class="nav-item">
                         <a class="nav-link" ng-click="activeTab='flightStats'" ng-class="{'active': activeTab === 'flightStats'}">Flight Stats</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" ng-click="activeTab='passengers'" ng-class="{'active': activeTab === 'passengers'}">Passengers</a>
+                    </li>
                 </ul>
 
                 <hr>
@@ -440,6 +443,16 @@
                                     <input type="datetime-local" class="form-control" id="gateArrivalDateTimeInput" ng-model="estimateGateArrivalDateTime">
                                 </div>
                             </div>
+
+                            <!-- Row 3 -->
+                            <div class="row mb-3">
+                                <!-- Passengers Input -->
+                                <div class="col-md-6">
+                                    <label for="numberOfPassengers" class="form-label">Passengers</label>
+                                    <input type="number" class="form-control" id="numberOfPassengers" ng-model="numberOfPassengers">
+                                </div>
+
+                            </div>
                         </form>
                         
                     </div>  
@@ -454,7 +467,7 @@
                                     <label class="form-label">Current Flight Status</label>
                                 </div>
                                 <div class="col-md-2">
-                                    <button type="button" class="btn btn-sm btn-outline-primary" ng-class="{'btn-primary text-white': currentFlightStatus == 'Boarding'}" ng-click="setFlightStatus('Boarding')">Boarding</button>
+                                    <button type="button" class="btn btn-sm btn-outline-primary" ng-class="{'btn-primary text-white': currentFlightStatus == 'Boarding'}" ng-click="setFlightStatus('Boarding'); boardPassengersAndBags()">Boarding</button>
                                 </div>
                                 <div class="col-md-2">
                                     <button type="button" class="btn btn-sm btn-outline-primary" ng-class="{'btn-primary text-white': currentFlightStatus == 'Departed'}" ng-click="setFlightStatus('Departed')">Departed</button>
@@ -467,6 +480,17 @@
                                 </div>
                                 <div class="col-md-2">
                                     <button type="button" class="btn btn-sm btn-outline-secondary" ng-click="setFlightStatus('Idle')">Reset</button>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <label class="form-label">Passenger Actions</label>
+                                </div>
+                                <div class="col-md-auto">
+                                    <button type="button" class="btn btn-sm btn-outline-success" ng-click="createManifest(numberOfPassengers, scheduledBoardingDateTime)">Begin Check Ins</button>
+                                </div>
+                                <div class="col-md-auto">
+                                    <button type="button" class="btn btn-sm btn-outline-success" ng-click="setFlightStatus('Departed'); deBoardPassengersAndBags()">Begin Deboarding</button>
                                 </div>
                             </div>
                         </form>
@@ -550,6 +574,86 @@
                         </form>
                     </div> 
                 </div>
+                </div>
+
+                <!-- Passengers Tab -->
+                <div ng-show="activeTab === 'passengers'">
+                    <div class="container mt-4">
+                        <div class="container mt-4">
+                            <h4>Flight Manifest</h4>
+<div class="row">
+    <div class="col-md-6">
+        <pre>Passengers
+----------
+Not Checked In: {{ passengersNotCheckedIn.length }}/{{ numberOfPassengers }}
+Checked In: {{ passengersCheckedIn.length }}/{{ numberOfPassengers }}
+Boarding: {{ passengersBoarded.length }}/{{ numberOfPassengers }}
+Seated: {{ passengersSeated.length }}/{{ numberOfPassengers }}
+Deboarded: {{ passengersDeboarded.length }}/{{ numberOfPassengers }}</pre>
+    </div>
+    <div class="col-md-6">
+        <pre>Checked Bags
+------------
+Not Checked In: {{ bagsNotCheckedIn.length }}
+Checked In: {{ bagsCheckedIn.length }}
+Loaded: {{ bagsLoaded.length }}
+Unloaded: {{ bagsUnloaded.length }}
+Baggage Claim: {{ bagsBaggageClaim.length }}
+</pre>
+    </div>
+</div>
+
+
+                            <table class="table table-sm table-bordered table-dark text-nowrap fs-6">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Seat</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col">Bags</th>
+                                        <th scope="col">Bag Details</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="passenger in (passengersNotCheckedIn.concat(passengersCheckedIn).concat(passengersBoarded).concat(passengersSeated).concat(passengersDeboarded) | orderBy:'passengerId')">
+                                        <th scope="row">{{ passenger.seat }}</th>
+                                        <td>{{ passenger.name }}</td>
+                                        <td>
+                                            <span class="badge" ng-class="{
+                                                'bg-secondary': passenger.status === 'Not Checked In',
+                                                'bg-primary': passenger.status === 'Checked In',
+                                                'bg-magenta': passenger.status === 'Boarding',
+                                                'bg-success': passenger.status === 'Seated',
+                                                'bg-danger': passenger.status === 'Deboarded'
+                                            }">
+                                                {{ passenger.status }}
+                                            </span>
+                                        </td>
+                                        <td>{{ passenger.bagsArray.length }}</td>
+                                        <td>
+                                            <div class="bg-dark" ng-repeat="bag in passenger.bagsArray">
+                                                Bag {{ $index + 1 }}: 
+                                                <span class="badge bg-light text-dark" ng-class="{
+                                                    'bg-secondary': bag.status === 'Not Checked In',
+                                                    'bg-primary': bag.status === 'Checked In',
+                                                    'bg-success': bag.status === 'Loaded',
+                                                    'bg-warning': bag.status == 'Unloaded',
+                                                    'bg-information': bag.status === 'Baggage Claim'
+                                                }">
+                                                    {{ bag.status }}
+                                                </span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            
+                            
+                            
+                            
+                            
+                        </div>                                                
+                    </div> 
                 </div>
                 </div>
                 

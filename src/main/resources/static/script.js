@@ -5,7 +5,9 @@ var app = angular.module('checklistApp', []);
 
 app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$document', '$interval', function($scope, $sce, $timeout, $http, $document, $interval) {
     
-    $scope.versionNumber = '1.0.6 Beta'; 
+
+    $scope.versionNumber = '1.1.0'; 
+
     $scope.state = 'Idle';
     $scope.messages = [];
     $scope.selectedChecklist = '';
@@ -911,6 +913,250 @@ $scope.$watch('calculatedBoardingDateTime', function(newVal, oldVal) {
 // Add logic here to calculate and set the 'calculatedBoardingDateTime' based on the provided Departure Date-Time and Boarding Time in minutes
 /** End Flight Status Section */
 
+/*** PASSENGERS */
+/** ************/
+$scope.numberOfPassengers = 0; // initiate number of passengers to 0. 
+$scope.firstNames = ["Carlos", "Cristian", "Katrina", "Alicia", "Candice", "Christian", "Carrie", "Nina", "Miguel", "Evan", "Adam", "Shelby", "Ann", "Jenny", "Kristy", "Rick", "Jared", "Carolyn", "Heidi", "Grant", "Christina", "James", "Megan", "Beth", "Brendan", "Charlene", "Rachel", "Kari", "Nichole", "Alan", "Sheryl", "Madison", "Ralph", "Tyler", "Carol", "Amber", "Kevin", "Hailey", "Hector", "Erin", "Lindsey", "Bryan", "Dylan", "Garrett", "Ronald", "Sharon", "Tina", "Sue", "Dorothy", "Kendra", "Barbara", "Nathan", "Xavier", "Teresa", "Kurt", "Mackenzie", "Kara", "Tabitha", "Roberta", "Janet", "Nancy", "Jay", "Tristan", "Jorge", "Anita", "Clarence", "Katherine", "Bailey", "Krista", "Jim", "Joseph", "Matthew", "Amanda", "Brianna", "Travis", "Elizabeth", "Ariel", "Jacob", "Maria", "Olivia", "Shelley", "Mindy", "Jeffery", "Seth", "Martin", "Jaime", "Gabriel", "Amy", "Christine", "Peter", "Anthony", "Tanner", "Briana", "Katie", "Tiffany", "Joshua", "Sierra", "Jeremy", "Annette", "Christopher", "Donald", "Bruce", "Jennifer", "Keith", "Tamara", "Bianca", "Tyrone", "Caleb", "Jerry", "Bobby", "Sabrina", "Jasmine", "Phillip", "Kenneth", "Cindy", "Jo", "Thomas", "Jeffrey", "Aimee", "Marcus", "Gina", "Molly", "Tammie", "Oscar", "Gerald", "Melissa", "Leonard", "Steven", "Sheila", "Leah", "Kayla", "Don", "Janice", "Holly", "Levi", "Casey", "Sonya", "Vanessa", "Corey", "Diana", "Frances", "Lynn", "Joyce", "Melanie", "Douglas", "Kathleen", "Connor", "Bonnie", "Ethan", "Nicole", "Richard", "Dillon", "Cassie", "Kaitlin", "Austin", "Hunter", "Gregory", "Vicki", "Julie", "Dana", "Cory", "Jillian", "Randy", "Isaiah", "Anna", "Meagan", "Francisco", "Zachary", "Alice", "Brandon", "Dean", "Krystal", "Glenda", "Manuel", "Kerri", "Lawrence", "Michael", "Sylvia", "Judith", "Judy", "Carla", "Kylie", "Autumn", "Kristie", "Candace", "Eric", "Justin", "Sean", "Marilyn", "Dakota", "Jesus", "Nathaniel", "Joanna", "Terry", "Philip", "Savannah", "Brandy", "Rachael", "Chris", "Ray", "Catherine", "Victor", "Jeff", "Laurie", "Scott", "Leslie", "Brandi", "Melinda", "Lauren", "Bridget", "Elaine", "Kathryn", "Ryan", "Brian", "Raymond", "Angel", "Clinton", "Derrick", "Margaret", "William", "Arthur", "Caitlin", "Devin", "Tara", "Andrew", "Donna", "Kyle", "Kellie", "Veronica", "Vincent", "Cole", "Pamela", "Debra", "Joan", "Clayton", "Steve", "Andres", "Dale", "Mathew", "Jimmy", "George", "Paige", "Laura", "Sandra", "Penny", "Bryce", "Johnny", "Patricia", "Brenda", "Melvin", "Tom", "Alyssa", "Dustin", "Michelle", "Spencer", "Shirley", "Evelyn", "Jerome", "Louis", "Ashley", "Fred", "Antonio", "Jaclyn", "Chase", "Meghan", "Renee", "Aaron", "Curtis", "Bethany", "Kristen", "Mason", "Julia", "Craig", "Misty", "Brooke", "Jon", "Theresa", "Allison", "Karen", "Roberto", "Raven", "Dawn", "Anne", "Jessica", "Cheyenne", "Luke", "Abigail", "Morgan", "Sally", "Marissa", "Deborah", "Alejandro", "Blake", "Billy", "Sandy", "Luis", "Whitney", "Loretta", "Gloria", "Jean", "Angelica", "Tami", "Karina", "Miranda", "Erika", "Jill", "Carl", "Cathy", "Angela", "Alexis", "Bradley", "Dennis", "Joe", "Stacey", "Rita", "Shane", "Latoya", "Devon", "Duane", "Robert", "Sonia", "Roy", "Jeanette", "Alex", "Emily", "Rhonda", "Kaitlyn", "Shannon", "Alexandria", "Jack", "Gail", "Darren", "Stephen", "Willie", "Valerie", "Mark", "Natasha", "Clifford", "Alexander", "Wesley", "Patrick", "Daniel", "Rose", "Tammy", "Courtney", "Theodore", "Howard", "Natalie", "Linda", "Kristina", "Jason", "Sarah", "Darryl", "Christy", "Lisa", "Frederick", "Kathy", "Darrell", "Cody", "Colleen", "Jacqueline", "Albert", "Troy", "Kelsey", "Deanna", "Wendy", "Barry", "Erik", "Suzanne", "Cynthia", "Hannah", "Marc", "Kerry", "Malik", "Guy", "Denise", "Pam", "Shawn", "Robin", "Ronnie", "Dalton", "Ruben", "Katelyn", "Sherri", "Brent", "Paul", "Samantha", "Monica", "Beverly", "Ellen", "Stanley", "Lindsay", "Tracy", "Andrea", "Jodi", "Ian", "Jesse", "Kelly", "Isabel", "Danny", "Sherry", "Lorraine", "Carly", "Mike", "Paula", "Jenna", "Virginia", "Susan", "Mary", "John", "Allen", "Sophia", "Sheri", "Charles", "Brett", "Kelli", "Darlene", "Gary", "Wanda", "Angie", "Martha", "Marie", "Betty", "Rodney", "Marisa", "Diane", "Juan", "Jose", "Monique", "Felicia", "Frank", "Nicholas", "Walter", "Tim", "Victoria", "Joel", "Kent", "Shelly", "Danielle", "Samuel", "Lee", "Kimberly", "Taylor", "Edward", "Edwin", "Cassandra", "Chad", "Destiny", "Yesenia", "Logan", "Kim", "Trevor", "Parker", "David", "Larry", "Henry", "Peggy", "Jamie", "Eugene", "Yolanda", "Haley", "Crystal", "Erica", "Lori", "Alexandra", "April", "Cheryl", "Randall", "Yvette", "Sergio", "Sara", "Tommy", "Brittany", "Harry", "Benjamin", "Stephanie", "Tracie", "Chelsea", "Mariah", "Edgar", "Jordan", "Heather", "Timothy", "Stacy", "Jonathan", "Brittney", "Connie", "Jake", "Vickie", "Dominic", "Daisy", "Todd", "Tony", "Gabriella", "Derek", "Kristin", "Rebecca", "Roger", "Debbie", "Javier"];
+$scope.lastNames = ["Ross", "Cruz", "Berry", "Dawson", "Jarvis", "Christian", "Hinton", "Williams", "Horton", "Fuentes", "Cunningham", "Bullock", "White", "Hodges", "Hill", "Caldwell", "Ferguson", "Mendoza", "Rich", "Rhodes", "Medina", "Robertson", "Griffin", "Quinn", "Brewer", "Mack", "Villarreal", "Marshall", "Booth", "Schultz", "Fernandez", "Cabrera", "James", "Peters", "Mclean", "Mcdonald", "Mitchell", "Wilkerson", "Hudson", "Massey", "Murphy", "Sparks", "Hoover", "Sandoval", "Madden", "Lane", "Bryan", "Fitzgerald", "Swanson", "Blanchard", "Garrett", "Simmons", "Norman", "Richards", "Yu", "Vaughn", "Rivera", "Mccarthy", "Walters", "Rush", "Arroyo", "Peterson", "Stephens", "Powers", "Mcguire", "Mccormick", "Schaefer", "Forbes", "Bailey", "Warren", "Woodard", "Burke", "Johnston", "Stout", "Johns", "Wheeler", "Delgado", "Alvarado", "Avery", "Martin", "Finley", "Lin", "Baker", "Montoya", "Marquez", "Henderson", "Bird", "Jimenez", "Kaufman", "Moreno", "King", "Roberts", "Shepherd", "Adkins", "Hartman", "Garcia", "Ward", "Bates", "Gaines", "Thomas", "Cortez", "Estes", "Miller", "Harper", "Case", "Ruiz", "Gomez", "Ho", "Chapman", "Leonard", "Dickerson", "Reyes", "Gordon", "Maddox", "Cannon", "Mckee", "Burch", "Perkins", "Lester", "Casey", "Lambert", "Underwood", "Morales", "Joyce", "Lynn", "Ramirez", "Cordova", "Drake", "Vasquez", "Daniels", "Frazier", "Walker", "Mclaughlin", "Hutchinson", "Bowers", "Richard", "Munoz", "Dillon", "Bauer", "Riggs", "Austin", "Hunter", "Webb", "Valenzuela", "Romero", "Humphrey", "Cross", "Robles", "Castro", "Jensen", "Marsh", "Pineda", "Warner", "Hobbs", "Patterson", "Moran", "Zhang", "Davila", "Schmidt", "Mills", "Decker", "Dean", "Coleman", "Franco", "Butler", "Wagner", "Pollard", "Lawrence", "Michael", "Davies", "Hughes", "Valentine", "Meyer", "Kelley", "Morris", "Vargas", "Estrada", "Perez", "Brennan", "Kline", "Stevens", "Sullivan", "Hardy", "Yang", "Whitaker", "Reed", "Riddle", "Kennedy", "Gutierrez", "Terry", "Walsh", "Malone", "Wood", "Ray", "Robinson", "Rice", "Hoffman", "Foster", "Hebert", "Scott", "Wise", "Mcpherson", "Beard", "Sharp", "Johnson", "Ryan", "Chavez", "Perry", "Atkins", "Hodge", "Lewis", "Garrison", "Clark", "Mann", "Ramsey", "Simon", "Bell", "Alvarez", "Garza", "Odonnell", "Elliott", "Vincent", "Cole", "Arias", "Beck", "Reid", "Blankenship", "Irwin", "Weber", "Morse", "Chambers", "Higgins", "Hansen", "Sanchez", "Welch", "Saunders", "Olson", "Kirk", "Brown", "Long", "Cline", "Ortiz", "Greene", "Spencer", "Wall", "Fletcher", "Valencia", "Hawkins", "Chase", "Davidson", "Curtis", "Kirby", "Young", "Moore", "Watkins", "Fitzpatrick", "Craig", "Spears", "Conner", "Snyder", "Little", "Crane", "Burgess", "Golden", "Watson", "Steele", "Burns", "Aguilar", "Morgan", "Cooper", "Cox", "Blake", "Knight", "Duncan", "Banks", "Dunn", "Pugh", "Torres", "Bright", "Nicholson", "Montgomery", "Powell", "Williamson", "Brock", "Lyons", "Phillips", "Barnett", "Wade", "Brooks", "Gibbs", "Dennis", "Martinez", "Shah", "Adams", "Fritz", "Cherry", "Collier", "Hanson", "Patton", "Hopkins", "Hahn", "Gibson", "Hernandez", "Delacruz", "Rollins", "Boyer", "Leon", "Green", "Pruitt", "Barnes", "Stark", "Woods", "Pittman", "Webster", "Newton", "Bridges", "Vazquez", "Russell", "Barr", "Morrison", "Merritt", "Vaughan", "Herrera", "Cohen", "Benton", "Macdonald", "Mccoy", "Alexander", "Cervantes", "Navarro", "Silva", "Daniel", "Murillo", "Lawson", "Rose", "Calderon", "Howard", "Miles", "Howell", "Edwards", "Baldwin", "Vega", "Holmes", "Flores", "Jones", "Davis", "Harrison", "Doyle", "Colon", "Woodward", "Barry", "Porter", "Holland", "Ballard", "Rowe", "Flynn", "Terrell", "Hicks", "Fox", "Hall", "Hurst", "Pena", "Gillespie", "Chandler", "Li", "Oliver", "Anderson", "Fleming", "Atkinson", "Ware", "Harris", "Mcgee", "Simpson", "Carrillo", "Stanley", "Arnold", "Sanders", "Dominguez", "Carlson", "Tate", "Huber", "Castillo", "Ali", "Galvan", "Shaffer", "Stewart", "Meyers", "Reynolds", "Singh", "Avila", "Kelly", "Velazquez", "Murray", "Wright", "Strickland", "Wallace", "Diaz", "Dunlap", "Short", "Jackson", "Ramos", "Ayers", "Allen", "Gill", "Turner", "Boyd", "Smith", "Sherman", "Orozco", "Chen", "Rodriguez", "Pitts", "Wiggins", "Carroll", "Mcbride", "Hayes", "Velasquez", "West", "Stokes", "Le", "Fowler", "Frank", "Gilmore", "Lutz", "Abbott", "Freeman", "Rocha", "Contreras", "Carpenter", "Brady", "Graham", "Byrd", "Kent", "Kaiser", "Jenkins", "Deleon", "Parrish", "Hardin", "Clay", "Mcmillan", "Lucas", "Lee", "Payne", "Ritter", "Campbell", "Carr", "Thornton", "Taylor", "Rios", "Mccall", "Richardson", "Santiago", "Park", "Phelps", "Wilson", "Kerr", "Gilbert", "Huff", "Duffy", "Kim", "Parker", "Ball", "Franklin", "Dixon", "Nguyen", "Becker", "Buchanan", "Wells", "Evans", "Fuller", "Calhoun", "Collins", "Kidd", "Thompson", "Parsons", "Choi", "Pearson", "Hart", "Randall", "Burton", "Cook", "Gonzalez", "Larson", "Mullins", "Stone", "Lopez", "Willis", "Pace", "Oneal", "Jordan", "Nichols", "Nelson", "Bryant", "Todd", "Carter", "Bennett", "Mathews", "Combs", "Oconnor", "Harrington"];
+
+// Initializing the lists
+$scope.passengersNotCheckedIn = [];
+$scope.bagsNotCheckedIn = [];
+$scope.passengersCheckedIn = [];
+$scope.passengersBoarded = [];
+$scope.passengersSeated = [];
+$scope.passengersDeboarded = [];
+$scope.bagsCheckedIn = [];
+$scope.bagsLoaded = [];
+$scope.bagsUnloaded = [];
+$scope.bagsBaggageClaim = [];
+
+//create a seat label based on the passenger index
+function createSeat(passengerIndex) {
+    let row = Math.floor(passengerIndex / 6) + 1;
+    let seatPosition = 'ABCDEF'.charAt(passengerIndex % 6);
+    return row + seatPosition;
+}
+
+// Function to create manifest
+$scope.createManifest = function(numberOfPassengers, scheduledBoardingDateTime) {
+    for (let i = 0; i < numberOfPassengers; i++) {
+        // Creating passenger name with random first and last names
+        let randomFirstNameIndex = Math.floor(Math.random() * $scope.firstNames.length);
+        let randomLastNameIndex = Math.floor(Math.random() * $scope.lastNames.length);
+        let firstName = $scope.firstNames[randomFirstNameIndex];
+        let lastName = $scope.lastNames[randomLastNameIndex];
+        let passengerName = firstName + ' ' + lastName;
+
+        // Assigning a seat
+        let seat = createSeat(i);
+
+        // Creating passenger object
+        let passenger = {
+            passengerId: i + 1,
+            name: passengerName,
+            seat: seat,
+            status: 'Not Checked In',
+            bags: Math.floor(Math.random() * 4) // Randomly 0, 1, 2, or 3
+        };
+
+        // Adding passenger to the not checked in list
+        $scope.passengersNotCheckedIn.push(passenger);
+
+        // Creating bags if any
+        for (let b = 0; b < passenger.bags; b++) {
+            let bag = {
+                passengerId: passenger.passengerId,
+                status: 'Not Checked In'
+            };
+            $scope.bagsNotCheckedIn.push(bag);
+        }
+    }
+    // After all passengers and bags are created, iterate through passengers to assign bags
+    $scope.passengersNotCheckedIn.forEach(passenger => {
+        passenger.bagsArray = $scope.bagsNotCheckedIn.filter(bag => bag.passengerId === passenger.passengerId);
+    });
+
+    // Calculate the time until boarding in milliseconds
+    var timeUntilBoarding = moment(scheduledBoardingDateTime).diff(moment(), 'milliseconds');
+    var checkInIntervalTime = timeUntilBoarding / numberOfPassengers;
+
+    // Function to move a random passenger and their bags to checked in
+    function checkInRandomPassenger() {
+        if ($scope.passengersNotCheckedIn.length > 0) {
+            // Select a random passenger from not checked in list
+            var randomIndex = Math.floor(Math.random() * $scope.passengersNotCheckedIn.length);
+            var passenger = $scope.passengersNotCheckedIn.splice(randomIndex, 1)[0];
+            passenger.status = 'Checked In';
+            $scope.passengersCheckedIn.push(passenger);
+
+            // Find and move the passenger's bags
+            var passengerBags = $scope.bagsNotCheckedIn.filter(bag => bag.passengerId === passenger.passengerId);
+            passengerBags.forEach(bag => {
+                bag.status = 'Checked In';
+                // Remove from not checked in list
+                var index = $scope.bagsNotCheckedIn.indexOf(bag);
+                $scope.bagsNotCheckedIn.splice(index, 1);
+                // Add to checked in list
+                $scope.bagsCheckedIn.push(bag);
+            });
+        } else {
+            // Cancel the interval if no passengers are left to check in
+            $interval.cancel(checkInPassengerInterval);
+        }
+    }
+
+    // Set up the interval to check in passengers at random
+    var checkInPassengerInterval = $interval(checkInRandomPassenger, checkInIntervalTime);
+
+    // Make sure to cancel the interval when the scope is destroyed
+    $scope.$on('$destroy', function() {
+        $interval.cancel(checkInPassengerInterval);
+    });
+
+};
+
+$scope.boardPassengersAndBags = function() {
+    var tenMinutes = 10 * 60 * 1000; // 10 minutes in milliseconds
+    var twoMinutes = 2 * 60 * 1000; // 2 minutes in milliseconds
+    var passengerIntervalTime = tenMinutes / $scope.passengersCheckedIn.length;
+    var bagIntervalTime = tenMinutes / $scope.bagsCheckedIn.length;
+
+    // Function to board a random passenger
+    var boardPassenger = function() {
+        if ($scope.passengersCheckedIn.length > 0) {
+            var randomIndex = Math.floor(Math.random() * $scope.passengersCheckedIn.length);
+            var passenger = $scope.passengersCheckedIn.splice(randomIndex, 1)[0];
+            passenger.status = 'Boarding';
+            $scope.passengersBoarded.push(passenger);
+
+            // Set a timeout to seat the passenger after 2 minutes
+            $timeout(function() {
+                passenger.status = 'Seated';
+                var index = $scope.passengersBoarded.indexOf(passenger);
+                $scope.passengersBoarded.splice(index, 1);
+                $scope.passengersSeated.push(passenger);
+            }, twoMinutes);
+        }
+    };
+
+    // Function to load a random bag
+    var loadBag = function() {
+        if ($scope.bagsCheckedIn.length > 0) {
+            var randomIndex = Math.floor(Math.random() * $scope.bagsCheckedIn.length);
+            var bag = $scope.bagsCheckedIn.splice(randomIndex, 1)[0];
+            bag.status = 'Loaded';
+            $scope.bagsLoaded.push(bag);
+        }
+    };
+
+    // Set intervals for boarding passengers and loading bags
+    var passengerBoardingInterval = $interval(boardPassenger, passengerIntervalTime);
+    var bagLoadingInterval = $interval(loadBag, bagIntervalTime);
+
+    // Cancel intervals when all passengers are boarded and bags are loaded
+    var checkIntervals = function() {
+        if ($scope.passengersCheckedIn.length === 0) {
+            $interval.cancel(passengerBoardingInterval);
+        }
+        if ($scope.bagsCheckedIn.length === 0) {
+            $interval.cancel(bagLoadingInterval);
+        }
+    };
+
+    // Regularly check if we need to cancel the intervals
+    var checkIntervalsInterval = $interval(checkIntervals, 1000);
+
+    // Make sure to cancel the intervals when the scope is destroyed
+    $scope.$on('$destroy', function() {
+        if (angular.isDefined(passengerBoardingInterval)) {
+            $interval.cancel(passengerBoardingInterval);
+        }
+        if (angular.isDefined(bagLoadingInterval)) {
+            $interval.cancel(bagLoadingInterval);
+        }
+        if (angular.isDefined(checkIntervalsInterval)) {
+            $interval.cancel(checkIntervalsInterval);
+        }
+    });
+};
+
+$scope.deBoardPassengersAndBags = function() {
+    var tenMinutes = 10 * 60 * 1000; // 10 minutes in milliseconds
+    var twoMinutes = 2 * 60 * 1000; // 2 minutes in milliseconds
+    var passengerIntervalTime = tenMinutes / $scope.passengersSeated.length;
+    var bagIntervalTime = tenMinutes / $scope.bagsLoaded.length;
+
+    // Function to deboard passengers in order of their passengerId
+    var deBoardPassenger = function() {
+        if ($scope.passengersSeated.length > 0) {
+            // Passengers are already sorted by passengerId so take the first one
+            var passenger = $scope.passengersSeated.shift();
+            passenger.status = 'Deboarded';
+            $scope.passengersDeboarded.push(passenger);
+        }
+    };
+
+    // Function to unload a random bag and move it to baggage claim after 2 minutes
+    var unloadBag = function() {
+        if ($scope.bagsLoaded.length > 0) {
+            var randomIndex = Math.floor(Math.random() * $scope.bagsLoaded.length);
+            var bag = $scope.bagsLoaded.splice(randomIndex, 1)[0];
+            bag.status = 'Unloaded';
+            $scope.bagsUnloaded.push(bag);
+
+            // Set a timeout to move the bag to baggage claim after 2 minutes
+            $timeout(function() {
+                var index = $scope.bagsUnloaded.indexOf(bag);
+                if (index !== -1) {
+                    $scope.bagsUnloaded.splice(index, 1);
+                }
+                bag.status = 'Baggage Claim';
+                $scope.bagsBaggageClaim.push(bag);
+            }, twoMinutes);
+        }
+    };
+
+    // Ensure passengers are sorted by passengerId
+    $scope.passengersSeated.sort(function(a, b) {
+        return a.passengerId - b.passengerId;
+    });
+
+    // Set intervals for deboarding passengers and unloading bags
+    var passengerDeboardingInterval = $interval(deBoardPassenger, passengerIntervalTime);
+    var bagUnloadingInterval = $interval(unloadBag, bagIntervalTime);
+
+    // Cancel intervals when all passengers are deboarded and bags are unloaded
+    var checkIntervals = function() {
+        if ($scope.passengersSeated.length === 0) {
+            $interval.cancel(passengerDeboardingInterval);
+        }
+        if ($scope.bagsLoaded.length === 0) {
+            $interval.cancel(bagUnloadingInterval);
+        }
+    };
+
+    // Regularly check if we need to cancel the intervals
+    var checkIntervalsInterval = $interval(checkIntervals, 1000);
+
+    // Make sure to cancel the intervals when the scope is destroyed
+    $scope.$on('$destroy', function() {
+        if (angular.isDefined(passengerDeboardingInterval)) {
+            $interval.cancel(passengerDeboardingInterval);
+        }
+        if (angular.isDefined(bagUnloadingInterval)) {
+            $interval.cancel(bagUnloadingInterval);
+        }
+        if (angular.isDefined(checkIntervalsInterval)) {
+            $interval.cancel(checkIntervalsInterval);
+        }
+    });
+};
+
+
+
+
+
     /*** API CALLS *****************/
     /**
      * 
@@ -937,6 +1183,9 @@ $scope.$watch('calculatedBoardingDateTime', function(newVal, oldVal) {
                 $scope.callSign = $scope.flightPlanJSONData.atc.callsign;
                 $scope.departureIcao = $scope.flightPlanJSONData.origin.icao_code;
                 $scope.arrivalIcao = $scope.flightPlanJSONData.destination.icao_code;
+
+                $scope.numberOfPassengers = Number($scope.flightPlanJSONData.weights.pax_count);
+
                 $scope.scheduledBoardingDateTime = moment.unix($scope.flightPlanJSONData.times.sched_out).subtract(30, 'minutes').toDate();
                 $scope.scheduledDepartureDateTime = moment.unix($scope.flightPlanJSONData.times.sched_out).toDate();
                 $scope.estimateArrivalDateTime = moment.unix($scope.flightPlanJSONData.times.est_on).toDate();

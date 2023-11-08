@@ -135,6 +135,7 @@ body, div, section {
     --my-secondary-color: #6c757d;
     --my-warning-color: #d49b00;
     --my-danger-color: #b5191f;
+    --my-magenta-color: magenta;
     /* Add/modify other colors as necessary */
 }
 
@@ -187,6 +188,10 @@ body, div, section {
 
 .bg-danger {
     background-color: var(--my-danger-color) !important;
+}
+
+.bg-magenta {
+    background-color: var(--my-magenta-color) !important;
 }
 
 .badge.bg-success {
