@@ -667,6 +667,7 @@ $scope.callSign = '';
 $scope.departureIcao = '';
 $scope.arrivalIcao = '';
 $scope.showFlightStatBanner = false;
+$scope.showPassengersBanner = false;
 $scope.currentFlightStatus = 'Idle';
 $scope.scheduledBoardingDateTime = '';
 $scope.scheduledDepartureDateTime = '';
@@ -874,6 +875,10 @@ $scope.$watch('showFlightStatBanner', function(newValue) {
     console.log('showFlightStatBanner changed to:', newValue);
 });
 
+$scope.$watch('showPassengersBanner', function(newValue) {
+    console.log('showPassengersBanner changed to:', newValue);
+});
+
 $scope.updateStatus = function(dateTimeField) {
     // Get the current time
     let currentTime = new Date().toISOString();
@@ -930,6 +935,19 @@ $scope.bagsCheckedIn = [];
 $scope.bagsLoaded = [];
 $scope.bagsUnloaded = [];
 $scope.bagsBaggageClaim = [];
+
+$scope.resetPassengers = function() {
+    $scope.passengersNotCheckedIn = [];
+    $scope.bagsNotCheckedIn = [];
+    $scope.passengersCheckedIn = [];
+    $scope.passengersBoarded = [];
+    $scope.passengersSeated = [];
+    $scope.passengersDeboarded = [];
+    $scope.bagsCheckedIn = [];
+    $scope.bagsLoaded = [];
+    $scope.bagsUnloaded = [];
+    $scope.bagsBaggageClaim = [];
+}
 
 //create a seat label based on the passenger index
 function createSeat(passengerIndex) {

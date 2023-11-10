@@ -59,10 +59,10 @@
                 <p class="mb-0">
                     {{callSign}} {{departureIcao}}/{{arrivalIcao}}
                 <a ng-show="currentFlightStatus == 'Idle'" class="text-white text-decoration-none"> | Boarding in: <span id="boardingCountdown">{{boardingHours}}h {{boardingMinutes}}m {{boardingSeconds}}s</span>
-                    <span class="badge" ng-class="{'bg-success': boardingStatus == 'ON TIME', 'bg-warning': boardingStatus == 'DELAYED'}">{{ boardingStatus }}</span>
+                    <span class="badge" ng-class="{'bg-success': boardingStatus == 'ON TIME', 'bg-warning': boardingStatus == 'DELAYED'}">{{ boardingStatus }}</span> | <span ng-show="showPassengersBanner">Checked In: <i class="fa-solid fa-user"></i> {{passengersCheckedIn.length}}/{{numberOfPassengers}} <i class="fa-solid fa-suitcase"></i> {{bagsCheckedIn.length}}</span>
                 </a>
                 <a ng-show="currentFlightStatus == 'Boarding'" class="text-white text-decoration-none"> | <span class="badge bg-info" >BOARDING</span> | Departing in: <span id="departureCountdown">{{departureHours}}h {{departureMinutes}}m {{departureSeconds}}s</span>
-                    <span class="badge" ng-class="{'bg-success': departureStatus == 'ON TIME', 'bg-warning': departureStatus == 'DELAYED'}">{{ departureStatus }}</span>
+                    <span class="badge" ng-class="{'bg-success': departureStatus == 'ON TIME', 'bg-warning': departureStatus == 'DELAYED'}">{{ departureStatus }}</span>  | <span ng-show="showPassengersBanner">Boarded: <i class="fa-solid fa-user"></i> {{passengersSeated.length}}/{{numberOfPassengers}} <i class="fa-solid fa-suitcase"></i> {{bagsLoaded.length}}</span>
                 </a>
                 <a ng-show="currentFlightStatus == 'Departed'" class="text-white text-decoration-none"> | <span class="badge bg-info" >DEPARTED</span> | Landing in: <span id="landingCountdown">{{landingHours}}h {{landingMinutes}}m {{landingSeconds}}s</span>
                     <span class="badge" ng-class="{'bg-success': landingStatus == 'ON TIME', 'bg-warning': landingStatus == 'DELAYED'}">{{ landingStatus }}</span>
@@ -70,8 +70,9 @@
                 <a ng-show="currentFlightStatus == 'Landed'" class="text-white text-decoration-none"> | <span class="badge bg-success" >LANDED</span> | Arriving at Gate in: <span id="arrivalCountdown">{{arrivalHours}}h {{arrivalMinutes}}m {{arrivalSeconds}}s</span>
                     <span class="badge" ng-class="{'bg-success': arrivalStatus == 'ON TIME', 'bg-warning': arrivalStatus == 'DELAYED'}">{{ arrivalStatus }}</span>
                 </a>
-                <a ng-show="currentFlightStatus == 'Arrived'" class="text-white text-decoration-none"> | <span class="badge bg-success" >ARRIVED AT GATE</span> | Scheduled: {{ estimateGateArrivalDateTime | toLocalTime }} Actual: {{ actualGateArrivalDateTime | toLocalTime }} | {{ getDifference(estimateGateArrivalDateTime, actualGateArrivalDateTime) }}         
-                    <span class="badge" ng-class="{'bg-success': arrivalStatus == 'ON TIME', 'bg-warning': arrivalStatus == 'DELAYED'}">{{ arrivalStatus }}</span> </a>
+                <a ng-show="currentFlightStatus == 'Arrived'" class="text-white text-decoration-none"> | <span class="badge bg-success" >ARRIVED AT GATE</span> | {{ getDifference(estimateGateArrivalDateTime, actualGateArrivalDateTime) }}
+                    <span class="badge" ng-class="{'bg-success': arrivalStatus == 'ON TIME', 'bg-warning': arrivalStatus == 'DELAYED'}">{{ arrivalStatus }}</span>  | <span ng-show="showPassengersBanner">Deboarding: <i class="fa-solid fa-user"></i> {{passengersSeated.length}}/{{numberOfPassengers}} <i class="fa-solid fa-suitcase"></i> {{bagsLoaded.length}}</span>
+                </a>
                 </p>
             </div>
             
@@ -492,12 +493,21 @@
                                 <div class="col-md-auto">
                                     <button type="button" class="btn btn-sm btn-outline-success" ng-click="deBoardPassengersAndBags()">Begin Deboarding</button>
                                 </div>
+                                <div class="col-md-auto">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" ng-click="resetPassengers()">Reset Passengers</button>
+                                </div>
                             </div>
                         </form>
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="flightStatBannerCheckbox" ng-model="showFlightStatBanner">
                             <label class="form-check-label" for="flightStatBannerCheckbox">
                               Show Flight Stats Banner
+                            </label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="passengersBannerCheckbox" ng-model="showPassengersBanner">
+                            <label class="form-check-label" for="passengersBannerCheckbox">
+                              Show Passenger Stats in Banner
                             </label>
                           </div>
                     </div> 
