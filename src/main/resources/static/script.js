@@ -6,7 +6,7 @@ var app = angular.module('checklistApp', []);
 app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$document', '$interval', function($scope, $sce, $timeout, $http, $document, $interval) {
     
 
-    $scope.versionNumber = '1.1.2'; 
+    $scope.versionNumber = '1.1.3'; 
 
     $scope.state = 'Idle';
     $scope.messages = [];
@@ -669,6 +669,7 @@ $scope.arrivalIcao = '';
 $scope.showFlightStatBanner = false;
 $scope.showPassengersBanner = false;
 $scope.currentFlightStatus = 'Idle';
+$scope.finalArrivalStatus = '';
 $scope.scheduledBoardingDateTime = '';
 $scope.scheduledDepartureDateTime = '';
 $scope.estimateArrivalDateTime = '';
@@ -696,6 +697,11 @@ $scope.setFlightStatus = function(status) {
             break;
         case 'Arrived':
             $scope.actualGateArrivalDateTime = currentTimestamp;
+            if ($scope.arrivalStatus === 'ON TIME') {
+                $scope.finalArrivalStatus = 'ON TIME';
+            } else if ($scope.arrivalStatus === 'DELAYED') {
+                $scope.finalArrivalStatus = 'DELAYED';
+            }
             break;
         case 'Idle':
             $scope.actualBoardingDateTime = '';

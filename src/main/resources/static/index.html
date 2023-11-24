@@ -57,7 +57,7 @@
             </a>
             <div ng-show="showFlightStatBanner" class="text-white d-flex align-items-center ms-2">
                 <p class="mb-0">
-                    {{callSign}} {{departureIcao}}/{{arrivalIcao}}
+                    {{callSign}} {{departureIcao}}->{{arrivalIcao}}
                 <a ng-show="currentFlightStatus == 'Idle'" class="text-white text-decoration-none"> | Boarding in: <span id="boardingCountdown">{{boardingHours}}h {{boardingMinutes}}m {{boardingSeconds}}s</span>
                     <span class="badge" ng-class="{'bg-success': boardingStatus == 'ON TIME', 'bg-warning': boardingStatus == 'DELAYED'}">{{ boardingStatus }}</span> | <span ng-show="showPassengersBanner">Checked In: <i class="fa-solid fa-user"></i> {{passengersCheckedIn.length}}/{{numberOfPassengers}} <i class="fa-solid fa-suitcase"></i> {{bagsCheckedIn.length}}</span>
                 </a>
@@ -71,7 +71,7 @@
                     <span class="badge" ng-class="{'bg-success': arrivalStatus == 'ON TIME', 'bg-warning': arrivalStatus == 'DELAYED'}">{{ arrivalStatus }}</span>
                 </a>
                 <a ng-show="currentFlightStatus == 'Arrived'" class="text-white text-decoration-none"> | <span class="badge bg-success" >ARRIVED AT GATE</span> | {{ getDifference(estimateGateArrivalDateTime, actualGateArrivalDateTime) }}
-                    <span class="badge" ng-class="{'bg-success': arrivalStatus == 'ON TIME', 'bg-warning': arrivalStatus == 'DELAYED'}">{{ arrivalStatus }}</span>  | <span ng-show="showPassengersBanner">Deboarding: <i class="fa-solid fa-user"></i> {{passengersSeated.length}}/{{numberOfPassengers}} <i class="fa-solid fa-suitcase"></i> {{bagsLoaded.length}}</span>
+                    <span class="badge" ng-class="{'bg-success': finalArrivalStatus == 'ON TIME', 'bg-warning': finalArrivalStatus == 'DELAYED'}">{{ finalArrivalStatus }}</span>  | <span ng-show="showPassengersBanner">Deboarding: <i class="fa-solid fa-user"></i> {{passengersSeated.length}}/{{numberOfPassengers}} <i class="fa-solid fa-suitcase"></i> {{bagsLoaded.length}}</span>
                 </a>
                 </p>
             </div>
