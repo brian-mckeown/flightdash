@@ -13,6 +13,9 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$
     $scope.selectedChecklist = '';
     $scope.icao = '';
     $scope.simbriefPilotId = '';
+    $scope.simbriefIdVisible = false;
+    $scope.openAiApiKey = '';
+    $scope.openAiKeyVisible = false;
     $scope.flightPlanData = '';
     $scope.flightPlanJSONData = '';
     $scope.flightPlanTrustedHtml = '';
@@ -610,6 +613,7 @@ $scope.saveConfig = function() {
 
         if($scope.metarSource) dataToSave.metarSource = $scope.metarSource;
         if($scope.simbriefPilotId) dataToSave.pilotId = $scope.simbriefPilotId;
+        if($scope.openAiApiKey) dataToSave.openAiApiKey = $scope.openAiApiKey;
         if($scope.bundleName) dataToSave.bundleName = $scope.bundleName;
         if($scope.tables) dataToSave.tables = angular.copy($scope.tables);
         
@@ -643,6 +647,7 @@ $scope.importConfig = function(inputElement) {
                     // Set new values from JSON
                     $scope.metarSource = jsonData.metarSource;
                     $scope.simbriefPilotId = jsonData.pilotId;
+                    $scope.openAiApiKey = jsonData.openAiApiKey;
                     $scope.bundleName = jsonData.bundleName;
                     $scope.tables = jsonData.tables;
                 });

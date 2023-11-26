@@ -719,9 +719,23 @@ Baggage Claim: {{ bagsBaggageClaim.length }}
                     <option>aviationweather_gov</option>
                     <option>metar_vatsim_net</option>
                 </select>
-                <div>
-                    <label for="simbriefPilotId">SimBrief Pilot ID</label>
-                    <input type="text" class="form-control" id="simbriefPilotId" ng-model="simbriefPilotId">
+                <div class="mb-3">
+                    <label for="simbriefPilotId" class="form-label">SimBrief Pilot ID</label>
+                    <div class="input-group">
+                        <input type="{{simbriefIdVisible ? 'text' : 'password'}}" class="form-control" id="simbriefPilotId" ng-model="simbriefPilotId">
+                        <button class="btn btn-outline-secondary" type="button" ng-click="simbriefIdVisible = !simbriefIdVisible">
+                            <i class="bi" ng-class="simbriefIdVisible ? 'bi-eye-slash-fill' : 'bi-eye-fill'"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="openAiApiKey" class="form-label">OpenAI API Key</label>
+                    <div class="input-group">
+                        <input type="{{openAiKeyVisible ? 'text' : 'password'}}" class="form-control" id="openAiApiKey" ng-model="openAiApiKey" placeholder="Enter your API Key">
+                        <button class="btn btn-outline-secondary" type="button" ng-click="openAiKeyVisible = !openAiKeyVisible">
+                            <i class="bi" ng-class="openAiKeyVisible ? 'bi-eye-slash-fill' : 'bi-eye-fill'"></i>
+                        </button>
+                    </div>
                 </div>
             <div class="form-group">
                 <label for="checklistDropdown">Aircraft Checklist Bundle</label>
