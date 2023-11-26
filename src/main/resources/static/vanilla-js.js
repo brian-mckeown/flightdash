@@ -35,6 +35,30 @@ document.addEventListener('DOMContentLoaded', function() {
     alertEl.addEventListener('closed.bs.alert', function () {
         overlayEl.style.display = 'none';
     });
+
+    // Initialize popovers (ai costs)
+    var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+    popoverTriggerList.forEach(function (popoverTriggerEl) {
+        new bootstrap.Popover(popoverTriggerEl, {
+            sanitize: false
+        });
+    });
+
+    // Add global click event listener for closing popovers
+    document.addEventListener('click', function (event) {
+        // Check if the clicked element is the close button inside a popover
+        if (event.target.matches('.close-popover')) {
+            // Find all popovers
+            var popovers = document.querySelectorAll('[data-bs-toggle="popover"]');
+            // Hide all popovers
+            popovers.forEach(function(popover) {
+                var bootstrapPopover = bootstrap.Popover.getInstance(popover);
+                if (bootstrapPopover) {
+                    bootstrapPopover.hide();
+                }
+            });
+        }
+    }, false);
 });
 
 fetch('/privacy-policy')

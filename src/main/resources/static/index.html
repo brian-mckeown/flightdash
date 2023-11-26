@@ -526,6 +526,37 @@
                                     <button type="button" class="btn btn-sm btn-outline-secondary" ng-click="resetPassengers()">Reset Passengers</button>
                                 </div>
                             </div>
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <label class="form-label">
+                                        AI Crew Announcements
+                                        <i class="fas fa-exclamation-triangle text-danger" 
+                                           style="cursor:pointer;" 
+                                           data-bs-toggle="popover" 
+                                           title="Cost Notice <button type='button' class='btn-close close-popover' aria-label='Close'></button>"
+                                           data-bs-content="Using the AI Crew Announcements will incur costs directly to your OpenAI account. The GPT-4 and TTS-HD models are used, which can utilize up to 1024 tokens each for script generation and text-to-speech. Please review OpenAI's pricing policies at https://openai.com/pricing before proceeding. By selecting any of the AI Crew Announcements buttons, you acknowledge and agree that you will be responsible for any costs incurred. Furthermore, you agree to hold FlightDash.io and its affiliates harmless and release them from any liability related to such costs." 
+                                           data-bs-html="true"> Cost Notice [Click]</i>
+                                    </label>
+                                </div>
+                                <div class="col-md-auto">
+                                    <button type="button" class="btn btn-sm btn-dark">Boarding</button>
+                                </div>
+                                <div class="col-md-auto">
+                                    <button type="button" class="btn btn-sm btn-dark">Pre Taxi</button>
+                                </div>
+                                <div class="col-md-auto">
+                                    <button type="button" class="btn btn-sm btn-dark">Safety</button>
+                                </div>
+                                <div class="col-md-auto">
+                                    <button type="button" class="btn btn-sm btn-dark">Cruise</button>
+                                </div>
+                                <div class="col-md-auto">
+                                    <button type="button" class="btn btn-sm btn-dark">Descent</button>
+                                </div>
+                                <div class="col-md-auto">
+                                    <button type="button" class="btn btn-sm btn-dark">Landing</button>
+                                </div>
+                            </div>
                         </form>
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="flightStatBannerCheckbox" ng-model="showFlightStatBanner">
