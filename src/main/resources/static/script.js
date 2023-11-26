@@ -6,7 +6,7 @@ var app = angular.module('checklistApp', []);
 app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$document', '$interval', function($scope, $sce, $timeout, $http, $document, $interval) {
     
 
-    $scope.versionNumber = '1.1.3'; 
+    $scope.versionNumber = '1.2.0'; 
 
     $scope.state = 'Idle';
     $scope.messages = [];
@@ -666,6 +666,8 @@ $scope.clearConfigValues = function() {
 $scope.callSign = '';
 $scope.departureIcao = '';
 $scope.arrivalIcao = '';
+$scope.airline = '';
+$scope.flightCrewArray = [];
 $scope.showFlightStatBanner = false;
 $scope.showPassengersBanner = false;
 $scope.currentFlightStatus = 'Idle';
@@ -678,6 +680,35 @@ $scope.actualBoardingDateTime = '';
 $scope.actualDepartedDateTime = '';
 $scope.actualArrivalDateTime = '';
 $scope.actualGateArrivalDateTime = '';
+
+$scope.generateFlightCrew = function() {
+    // Empty the flightCrewArray before generating new crew members
+    $scope.flightCrewArray.length = 0;
+        
+    // Generate a flight crew member for each position
+    positions.forEach(function(position) {
+        var gender = Math.random() > 0.5 ? 'male' : 'female';
+        var firstNameArray = gender === 'male' ? maleFirstNames : femaleFirstNames;
+        var firstName = firstNameArray[Math.floor(Math.random() * firstNameArray.length)];
+        var lastName = $scope.lastNames[Math.floor(Math.random() * $scope.lastNames.length)];
+        var voiceOptions = (position === 'Captain' && gender === 'male') ? ['onyx'] : 
+                            (gender === 'male' ? ['alloy', 'echo', 'fable'] : ['nova', 'shimmer']);
+        var voice = voiceOptions[Math.floor(Math.random() * voiceOptions.length)];
+        
+        // Create the crew member object
+        var crewMember = {
+            firstName: firstName,
+            lastName: lastName,
+            position: position,
+            gender: gender,
+            voice: voice
+        };
+        
+        // Add the crew member to the array
+        $scope.flightCrewArray.push(crewMember);
+    });
+    console.log($scope.flightCrewArray);
+}
 
 
 $scope.setFlightStatus = function(status) {
@@ -929,6 +960,23 @@ $scope.$watch('calculatedBoardingDateTime', function(newVal, oldVal) {
 $scope.numberOfPassengers = 0; // initiate number of passengers to 0. 
 $scope.firstNames = ["Carlos", "Cristian", "Katrina", "Alicia", "Candice", "Christian", "Carrie", "Nina", "Miguel", "Evan", "Adam", "Shelby", "Ann", "Jenny", "Kristy", "Rick", "Jared", "Carolyn", "Heidi", "Grant", "Christina", "James", "Megan", "Beth", "Brendan", "Charlene", "Rachel", "Kari", "Nichole", "Alan", "Sheryl", "Madison", "Ralph", "Tyler", "Carol", "Amber", "Kevin", "Hailey", "Hector", "Erin", "Lindsey", "Bryan", "Dylan", "Garrett", "Ronald", "Sharon", "Tina", "Sue", "Dorothy", "Kendra", "Barbara", "Nathan", "Xavier", "Teresa", "Kurt", "Mackenzie", "Kara", "Tabitha", "Roberta", "Janet", "Nancy", "Jay", "Tristan", "Jorge", "Anita", "Clarence", "Katherine", "Bailey", "Krista", "Jim", "Joseph", "Matthew", "Amanda", "Brianna", "Travis", "Elizabeth", "Ariel", "Jacob", "Maria", "Olivia", "Shelley", "Mindy", "Jeffery", "Seth", "Martin", "Jaime", "Gabriel", "Amy", "Christine", "Peter", "Anthony", "Tanner", "Briana", "Katie", "Tiffany", "Joshua", "Sierra", "Jeremy", "Annette", "Christopher", "Donald", "Bruce", "Jennifer", "Keith", "Tamara", "Bianca", "Tyrone", "Caleb", "Jerry", "Bobby", "Sabrina", "Jasmine", "Phillip", "Kenneth", "Cindy", "Jo", "Thomas", "Jeffrey", "Aimee", "Marcus", "Gina", "Molly", "Tammie", "Oscar", "Gerald", "Melissa", "Leonard", "Steven", "Sheila", "Leah", "Kayla", "Don", "Janice", "Holly", "Levi", "Casey", "Sonya", "Vanessa", "Corey", "Diana", "Frances", "Lynn", "Joyce", "Melanie", "Douglas", "Kathleen", "Connor", "Bonnie", "Ethan", "Nicole", "Richard", "Dillon", "Cassie", "Kaitlin", "Austin", "Hunter", "Gregory", "Vicki", "Julie", "Dana", "Cory", "Jillian", "Randy", "Isaiah", "Anna", "Meagan", "Francisco", "Zachary", "Alice", "Brandon", "Dean", "Krystal", "Glenda", "Manuel", "Kerri", "Lawrence", "Michael", "Sylvia", "Judith", "Judy", "Carla", "Kylie", "Autumn", "Kristie", "Candace", "Eric", "Justin", "Sean", "Marilyn", "Dakota", "Jesus", "Nathaniel", "Joanna", "Terry", "Philip", "Savannah", "Brandy", "Rachael", "Chris", "Ray", "Catherine", "Victor", "Jeff", "Laurie", "Scott", "Leslie", "Brandi", "Melinda", "Lauren", "Bridget", "Elaine", "Kathryn", "Ryan", "Brian", "Raymond", "Angel", "Clinton", "Derrick", "Margaret", "William", "Arthur", "Caitlin", "Devin", "Tara", "Andrew", "Donna", "Kyle", "Kellie", "Veronica", "Vincent", "Cole", "Pamela", "Debra", "Joan", "Clayton", "Steve", "Andres", "Dale", "Mathew", "Jimmy", "George", "Paige", "Laura", "Sandra", "Penny", "Bryce", "Johnny", "Patricia", "Brenda", "Melvin", "Tom", "Alyssa", "Dustin", "Michelle", "Spencer", "Shirley", "Evelyn", "Jerome", "Louis", "Ashley", "Fred", "Antonio", "Jaclyn", "Chase", "Meghan", "Renee", "Aaron", "Curtis", "Bethany", "Kristen", "Mason", "Julia", "Craig", "Misty", "Brooke", "Jon", "Theresa", "Allison", "Karen", "Roberto", "Raven", "Dawn", "Anne", "Jessica", "Cheyenne", "Luke", "Abigail", "Morgan", "Sally", "Marissa", "Deborah", "Alejandro", "Blake", "Billy", "Sandy", "Luis", "Whitney", "Loretta", "Gloria", "Jean", "Angelica", "Tami", "Karina", "Miranda", "Erika", "Jill", "Carl", "Cathy", "Angela", "Alexis", "Bradley", "Dennis", "Joe", "Stacey", "Rita", "Shane", "Latoya", "Devon", "Duane", "Robert", "Sonia", "Roy", "Jeanette", "Alex", "Emily", "Rhonda", "Kaitlyn", "Shannon", "Alexandria", "Jack", "Gail", "Darren", "Stephen", "Willie", "Valerie", "Mark", "Natasha", "Clifford", "Alexander", "Wesley", "Patrick", "Daniel", "Rose", "Tammy", "Courtney", "Theodore", "Howard", "Natalie", "Linda", "Kristina", "Jason", "Sarah", "Darryl", "Christy", "Lisa", "Frederick", "Kathy", "Darrell", "Cody", "Colleen", "Jacqueline", "Albert", "Troy", "Kelsey", "Deanna", "Wendy", "Barry", "Erik", "Suzanne", "Cynthia", "Hannah", "Marc", "Kerry", "Malik", "Guy", "Denise", "Pam", "Shawn", "Robin", "Ronnie", "Dalton", "Ruben", "Katelyn", "Sherri", "Brent", "Paul", "Samantha", "Monica", "Beverly", "Ellen", "Stanley", "Lindsay", "Tracy", "Andrea", "Jodi", "Ian", "Jesse", "Kelly", "Isabel", "Danny", "Sherry", "Lorraine", "Carly", "Mike", "Paula", "Jenna", "Virginia", "Susan", "Mary", "John", "Allen", "Sophia", "Sheri", "Charles", "Brett", "Kelli", "Darlene", "Gary", "Wanda", "Angie", "Martha", "Marie", "Betty", "Rodney", "Marisa", "Diane", "Juan", "Jose", "Monique", "Felicia", "Frank", "Nicholas", "Walter", "Tim", "Victoria", "Joel", "Kent", "Shelly", "Danielle", "Samuel", "Lee", "Kimberly", "Taylor", "Edward", "Edwin", "Cassandra", "Chad", "Destiny", "Yesenia", "Logan", "Kim", "Trevor", "Parker", "David", "Larry", "Henry", "Peggy", "Jamie", "Eugene", "Yolanda", "Haley", "Crystal", "Erica", "Lori", "Alexandra", "April", "Cheryl", "Randall", "Yvette", "Sergio", "Sara", "Tommy", "Brittany", "Harry", "Benjamin", "Stephanie", "Tracie", "Chelsea", "Mariah", "Edgar", "Jordan", "Heather", "Timothy", "Stacy", "Jonathan", "Brittney", "Connie", "Jake", "Vickie", "Dominic", "Daisy", "Todd", "Tony", "Gabriella", "Derek", "Kristin", "Rebecca", "Roger", "Debbie", "Javier"];
 $scope.lastNames = ["Ross", "Cruz", "Berry", "Dawson", "Jarvis", "Christian", "Hinton", "Williams", "Horton", "Fuentes", "Cunningham", "Bullock", "White", "Hodges", "Hill", "Caldwell", "Ferguson", "Mendoza", "Rich", "Rhodes", "Medina", "Robertson", "Griffin", "Quinn", "Brewer", "Mack", "Villarreal", "Marshall", "Booth", "Schultz", "Fernandez", "Cabrera", "James", "Peters", "Mclean", "Mcdonald", "Mitchell", "Wilkerson", "Hudson", "Massey", "Murphy", "Sparks", "Hoover", "Sandoval", "Madden", "Lane", "Bryan", "Fitzgerald", "Swanson", "Blanchard", "Garrett", "Simmons", "Norman", "Richards", "Yu", "Vaughn", "Rivera", "Mccarthy", "Walters", "Rush", "Arroyo", "Peterson", "Stephens", "Powers", "Mcguire", "Mccormick", "Schaefer", "Forbes", "Bailey", "Warren", "Woodard", "Burke", "Johnston", "Stout", "Johns", "Wheeler", "Delgado", "Alvarado", "Avery", "Martin", "Finley", "Lin", "Baker", "Montoya", "Marquez", "Henderson", "Bird", "Jimenez", "Kaufman", "Moreno", "King", "Roberts", "Shepherd", "Adkins", "Hartman", "Garcia", "Ward", "Bates", "Gaines", "Thomas", "Cortez", "Estes", "Miller", "Harper", "Case", "Ruiz", "Gomez", "Ho", "Chapman", "Leonard", "Dickerson", "Reyes", "Gordon", "Maddox", "Cannon", "Mckee", "Burch", "Perkins", "Lester", "Casey", "Lambert", "Underwood", "Morales", "Joyce", "Lynn", "Ramirez", "Cordova", "Drake", "Vasquez", "Daniels", "Frazier", "Walker", "Mclaughlin", "Hutchinson", "Bowers", "Richard", "Munoz", "Dillon", "Bauer", "Riggs", "Austin", "Hunter", "Webb", "Valenzuela", "Romero", "Humphrey", "Cross", "Robles", "Castro", "Jensen", "Marsh", "Pineda", "Warner", "Hobbs", "Patterson", "Moran", "Zhang", "Davila", "Schmidt", "Mills", "Decker", "Dean", "Coleman", "Franco", "Butler", "Wagner", "Pollard", "Lawrence", "Michael", "Davies", "Hughes", "Valentine", "Meyer", "Kelley", "Morris", "Vargas", "Estrada", "Perez", "Brennan", "Kline", "Stevens", "Sullivan", "Hardy", "Yang", "Whitaker", "Reed", "Riddle", "Kennedy", "Gutierrez", "Terry", "Walsh", "Malone", "Wood", "Ray", "Robinson", "Rice", "Hoffman", "Foster", "Hebert", "Scott", "Wise", "Mcpherson", "Beard", "Sharp", "Johnson", "Ryan", "Chavez", "Perry", "Atkins", "Hodge", "Lewis", "Garrison", "Clark", "Mann", "Ramsey", "Simon", "Bell", "Alvarez", "Garza", "Odonnell", "Elliott", "Vincent", "Cole", "Arias", "Beck", "Reid", "Blankenship", "Irwin", "Weber", "Morse", "Chambers", "Higgins", "Hansen", "Sanchez", "Welch", "Saunders", "Olson", "Kirk", "Brown", "Long", "Cline", "Ortiz", "Greene", "Spencer", "Wall", "Fletcher", "Valencia", "Hawkins", "Chase", "Davidson", "Curtis", "Kirby", "Young", "Moore", "Watkins", "Fitzpatrick", "Craig", "Spears", "Conner", "Snyder", "Little", "Crane", "Burgess", "Golden", "Watson", "Steele", "Burns", "Aguilar", "Morgan", "Cooper", "Cox", "Blake", "Knight", "Duncan", "Banks", "Dunn", "Pugh", "Torres", "Bright", "Nicholson", "Montgomery", "Powell", "Williamson", "Brock", "Lyons", "Phillips", "Barnett", "Wade", "Brooks", "Gibbs", "Dennis", "Martinez", "Shah", "Adams", "Fritz", "Cherry", "Collier", "Hanson", "Patton", "Hopkins", "Hahn", "Gibson", "Hernandez", "Delacruz", "Rollins", "Boyer", "Leon", "Green", "Pruitt", "Barnes", "Stark", "Woods", "Pittman", "Webster", "Newton", "Bridges", "Vazquez", "Russell", "Barr", "Morrison", "Merritt", "Vaughan", "Herrera", "Cohen", "Benton", "Macdonald", "Mccoy", "Alexander", "Cervantes", "Navarro", "Silva", "Daniel", "Murillo", "Lawson", "Rose", "Calderon", "Howard", "Miles", "Howell", "Edwards", "Baldwin", "Vega", "Holmes", "Flores", "Jones", "Davis", "Harrison", "Doyle", "Colon", "Woodward", "Barry", "Porter", "Holland", "Ballard", "Rowe", "Flynn", "Terrell", "Hicks", "Fox", "Hall", "Hurst", "Pena", "Gillespie", "Chandler", "Li", "Oliver", "Anderson", "Fleming", "Atkinson", "Ware", "Harris", "Mcgee", "Simpson", "Carrillo", "Stanley", "Arnold", "Sanders", "Dominguez", "Carlson", "Tate", "Huber", "Castillo", "Ali", "Galvan", "Shaffer", "Stewart", "Meyers", "Reynolds", "Singh", "Avila", "Kelly", "Velazquez", "Murray", "Wright", "Strickland", "Wallace", "Diaz", "Dunlap", "Short", "Jackson", "Ramos", "Ayers", "Allen", "Gill", "Turner", "Boyd", "Smith", "Sherman", "Orozco", "Chen", "Rodriguez", "Pitts", "Wiggins", "Carroll", "Mcbride", "Hayes", "Velasquez", "West", "Stokes", "Le", "Fowler", "Frank", "Gilmore", "Lutz", "Abbott", "Freeman", "Rocha", "Contreras", "Carpenter", "Brady", "Graham", "Byrd", "Kent", "Kaiser", "Jenkins", "Deleon", "Parrish", "Hardin", "Clay", "Mcmillan", "Lucas", "Lee", "Payne", "Ritter", "Campbell", "Carr", "Thornton", "Taylor", "Rios", "Mccall", "Richardson", "Santiago", "Park", "Phelps", "Wilson", "Kerr", "Gilbert", "Huff", "Duffy", "Kim", "Parker", "Ball", "Franklin", "Dixon", "Nguyen", "Becker", "Buchanan", "Wells", "Evans", "Fuller", "Calhoun", "Collins", "Kidd", "Thompson", "Parsons", "Choi", "Pearson", "Hart", "Randall", "Burton", "Cook", "Gonzalez", "Larson", "Mullins", "Stone", "Lopez", "Willis", "Pace", "Oneal", "Jordan", "Nichols", "Nelson", "Bryant", "Todd", "Carter", "Bennett", "Mathews", "Combs", "Oconnor", "Harrington"];
+
+/** Flight Crew names and positions*/
+// Arrays of first names
+var maleFirstNames = [
+    'John', 'William', 'James', 'Charles', 'George', 'Frank', 'Joseph', 'Thomas', 'Henry', 'Robert',
+    'Edward', 'Harry', 'Walter', 'Arthur', 'Fred', 'Albert', 'Samuel', 'David', 'Louis', 'Carl'
+];
+var femaleFirstNames = [
+    'Mary', 'Anna', 'Emma', 'Elizabeth', 'Minnie', 'Margaret', 'Ida', 'Alice', 'Bertha', 'Sarah',
+    'Annie', 'Clara', 'Ella', 'Florence', 'Cora', 'Martha', 'Laura', 'Nellie', 'Grace', 'Carrie'
+];
+
+// Array of positions
+var positions = [
+    'Captain', 'First Officer', 'Lead Flight Attendant', 'Flight Attendant 2', 'Flight Attendant 3',
+    'Flight Attendant 4', 'Gate Attendant'
+];
 
 // Initializing the lists
 $scope.passengersNotCheckedIn = [];

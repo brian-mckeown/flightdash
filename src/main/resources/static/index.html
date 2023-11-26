@@ -445,15 +445,44 @@
                                 </div>
                             </div>
 
-                            <!-- Row 3 -->
+                            <!-- Row 4 -->
                             <div class="row mb-3">
                                 <!-- Passengers Input -->
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <label for="numberOfPassengers" class="form-label">Passengers</label>
                                     <input type="number" class="form-control" id="numberOfPassengers" ng-model="numberOfPassengers">
                                 </div>
-
+                        
+                                <!-- Airline -->
+                                <div class="col-md-4">
+                                    <label for="airlineInput" class="form-label">Airline</label>
+                                    <input type="text" class="form-control" id="airlienInput" placeholder="e.g. American Airlines" ng-model="airline">
+                                </div>
+                        
+                                <!-- Generate Flight Crew -->
+                                <div class="col-md-4">
+                                    <label for="generateFlightCrew" class="form-label">Generate Flight Crew</label>
+                                    <input type="button" class="btn btn-success" id="generateFlightCrew" ng-click="generateFlightCrew()" value="Generate Flight Crew">
+                                </div>
                             </div>
+
+                            <div>
+                                <h4>Flight Crew</h4>
+                                <table class="table table-sm">
+                                  <thead>
+                                    <tr>
+                                      <th scope="col">Position</th>
+                                      <th scope="col">Name</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr ng-repeat="crewMember in flightCrewArray">
+                                      <td>{{ crewMember.position }}</td>
+                                      <td>{{ crewMember.firstName }} {{ crewMember.lastName }}</td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
                         </form>
                         
                     </div>  
