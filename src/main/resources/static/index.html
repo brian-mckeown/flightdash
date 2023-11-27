@@ -554,8 +554,13 @@
                                     <button type="button" class="btn btn-sm btn-dark">Descent</button>
                                 </div>
                                 <div class="col-md-auto">
-                                    <button type="button" class="btn btn-sm btn-dark">Landing</button>
+                                    <button type="button" class="btn btn-sm btn-dark" ng-click="fetchLandingAnnouncement()" ng-disabled="isLandingAnnouncementLoading">Landing
+                                        <div ng-show="isLandingAnnouncementLoading" class="spinner-grow spinner-grow-sm text-info" role="status">
+                                            <span class="visually-hidden"></span>
+                                          </div>
+                                    </button>
                                 </div>
+                                <audio ng-src="{{audioSrc}}" controls autoplay></audio>
                             </div>
                         </form>
                         <div class="form-check">

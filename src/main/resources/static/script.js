@@ -23,6 +23,8 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$
     $scope.airportInfo = {};
     $scope.savedConfigData = {};
     $scope.defaultChecklists = {};
+
+    $scope.audioSrc = '';
     
     $scope.runways = '';
     $scope.frequencies = '';
@@ -1366,6 +1368,52 @@ $scope.deBoardPassengersAndBags = function() {
             });
     };
     $scope.fetchDefaultChecklists();
+
+    $scope.isLandingAnnouncementLoading = false;
+    $scope.fetchLandingAnnouncement = function() {
+        $scope.isLandingAnnouncementLoading = true;
+
+        var requestData = {
+            openAiApiKey: $scope.openAiApiKey,
+            flightCrewArray: $scope.flightCrewArray,
+            airline: $scope.airline,
+            flightNumber: $scope.callSign,
+            currentDateTime: new Date().toISOString(), // Format the current date and time as ISO string
+            departureIcao: $scope.departureIcao,
+            arrivalIcao: $scope.arrivalIcao
+        };
+
+        // Define the headers for your POST request
+        var config = {
+            headers : {
+                'Content-Type': 'application/json'
+            }
+        };
+        $http({
+            method: 'POST',
+            url: '/api/v1/announcements/landing',
+            data: requestData,
+            responseType: 'blob',  // Correct way to set the expected response type for binary data
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+            .then(function(response) {
+                // Handle the audio response
+            var blob = new Blob([response.data], { type: 'audio/mpeg' });
+            $scope.audioSrc = $sce.trustAsResourceUrl(URL.createObjectURL(blob));
+            console.log("test1: " + blob);
+            console.log("test2: " + $scope.audioSrc);
+            console.log("Audio Blob size: " + blob.size);
+            })
+            .catch(function(error) {
+                // Handle errors here, such as displaying a message to the user
+                console.error('Error fetching landing announcement:', error);
+            })
+            .finally(function() {
+                $scope.isLandingAnnouncementLoading = false; // Hide spinner
+            });
+    };
     
 }]);
 
