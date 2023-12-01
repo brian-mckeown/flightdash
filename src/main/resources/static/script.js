@@ -1369,6 +1369,16 @@ $scope.deBoardPassengersAndBags = function() {
     };
     $scope.fetchDefaultChecklists();
 
+
+    $scope.playDingThenCallback = function(callback) {
+        var dingAudio = document.getElementById('dingAudio');
+        dingAudio.play();
+        dingAudio.onended = function() {
+            // Wait for 1 second after ding audio ends
+            setTimeout(callback, 1000);
+        };
+    };
+
     $scope.isLandingAnnouncementLoading = false;
     $scope.fetchLandingAnnouncement = function() {
         $scope.isLandingAnnouncementLoading = true;
@@ -1398,14 +1408,21 @@ $scope.deBoardPassengersAndBags = function() {
                 'Content-Type': 'application/json'
             },
         })
-            .then(function(response) {
-                // Handle the audio response
+        .then(function(response) {
             var blob = new Blob([response.data], { type: 'audio/mpeg' });
             $scope.audioSrc = $sce.trustAsResourceUrl(URL.createObjectURL(blob));
-            console.log("test1: " + blob);
-            console.log("test2: " + $scope.audioSrc);
-            console.log("Audio Blob size: " + blob.size);
-            })
+    
+            // Use the reusable function
+            $scope.playDingThenCallback(function() {
+                var announcementAudio = document.getElementById('announcementAudio');
+                if (announcementAudio) {
+                    announcementAudio.src = $scope.audioSrc;
+                    announcementAudio.play();
+                } else {
+                    console.error('Announcement audio element not found');
+                }
+            });
+        })
             .catch(function(error) {
                 // Handle errors here, such as displaying a message to the user
                 console.error('Error fetching landing announcement:', error);
