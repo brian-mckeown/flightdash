@@ -673,6 +673,7 @@ $scope.clearConfigValues = function() {
 $scope.callSign = '';
 $scope.departureIcao = '';
 $scope.arrivalIcao = '';
+$scope.flightLevelString = '';
 $scope.airline = '';
 $scope.flightCrewArray = [];
 $scope.showFlightStatBanner = false;
@@ -1262,6 +1263,8 @@ $scope.deBoardPassengersAndBags = function() {
                 $scope.callSign = $scope.flightPlanJSONData.atc.callsign;
                 $scope.departureIcao = $scope.flightPlanJSONData.origin.icao_code;
                 $scope.arrivalIcao = $scope.flightPlanJSONData.destination.icao_code;
+                $scope.flightLevelString = $scope.flightPlanJSONData.general.stepclimb_string;
+                console.log("STEP FLIGHT LEVEL STRING: " + $scope.flightLevelString);
 
                 $scope.numberOfPassengers = Number($scope.flightPlanJSONData.weights.pax_count);
 
@@ -1379,9 +1382,9 @@ $scope.deBoardPassengersAndBags = function() {
         };
     };
 
-    $scope.isLandingAnnouncementLoading = false;
-    $scope.fetchLandingAnnouncement = function() {
-        $scope.isLandingAnnouncementLoading = true;
+    $scope.isAnnouncementLoading = false;
+    $scope.fetchAnnouncement = function(announcementType) {
+        $scope.isAnnouncementLoading = true;
 
         var requestData = {
             openAiApiKey: $scope.openAiApiKey,
@@ -1390,7 +1393,10 @@ $scope.deBoardPassengersAndBags = function() {
             flightNumber: $scope.callSign,
             currentDateTime: new Date().toISOString(), // Format the current date and time as ISO string
             departureIcao: $scope.departureIcao,
-            arrivalIcao: $scope.arrivalIcao
+            arrivalIcao: $scope.arrivalIcao,
+            arrivalTime: $scope.estimateGateArrivalDateTime,
+            flightLevelString: $scope.flightLevelString,
+            announcementType: announcementType
         };
 
         // Define the headers for your POST request
@@ -1428,7 +1434,7 @@ $scope.deBoardPassengersAndBags = function() {
                 console.error('Error fetching landing announcement:', error);
             })
             .finally(function() {
-                $scope.isLandingAnnouncementLoading = false; // Hide spinner
+                $scope.isAnnouncementLoading = false; // Hide spinner
             });
     };
     

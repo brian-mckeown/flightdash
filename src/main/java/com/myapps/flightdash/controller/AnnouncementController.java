@@ -32,19 +32,68 @@ static {
 
     @PostMapping("/landing")
     public ResponseEntity<?> fetchLandingAnnouncement(@RequestBody Map<String, Object> payload) {
+
+        String announcementType = (String)payload.get("announcementType");
         String openAiApiKey = (String) payload.get("openAiApiKey");
         String aiResponseText = "";
         List<Map<String, Object>> flightCrewArray = (List<Map<String, Object>>) payload.get("flightCrewArray");
         String airline = (String) payload.get("airline");
         String flightNumber = (String) payload.get("flightNumber");
         String currentDateTime = (String) payload.get("currentDateTime"); // Make sure to parse or convert this to a Date object as needed
+        String arrivalTime = (String) payload.get("arrivalTime");
         String departureIcao = (String) payload.get("departureIcao");
         String arrivalIcao = (String) payload.get("arrivalIcao");
-        String weatherUrl = "https://api.weatherbit.io/v2.0/current?station=" +
+        String flightLevelString = (String) payload.get("flightLevelString");
+        
+        String departureWeatherUrl = "https://api.weatherbit.io/v2.0/current?station=" +
+                departureIcao + "&key=" + weatherbitApiToken + "&include=minutely";
+        String arrivalWeatherUrl = "https://api.weatherbit.io/v2.0/current?station=" +
                 arrivalIcao + "&key=" + weatherbitApiToken + "&include=minutely";
 
+        //set Flight Crew names:
+        String captainFirstName = "";
+        String captainLastName = "";
+        String foFirstName = "";
+        String foLastName = "";
+        String leadFaFirstName = "";
+        String fa2FirstName = "";
+        String fa3FirstName = "";
+        String fa4FirstName = "";
+
+        for (Map<String, Object> crewMember : flightCrewArray) {
+            String position = (String) crewMember.get("position");
+            String firstName = (String) crewMember.get("firstName");
+            String lastName = (String) crewMember.get("lastName");
+
+            switch (position) {
+                case "Captain":
+                    captainFirstName = firstName;
+                    captainLastName = lastName;
+                    break;
+                case "First Officer":
+                    foFirstName = firstName;
+                    foLastName = lastName;
+                    break;
+                case "Lead Flight Attendant":
+                    leadFaFirstName = firstName;
+                    break;
+                case "Flight Attendant 2":
+                    fa2FirstName = firstName;
+                    break;
+                case "Flight Attendant 3":
+                    fa3FirstName = firstName;
+                    break;
+                case "Flight Attendant 4":
+                    fa4FirstName = firstName;
+                    break;
+                // Add more cases as needed
+            }
+        }
+
     RestTemplate restTemplate = new RestTemplate();
-    ResponseEntity<Map> weatherResponse = restTemplate.getForEntity(weatherUrl, Map.class);
+
+
+    ResponseEntity<Map> weatherResponse = restTemplate.getForEntity(arrivalWeatherUrl, Map.class);
 
     // Initialize response variables
     String weatherDescription = null;
@@ -52,12 +101,34 @@ static {
     String announcementVoice = null;
     Map<String, Object> response = new HashMap<>();
 
-    // Parse the flightCrewArray to find the Lead Flight Attendant
-    if (flightCrewArray != null) {
-        for (Map<String, Object> crewMember : flightCrewArray) {
-            if ("Lead Flight Attendant".equals(crewMember.get("position"))) {
-                announcementVoice = (String) crewMember.get("voice");
-                break; // Stop the loop once the lead flight attendant is found
+    if (announcementType.equals("landing") || announcementType.equals("safety")) {
+        // Parse the flightCrewArray to find the Lead Flight Attendant
+        if (flightCrewArray != null) {
+            for (Map<String, Object> crewMember : flightCrewArray) {
+                if ("Lead Flight Attendant".equals(crewMember.get("position"))) {
+                    announcementVoice = (String) crewMember.get("voice");
+                    break; // Stop the loop once the lead flight attendant is found
+                }
+            }
+        }
+    } else if (announcementType.equals("pre taxi") || announcementType.equals("cruise") || announcementType.equals("descent")) {
+        // Parse the flightCrewArray to find the Captain
+        if (flightCrewArray != null) {
+            for (Map<String, Object> crewMember : flightCrewArray) {
+                if ("Captain".equals(crewMember.get("position"))) {
+                    announcementVoice = (String) crewMember.get("voice");
+                    break; // Stop the loop once the Captain is found
+                }
+            }
+        }
+    } else if (announcementType.equals("boarding")) {
+        // Parse the flightCrewArray to find the Gate Attendant
+        if (flightCrewArray != null) {
+            for (Map<String, Object> crewMember : flightCrewArray) {
+                if ("Gate Attendant".equals(crewMember.get("position"))) {
+                    announcementVoice = (String) crewMember.get("voice");
+                    break; // Stop the loop once the Gate Attendant is found
+                }
             }
         }
     }
@@ -75,7 +146,14 @@ static {
         //Define Chat GPT 4 data
         String chatGptModel = "gpt-4";
         String ttsModel = "tts-1-hd";
-        String systemRole = 
+        double aiTemp = 0.7;
+        int max_tokens = 1024;
+        String systemRole = "";
+        String instruction = "";
+
+
+        if (announcementType.equals("landing")) {
+        systemRole = 
         "You are an experienced flight attendant for the airline: " 
         + airline 
         + ", on flight number: " 
@@ -90,9 +168,99 @@ static {
         + " degrees celsius. The date and time in UTC is " 
         + currentDateTime;
 
-        String instruction = "Write a script for an after-landing announcement for the flight. When mentioning the flight number, only mention the number portion as individual digits, not the letters. Include all standard content in a typical airliner announcment, and also include brief information on on local attractions. If it is a holiday today or a holiday is upcoming, be sure to speak to this briefly. Always convert the temperature to fareinheit unless celsius is standard to the region. Also, provide the time in AM/PM format. Never say the icao codes directly, always say the actual city name.";
-        double aiTemp = 0.7;
-        int max_tokens = 1024;
+        instruction = "Write a script for an after-landing announcement for the flight. When mentioning the flight number, only mention the number portion as individual digits, not the letters. Include all standard content in a typical airliner announcment, and also include brief information on on local attractions. If it is a holiday today or a holiday is upcoming, be sure to speak to this briefly. Always convert the temperature to fareinheit unless celsius is standard to the region. Also, provide the time in AM/PM format. Never say the icao codes directly, always say the actual city name.";
+        }
+        else if (announcementType.equals("pre taxi")) {
+        systemRole = 
+        "You are airliner captain for the airline: " 
+        + airline 
+        + ", on flight number: " 
+        + flightNumber
+        + ". You are flying from " 
+        + departureIcao 
+        + " to "
+        + arrivalIcao 
+        + ". The weather at the destination is: " 
+        + weatherDescription 
+        + " at " + celsiusTemp 
+        + " degrees celsius. The date and time in UTC is " 
+        + currentDateTime + ". " 
+        + "The flight's expected arrival time is: "
+        + arrivalTime + ". Always convert from the timezone given to the timezone of the arrival location. " 
+        + "Your name is: " 
+        + captainFirstName + " " + captainLastName
+        + ". Your First Officer's name is: "
+        + foFirstName + " " + foLastName
+        + ". Your flight attendants are: " 
+        + leadFaFirstName + ", "
+        + fa2FirstName + ", "
+        + fa3FirstName + ", "
+        + fa4FirstName + ". "
+        + "The flight level is the first number after the ICAO code in the following string: "
+        + flightLevelString;
+
+        instruction = "Write a script for your captain's announcement before a flight begins, welcoming the passengers and introducing the flight crew. When mentioning the flight number, only mention the number portion as individual digits, not the letters. Include all standard content in a typical preflight airliner announcment to passengers, and also mention the estimated time to arrive and expected weather conditions. Always convert the temperature to fareinheit unless celsius is standard to the region. Also, provide the time in AM/PM format and in the correct timezone for the destination, and be sure to account for correct daylight savings. Don't talk about the timezone or daylight savings though. The flight level should be said in feet. Never say the icao codes directly, always say the actual city name. Safety briefings to follow will be made by the flight attendants.";
+        
+        }
+        else if (announcementType.equals("safety")) {
+        systemRole = 
+        "You are a flight attendant for the airline: " 
+        + airline 
+        + ", on flight number: " 
+        + flightNumber
+        + ". You are flying from " 
+        + departureIcao 
+        + " to "
+        + arrivalIcao 
+        + ". "
+        + "Your name is: " 
+        + leadFaFirstName;
+
+        instruction = "Write a script for your safety breifing before the flight begins. Be sure to introduce yourself. Include all standard and important information that would be include in a modern airline safety announcement. When stating the flight number, just say the number portion in individual digits, not the letters.";
+        }
+        else if (announcementType.equals("cruise")) {
+        systemRole = 
+        "You are airliner captain for the airline: " 
+        + airline 
+        + ", on flight number: " 
+        + flightNumber
+        + ". You are flying from " 
+        + departureIcao 
+        + " to "
+        + arrivalIcao 
+        + ". The date and time in UTC is " 
+        + currentDateTime + ". " 
+        + "The flight's expected arrival time is: "
+        + arrivalTime + ". Always convert from the timezone given to the timezone of the arrival location. " 
+        + "Your flight attendants are: " 
+        + leadFaFirstName + ", "
+        + fa2FirstName + ", "
+        + fa3FirstName + ", "
+        + fa4FirstName + ". "
+        + "The flight level is the first number after the ICAO code in the following string: "
+        + flightLevelString;
+
+        instruction = "Write a script for a brief captain's announcement for reaching cruise altitude during the flight. When mentioning the flight number, only mention the number portion as individual digits, not the letters. Include all standard content in a typical cruise level airliner announcment to passengers, and also mention the estimated time to arrive and expected weather conditions. Always convert the temperature to fareinheit unless celsius is standard to the region. Also, provide the time in AM/PM format and in the correct timezone for the destination, and be sure to account for correct daylight savings. Don't talk about the timezone or daylight savings though. The flight level should be said in feet. Never say the icao codes directly, always say the actual city name. Mention that the flight attendants will be providing in flight services shortly.";
+        }
+        else if (announcementType.equals("descent")) {
+        systemRole = 
+        "You are airliner captain for the airline: " 
+        + airline 
+        + ", on flight number: " 
+        + flightNumber
+        + ". You are flying from " 
+        + departureIcao 
+        + " to "
+        + arrivalIcao 
+        + ". The date and time in UTC is " 
+        + currentDateTime + ". " 
+        + "The flight's expected arrival time is: "
+        + arrivalTime + ". Always convert from the timezone given to the timezone of the arrival location. " 
+        + "The flight level is the first number after the ICAO code in the following string: "
+        + flightLevelString;
+
+        instruction = "Write a script for a brief captain's announcement for beginning descent during the flight. When mentioning the flight number, only mention the number portion as individual digits, not the letters. Include all standard content in a typical descent airliner announcment to passengers, and also mention the estimated time to arrive and expected weather conditions. Always convert the temperature to fareinheit unless celsius is standard to the region. Also, provide the time in AM/PM format and in the correct timezone for the destination, and be sure to account for correct daylight savings. Don't talk about the timezone or daylight savings though. The flight level should be said in feet. Never say the icao codes directly, always say the actual city name.";
+        }
         
         // Define the body for the OpenAI chat completion request
         Map<String, Object> openAiRequestBody = new HashMap<>();

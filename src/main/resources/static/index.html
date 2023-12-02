@@ -542,23 +542,22 @@
                                     <button type="button" class="btn btn-sm btn-dark">Boarding</button>
                                 </div>
                                 <div class="col-md-auto">
-                                    <button type="button" class="btn btn-sm btn-dark">Pre Taxi</button>
+                                    <button type="button" class="btn btn-sm btn-dark" ng-click="fetchAnnouncement('pre taxi')" ng-disabled="isAnnouncementLoading">Pre Taxi</button>
                                 </div>
                                 <div class="col-md-auto">
-                                    <button type="button" class="btn btn-sm btn-dark">Safety</button>
+                                    <button type="button" class="btn btn-sm btn-dark" ng-click="fetchAnnouncement('safety')" ng-disabled="isAnnouncementLoading">Safety</button>
                                 </div>
                                 <div class="col-md-auto">
-                                    <button type="button" class="btn btn-sm btn-dark">Cruise</button>
+                                    <button type="button" class="btn btn-sm btn-dark" ng-click="fetchAnnouncement('cruise')" ng-disabled="isAnnouncementLoading">Cruise</button>
                                 </div>
                                 <div class="col-md-auto">
-                                    <button type="button" class="btn btn-sm btn-dark">Descent</button>
+                                    <button type="button" class="btn btn-sm btn-dark" ng-click="fetchAnnouncement('descent')" ng-disabled="isAnnouncementLoading">Descent </button>
                                 </div>
                                 <div class="col-md-auto">
-                                    <button type="button" class="btn btn-sm btn-dark" ng-click="fetchLandingAnnouncement()" ng-disabled="isLandingAnnouncementLoading">Landing
-                                        <div ng-show="isLandingAnnouncementLoading" class="spinner-grow spinner-grow-sm text-info" role="status">
-                                            <span class="visually-hidden"></span>
-                                          </div>
-                                    </button>
+                                    <button type="button" class="btn btn-sm btn-dark" ng-click="fetchAnnouncement('landing')" ng-disabled="isAnnouncementLoading">Landing</button>
+                                    <div ng-show="isAnnouncementLoading" class="spinner-grow spinner-grow-sm text-info" role="status">
+                                        <span class="visually-hidden"></span>
+                                    </div>
                                 </div>
                                 <audio id="dingAudio" src="./airplane-ding.mp3" style="display: none;"></audio>
                                 <audio id="announcementAudio" ng-src="{{audioSrc}}" controls></audio>
