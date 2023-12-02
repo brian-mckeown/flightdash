@@ -90,7 +90,7 @@ static {
         + " degrees celsius. The date and time in UTC is " 
         + currentDateTime;
 
-        String instruction = "Write a script for an after-landing announcement for the flight. When mentioning the flight number, only mention the number portion, not the letters. Include all standard content in a typical airliner announcment, and also include brief information on on local attractions. If it is a holiday today or a holiday is upcoming, be sure to speak to this briefly. Always convert the temperature to fareinheit unless celsius is standard to the region. Also, provide the time in AM/PM format. Never say the icao codes directly, always say the actual city name.";
+        String instruction = "Write a script for an after-landing announcement for the flight. When mentioning the flight number, only mention the number portion as individual digits, not the letters. Include all standard content in a typical airliner announcment, and also include brief information on on local attractions. If it is a holiday today or a holiday is upcoming, be sure to speak to this briefly. Always convert the temperature to fareinheit unless celsius is standard to the region. Also, provide the time in AM/PM format. Never say the icao codes directly, always say the actual city name.";
         double aiTemp = 0.7;
         int max_tokens = 1024;
         
