@@ -396,20 +396,25 @@
                           <form>
                             <!-- Row 1 -->
                             <div class="row mb-3">
+                                <!-- Aircraft Input -->
+                                <div class="col-md-3">
+                                    <label for="aircraftInput" class="form-label">Aircraft</label>
+                                    <input type="text" class="form-control" id="aircraftInput" placeholder="Enter Aircraft Name" ng-model="aircraftName">
+                                </div>
                                 <!-- Call Sign Input -->
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <label for="callSignInput" class="form-label">Call Sign</label>
                                     <input type="text" class="form-control" id="callSignInput" placeholder="Enter Call Sign" ng-model="callSign">
                                 </div>
                         
                                 <!-- Departure ICAO Input -->
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <label for="departureICAOInput" class="form-label">Departure ICAO</label>
                                     <input type="text" class="form-control" id="departureICAOInput" maxlength="4" oninput="this.value = this.value.toUpperCase()" placeholder="Enter Departure ICAO" ng-model="departureIcao">
                                 </div>
                         
                                 <!-- Arrival ICAO Input -->
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <label for="arrivalICAOInput" class="form-label">Arrival ICAO</label>
                                     <input type="text" class="form-control" id="arrivalICAOInput" maxlength="4" oninput="this.value = this.value.toUpperCase()" placeholder="Enter Arrival ICAO" ng-model="arrivalIcao">
                                 </div>
@@ -539,7 +544,10 @@
                                     </label>
                                 </div>
                                 <div class="col-md-auto">
-                                    <button type="button" class="btn btn-sm btn-dark">Boarding</button>
+                                    <button type="button" class="btn btn-sm btn-dark" ng-click="fetchAnnouncement('pre boarding')" ng-disabled="isAnnouncementLoading">Pre Boarding</button>
+                                </div>
+                                <div class="col-md-auto">
+                                    <button type="button" class="btn btn-sm btn-dark" ng-click="fetchAnnouncement('boarding6')" ng-disabled="isAnnouncementLoading">Boarding</button>
                                 </div>
                                 <div class="col-md-auto">
                                     <button type="button" class="btn btn-sm btn-dark" ng-click="fetchAnnouncement('pre taxi')" ng-disabled="isAnnouncementLoading">Pre Taxi</button>

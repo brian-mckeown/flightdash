@@ -670,6 +670,7 @@ $scope.clearConfigValues = function() {
 
 //** Flight Status Section */
 // Default values for the badges
+$scope.aircraftName = '';
 $scope.callSign = '';
 $scope.departureIcao = '';
 $scope.arrivalIcao = '';
@@ -700,7 +701,7 @@ $scope.generateFlightCrew = function() {
         var firstName = firstNameArray[Math.floor(Math.random() * firstNameArray.length)];
         var lastName = $scope.lastNames[Math.floor(Math.random() * $scope.lastNames.length)];
         var voiceOptions = (position === 'Captain' && gender === 'male') ? ['onyx'] : 
-                            (gender === 'male' ? ['alloy', 'echo', 'fable'] : ['nova', 'shimmer']);
+                            (gender === 'male' ? ['echo', 'fable'] : ['alloy', 'nova', 'shimmer']);
         var voice = voiceOptions[Math.floor(Math.random() * voiceOptions.length)];
         
         // Create the crew member object
@@ -1260,6 +1261,7 @@ $scope.deBoardPassengersAndBags = function() {
             .then(function(response) {
                 // Handle the returned data here
                 $scope.flightPlanJSONData = response.data;
+                $scope.aircraftName = $scope.flightPlanJSONData.aircraft.name;
                 $scope.callSign = $scope.flightPlanJSONData.atc.callsign;
                 $scope.departureIcao = $scope.flightPlanJSONData.origin.icao_code;
                 $scope.arrivalIcao = $scope.flightPlanJSONData.destination.icao_code;
@@ -1396,7 +1398,10 @@ $scope.deBoardPassengersAndBags = function() {
             arrivalIcao: $scope.arrivalIcao,
             arrivalTime: $scope.estimateGateArrivalDateTime,
             flightLevelString: $scope.flightLevelString,
-            announcementType: announcementType
+            announcementType: announcementType,
+            scheduledBoardingTime: $scope.scheduledBoardingDateTime,
+            scheduledDepartureTime: $scope.scheduledDepartureDateTime,
+            aircraftName: $scope.aircraftName
         };
 
         // Define the headers for your POST request
