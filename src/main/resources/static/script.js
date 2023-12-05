@@ -1412,7 +1412,7 @@ $scope.deBoardPassengersAndBags = function() {
         };
         $http({
             method: 'POST',
-            url: '/api/v1/announcements/landing',
+            url: '/api/v1/announcements/universal',
             data: requestData,
             responseType: 'blob',  // Correct way to set the expected response type for binary data
             headers: {
@@ -1441,6 +1441,57 @@ $scope.deBoardPassengersAndBags = function() {
             .finally(function() {
                 $scope.isAnnouncementLoading = false; // Hide spinner
             });
+    };
+
+    $scope.startPreBoardingAnnouncement = function() {
+
+        var noiseAudio = document.getElementById('noiseAudio');
+        noiseAudio.loop = true; // Set the audio to loop
+        noiseAudio.play(); // Start playing the audio
+        
+        $scope.fetchAnnouncement('pre boarding');
+
+        $timeout(function() {
+            noiseAudio.loop = false; // stop the audio to loop
+            noiseAudio.pause();
+            noiseAudio.currentTime = 0; // Reset the audio to the start
+        }, 60000); // 1min
+    }
+
+    $scope.startBoardingAnnouncements = function() {
+
+        var noiseAudio = document.getElementById('noiseAudio');
+        noiseAudio.loop = true; // Set the audio to loop
+        noiseAudio.play(); // Start playing the audio
+
+        $scope.fetchAnnouncement('boarding1');
+
+        $timeout(function() {
+            $scope.fetchAnnouncement('boarding2');
+        }, 120000); // 2 minutes
+
+        $timeout(function() {
+            $scope.fetchAnnouncement('boarding3');
+        }, 300000); // 5 minutes (2 + 3)
+
+        $timeout(function() {
+            $scope.fetchAnnouncement('boarding4');
+        }, 480000); // 8 minutes (2 + 3 + 3)
+
+        $timeout(function() {
+            $scope.fetchAnnouncement('boarding5');
+        }, 600000); // 10 minutes (2 + 3 + 3 + 2)
+
+        $timeout(function() {
+            $scope.fetchAnnouncement('boarding6');
+            noiseAudio.currentTime = 0; // Reset the audio to the start
+        }, 720000); // 12 minutes (2 + 3 + 3 + 2 + 2)
+
+        $timeout(function() {
+            noiseAudio.loop = false; // stop the audio to loop
+            noiseAudio.pause();
+            noiseAudio.currentTime = 0; // Reset the audio to the start
+        }, 750000); // 12.5 minutes (2 + 3 + 3 + 2 + 2)
     };
     
 }]);

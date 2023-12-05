@@ -30,7 +30,7 @@ static {
 }
     
 
-    @PostMapping("/landing")
+    @PostMapping("/universal")
     public ResponseEntity<?> fetchLandingAnnouncement(@RequestBody Map<String, Object> payload) {
 
         String announcementType = (String)payload.get("announcementType");

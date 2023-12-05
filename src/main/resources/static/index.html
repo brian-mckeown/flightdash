@@ -544,10 +544,10 @@
                                     </label>
                                 </div>
                                 <div class="col-md-auto">
-                                    <button type="button" class="btn btn-sm btn-dark" ng-click="fetchAnnouncement('pre boarding')" ng-disabled="isAnnouncementLoading">Pre Boarding</button>
+                                    <button type="button" class="btn btn-sm btn-dark" ng-click="startPreBoardingAnnouncement()" ng-disabled="isAnnouncementLoading">Pre Boarding</button>
                                 </div>
                                 <div class="col-md-auto">
-                                    <button type="button" class="btn btn-sm btn-dark" ng-click="fetchAnnouncement('boarding6')" ng-disabled="isAnnouncementLoading">Boarding</button>
+                                    <button type="button" class="btn btn-sm btn-dark" ng-click="startBoardingAnnouncements()" ng-disabled="isAnnouncementLoading">Boarding</button>
                                 </div>
                                 <div class="col-md-auto">
                                     <button type="button" class="btn btn-sm btn-dark" ng-click="fetchAnnouncement('pre taxi')" ng-disabled="isAnnouncementLoading">Pre Taxi</button>
@@ -568,6 +568,7 @@
                                     </div>
                                 </div>
                                 <audio id="dingAudio" src="./airplane-ding.mp3" style="display: none;"></audio>
+                                <audio id="noiseAudio" src="./noise.mp3" style="display: none;"></audio>
                                 <audio id="announcementAudio" ng-src="{{audioSrc}}" controls></audio>
                             </div>
                         </form>
