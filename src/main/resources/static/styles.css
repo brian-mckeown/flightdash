@@ -53,7 +53,7 @@ body, div, section {
 
 .navbar .navbar-brand {
     color: white;  /* Makes the text color white */
-    pointer-events: none;  /* Disables all pointer events, so it won't be clickable or hoverable */
+    
 }
 .navbar .navbar-brand:hover {
     text-decoration: none;  /* Removes underline on hover */
