@@ -1,3 +1,9 @@
+//initialized bootstrap tooltips. 
+var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+
 document.getElementById('customChecklistToggle').addEventListener('change', function() {
     var uploader = document.getElementById('customChecklistUploader');
     if (this.checked) {

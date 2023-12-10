@@ -286,3 +286,38 @@ hr {
     width: 90%; /* Adjust as needed */
     margin: 0 auto; /* Center the container */
 }
+
+/* Custom Sidebar Styles */
+div.bg-black {
+    background-color: #000 !important; /* Ensures the background is black */
+}
+
+.nav-link {
+    color: white !important; /* Ensures the icons (and text) are white */
+}
+
+/* Custom width adjustment */
+.col-auto {
+    padding: 0; /* Removes default padding */
+    width: auto; /* Sets width to content width */
+}
+
+/* Override default Bootstrap padding and margins */
+.bg-black .nav-link, .bg-black .nav-item {
+    padding: 0;
+    margin: 0;
+}
+
+/* Hide text next to icons for all screen sizes if not needed */
+.bg-black .nav-link .ms-1 {
+    display: none;
+}
+
+/* Additional adjustments if needed */
+.bg-black .nav-pills {
+    padding-left: 0;
+}
+
+.bg-black .dropdown-menu {
+    margin-top: 0;
+}

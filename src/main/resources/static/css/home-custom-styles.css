@@ -1,0 +1,22 @@
+.header-background {
+    position: relative; /* Ensures the pseudo-element is positioned relative to the header */
+    background-image: url('../assets/home-bg.jpg');
+    background-size: cover; /* Ensure the image covers the whole header */
+    background-position: center; /* Center the image */
+}
+
+.header-background::before {
+    content: ''; /* Required for pseudo-elements */
+    position: absolute; /* Position relative to the header */
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent black color */
+    z-index: 1; /* Ensures the overlay is above the background image but below the content */
+}
+
+.header-content {
+    position: relative; /* Make sure the text appears above the overlay */
+    z-index: 2;
+}
