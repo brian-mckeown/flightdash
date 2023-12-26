@@ -94,11 +94,16 @@ static {
                     gaFirstName = firstName;
             }
         }
+        
+    StringBuilder apiCallStatus = new StringBuilder();
 
     RestTemplate restTemplate = new RestTemplate();
 
 
     ResponseEntity<Map> weatherResponse = restTemplate.getForEntity(arrivalWeatherUrl, Map.class);
+    apiCallStatus.append("Weather API Call - Status: ")
+                 .append(weatherResponse.getStatusCode())
+                 .append("\n");
 
     // Initialize response variables
     String weatherDescription = null;
@@ -440,6 +445,9 @@ static {
         // Make the POST request to OpenAI
         String openAiUrl = "https://api.openai.com/v1/chat/completions";
         ResponseEntity<Map> openAiResponse = restTemplate.postForEntity(openAiUrl, entity, Map.class);
+        apiCallStatus.append("OpenAI GPT API Call - Status: ")
+                 .append(openAiResponse.getStatusCode())
+                 .append("\n");
 
        // Check response and extract OpenAI response text
         if (openAiResponse.getStatusCode().is2xxSuccessful() && openAiResponse.getBody() != null) {
@@ -463,6 +471,8 @@ static {
         ResponseEntity<byte[]> ttsResponse = restTemplate.postForEntity(ttsUrl, ttsEntity, byte[].class);
             // Construct the response object
         if (ttsResponse.getStatusCode().is2xxSuccessful() && ttsResponse.getBody() != null) {
+
+            apiCallStatus.append("OpenAI TTS API Call - Success\n");
             // The response should be the binary data of the mp3 file
             byte[] audioData = ttsResponse.getBody();
 
@@ -479,11 +489,11 @@ static {
             // Handle error case
         // Since it's an error condition, construct a JSON response
         Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("error", "Failed to generate audio from the text");
+        errorResponse.put("error", apiCallStatus + "\nOpenAI TTS Call: Failed to generate audio from the text");
         return ResponseEntity.status(ttsResponse.getStatusCode()).body(new MapResource(errorResponse));
         }
     }
-    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("internal server error");
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiCallStatus + "\ninternal server error");
     
 }
 // Helper class to wrap a Map in a Resource

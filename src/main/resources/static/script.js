@@ -23,6 +23,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$
     $scope.airportInfo = {};
     $scope.savedConfigData = {};
     $scope.defaultChecklists = {};
+    $scope.announcementApiReport = '';
 
     $scope.audioSrc = '';
     
@@ -1436,7 +1437,8 @@ $scope.deBoardPassengersAndBags = function() {
         })
             .catch(function(error) {
                 // Handle errors here, such as displaying a message to the user
-                console.error('Error fetching landing announcement:', error);
+                console.error('Error fetching announcement:', error);
+                $scope.announcementApiReport = error;
             })
             .finally(function() {
                 $scope.isAnnouncementLoading = false; // Hide spinner
