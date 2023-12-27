@@ -775,18 +775,24 @@ Baggage Claim: {{ bagsBaggageClaim.length }}
                 <!-- Announcements Tab-->
                 <div ng-show="activeTab === 'announcements'">
                     <div class="container mt-4">
-                        <h3>Announcements</h3>
+                        <h3>Announcements (Open Beta)</h3>
+                        <p>Before using this feature, you must read and agree to the <a href="/openai-usage-policy" target="_blank">OpenAI Usage Policy</a>.</p>
+                        <p>Please complete the checklist below. This ensures that you understand all terms of use, and are properly configured to receive the best possible experience with this feature. Once complete, the Announcements Controller will become available.</p>
+                        <form>
+                            <div class="form-check" ng-repeat="checkbox in announcementCheckboxes">
+                                <input class="form-check-input" type="checkbox" id="{{checkbox.id}}" ng-model="checkbox.checked">
+                                <label class="form-check-label" for="{{checkbox.id}}">
+                                    {{checkbox.label}}
+                                </label>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="container mt-4" ng-show="announcementsReady">
                         <form>
                         <div class="row mb-3">
                             <div class="col-md-12">
                                 <label class="form-label">
                                     AI Crew Announcements
-                                    <i class="fas fa-exclamation-triangle text-danger" 
-                                       style="cursor:pointer;" 
-                                       data-bs-toggle="popover" 
-                                       title="Cost Notice <button type='button' class='btn-close close-popover' aria-label='Close'></button>"
-                                       data-bs-content="Using the AI Crew Announcements will incur costs directly to your OpenAI account. The GPT-4 and TTS-HD models are used, which can utilize up to 1024 tokens each for script generation and text-to-speech. Please review OpenAI's pricing policies at https://openai.com/pricing before proceeding. By selecting any of the AI Crew Announcements buttons, you acknowledge and agree that you will be responsible for any costs incurred. Furthermore, you agree to hold FlightDash.io and its affiliates harmless and release them from any liability related to such costs." 
-                                       data-bs-html="true"> Cost Notice [Click]</i>
                                 </label>
                             </div>
                             <div class="col-md-auto">
@@ -818,6 +824,12 @@ Baggage Claim: {{ bagsBaggageClaim.length }}
                             <audio id="announcementAudio" ng-src="{{audioSrc}}" controls></audio>
                         </div>
                         </form>
+                        <div class="alert alert-warning">
+                            <strong>Note:</strong> When you click an announcment button, OpenAI is processing your flight data, creating a script, recording the audio, then sending it back to you. This does not all happen instantly. Announcments may take up to 1-2 minutes, but usually much faster. This is dependent on network speeds, as well as OpenAI's current performance and availability.
+                        </div>
+                        <div class="alert alert-danger">
+                            <strong>Support:</strong> If you feel you've configured everything properly based on the checklist steps above, and are not getting any announcements after waiting a few mintues, please cease using the feature (to avoid any additional OpenAI API costs) and report the issue via <a href="/#support-section" target="_blank">Support</a>
+                        </div>
                         <div>
                             <p ng-model="announcementApiReport">
 

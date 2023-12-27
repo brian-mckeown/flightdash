@@ -24,6 +24,24 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$
     $scope.savedConfigData = {};
     $scope.defaultChecklists = {};
     $scope.announcementApiReport = '';
+    $scope.announcementsReady = false;
+
+    $scope.announcementCheckboxes = [
+        { id: 'policyAgreement', label: 'I have read and agree to the OpenAI Usage Policy.', checked: false },
+        { id: 'costResponsibility', label: 'I understand that all costs incurred via OpenAI are my responsibility, regardless of FlightDash.io\'s cost estimation accuracy. I do not hold FlightDash.io (including developers, members, affiliates, etc.) accountable for any costs incurred.', checked: false },
+        { id: 'betaUnderstanding', label: 'I understand that this is an Open Beta feature and may not always work as expected.', checked: false },
+        { id: 'apiKeyAdded', label: 'I\'ve added my OpenAI API Key in the Configuration Settings.', checked: false },
+        { id: 'flightDataCheck', label: 'I\'ve ensured that all Flight Data and Flight Crew are generated in the Flight Data section of FlightDash.io (no fields are empty).', checked: false }
+    ];
+
+    function updateAnnouncementsReady() {
+        $scope.announcementsReady = $scope.announcementCheckboxes.every(function(checkbox) {
+            return checkbox.checked;
+        });
+    }
+
+    $scope.$watch('announcementCheckboxes', updateAnnouncementsReady, true);
+    
 
     $scope.audioSrc = '';
     
