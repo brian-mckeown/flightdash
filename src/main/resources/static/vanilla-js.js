@@ -39,12 +39,6 @@ fetch('/support')
         document.getElementById('support').innerHTML = content;
     });
 
-fetch('/about')
-    .then(response => response.text())
-    .then(content => {
-        document.getElementById('about').innerHTML = content;
-    });
-
 fetch('/welcome')
     .then(response => response.text())
     .then(content => {
