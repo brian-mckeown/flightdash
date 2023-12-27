@@ -17,11 +17,6 @@ public class ThymeleafController {
         return "terms"; // This refers to terms.html in src/main/resources/templates
     }
 
-    @GetMapping("/support")
-    public String supportContent() {
-        return "support"; // This refers to support.html in src/main/resources/templates
-    }
-
      @GetMapping("/openai-usage-policy")
     public String openAIUsagePolicyContent() {
         return "openai-usage-policy"; // This refers to openai-usage-policy.html in src/main/resources/templates

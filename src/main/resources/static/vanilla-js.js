@@ -33,12 +33,6 @@ fetch('/terms')
         document.getElementById('terms').innerHTML = content;
     });
 
-fetch('/support')
-    .then(response => response.text())
-    .then(content => {
-        document.getElementById('support').innerHTML = content;
-    });
-
 fetch('/welcome')
     .then(response => response.text())
     .then(content => {
