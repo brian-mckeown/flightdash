@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlightDash.io User Guide</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #fullHeightIframe {
+            width: 100%;
+            height: 100vh; /* Initially set to full viewport height */
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <iframe id="fullHeightIframe" src="https://scribehow.com/page-embed/FlightDashio_User_Guide__DSwMzwXcRQ-6YhfLetZK7w?as=scrollable" width="100%" height="640" allowfullscreen frameborder="0"></iframe>
+
+    <script>
+        function adjustIframeHeight() {
+            var iframe = document.getElementById('fullHeightIframe');
+            iframe.style.height = window.innerHeight + 'px';
+        }
+
+        window.onresize = adjustIframeHeight;
+        window.onload = adjustIframeHeight;
+    </script>
+</body>
+</html>

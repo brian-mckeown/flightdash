@@ -1,884 +1,411 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>flightdash.io</title>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RKZ370CHNJ"></script>
-    <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>FlightDash.io</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Bootstrap icons-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet" />
+            <!-- Include FontAwesome -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="css/styles.css" rel="stylesheet" />
+        <!-- Custom CSS)-->
+        <link href="css/home-custom-styles.css" rel="stylesheet" />
+    </head>
+    <body>
+        <!-- Responsive navbar-->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-black">
+            <div class="container px-5">
+                <a class="navbar-brand" href="#!"><i class="fas fa-plane"></i> FlightDash.io</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="#!">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="./app" target="_blank">App</a></li>
+                        <li class="nav-item"><a class="nav-link" href="./guide" target="_blank">Knowledgebase</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#forum-section">Forum</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#support-section">Support</a></li>
+                        <li class="nav-item"><a class="nav-link" href="https://www.facebook.com/profile.php?id=61553297903915" target="_blank" style="text-decoration: none;">
+                            <i class="fa-brands fa-facebook fa-lg"></i></a></li>
+                        <li class="nav-item"><a class="nav-link" href="https://www.youtube.com/@FlightDashIO" target="_blank" style="text-decoration: none;">
+                            <i class="fa-brands fa-youtube fa-lg"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- Header-->
+        <header class="header-background py-5">
+            <div class="container px-5 header-content">
+                <div class="row gx-5 justify-content-center">
+                    <div class="col-lg-6">
+                        <div class="text-center my-5">
+                            <h1 class="display-5 fw-bolder text-white mb-2">Welcome to FlightDash.io</h1>
+                            <p class="lead text-white mb-4">Enhance your flight simulation experience with our open-source Electronic Flight Bag (EFB) web application.</p>
+                            <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
+                                <a class="btn btn-primary btn-lg px-4 me-sm-3" href="./app" target="_blank">Open App</a>
+                                <a class="btn btn-outline-light btn-lg px-4" href="./guide" target="_blank">Knowledgebase</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 text-end">
+                        <span class="text-secondary fs-6">
+                            Photo by <a href="https://unsplash.com/@dallimonti?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash" class="text-secondary">Andrés Dallimonti</a> on <a href="https://unsplash.com/photos/white-and-red-kanji-text-kjqTlMHLci4?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash" class="text-secondary">Unsplash</a>
+                        </span> 
+                    </div>
+                </div>
+            </div>
+        </header>
 
-    gtag('config', 'G-RKZ370CHNJ');
-    </script>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css" rel="stylesheet">
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>   
-    <!-- Include FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Google Fonts-->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-    <!-- Moment.js-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-    <!-- Optional AngularJS -->
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
-    <!-- Custom files-->
-    <link href="./styles.css" rel="stylesheet">
-
-</head>
-<body ng-app="checklistApp" ng-controller="ChecklistController">
-
-    <div id="overlay" class=""></div>
-    <!-- Warning message -->
-    <div id="warning-message" class="alert alert-warning alert-dismissible fade show">
-        FlightDash.io is currently meant to be displayed on computers or tablets in landscape mode, with a screen width of at least 1200 pixels. Please try another device to use FlightDash.io.
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> 
-    </div>
-
-    <!-- Initial Agreement-->
-    <div class="toast align-items-center bg-primary border-0 position-fixed" style="top: 50%; left: 50%; transform: translate(-50%, -50%);" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
-        <div class="toast-body">
-            By using FlightDash.io, you acknowledge and consent to our <a href="#" data-bs-toggle="modal" data-bs-target="#termsOfUseModal">Terms of Use</a> and <a href="#" data-bs-toggle="modal" data-bs-target="#privacyPolicyModal">Privacy Policy</a>, which detail our cookie practices. Furthermore, you understand that this application is exclusively for flight simulation and must not be used for real-world aviation endeavors.
-        </div>
-        <div class="d-flex justify-content-center mt-2">
-            <button type="button" class="btn btn-white btn-lg fw-bold" data-bs-dismiss="toast">Agree</button>
-        </div>
-    </div>
-
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <div class="container-fluid">
-            <!-- Branding Text -->
-            <a class="navbar-brand" href="#">
-                <i class="fas fa-plane"></i> flightdash.io
-            </a>
-            <div ng-show="showFlightStatBanner" class="text-white d-flex align-items-center ms-2">
-                <p class="mb-0">
-                    {{callSign}} {{departureIcao}}->{{arrivalIcao}}
-                <a ng-show="currentFlightStatus == 'Idle'" class="text-white text-decoration-none"> | Boarding in: <span id="boardingCountdown">{{boardingHours}}h {{boardingMinutes}}m {{boardingSeconds}}s</span>
-                    <span class="badge" ng-class="{'bg-success': boardingStatus == 'ON TIME', 'bg-warning': boardingStatus == 'DELAYED'}">{{ boardingStatus }}</span> | <span ng-show="showPassengersBanner">Checked In: <i class="fa-solid fa-user"></i> {{passengersCheckedIn.length}}/{{numberOfPassengers}} <i class="fa-solid fa-suitcase"></i> {{bagsCheckedIn.length}}</span>
-                </a>
-                <a ng-show="currentFlightStatus == 'Boarding'" class="text-white text-decoration-none"> | <span class="badge bg-info" >BOARDING</span> | Departing in: <span id="departureCountdown">{{departureHours}}h {{departureMinutes}}m {{departureSeconds}}s</span>
-                    <span class="badge" ng-class="{'bg-success': departureStatus == 'ON TIME', 'bg-warning': departureStatus == 'DELAYED'}">{{ departureStatus }}</span>  | <span ng-show="showPassengersBanner">Boarded: <i class="fa-solid fa-user"></i> {{passengersSeated.length}}/{{numberOfPassengers}} <i class="fa-solid fa-suitcase"></i> {{bagsLoaded.length}}</span>
-                </a>
-                <a ng-show="currentFlightStatus == 'Departed'" class="text-white text-decoration-none"> | <span class="badge bg-info" >DEPARTED</span> | Landing in: <span id="landingCountdown">{{landingHours}}h {{landingMinutes}}m {{landingSeconds}}s</span>
-                    <span class="badge" ng-class="{'bg-success': landingStatus == 'ON TIME', 'bg-warning': landingStatus == 'DELAYED'}">{{ landingStatus }}</span>
-                </a>
-                <a ng-show="currentFlightStatus == 'Landed'" class="text-white text-decoration-none"> | <span class="badge bg-success" >LANDED</span> | Arriving at Gate in: <span id="arrivalCountdown">{{arrivalHours}}h {{arrivalMinutes}}m {{arrivalSeconds}}s</span>
-                    <span class="badge" ng-class="{'bg-success': arrivalStatus == 'ON TIME', 'bg-warning': arrivalStatus == 'DELAYED'}">{{ arrivalStatus }}</span>
-                </a>
-                <a ng-show="currentFlightStatus == 'Arrived'" class="text-white text-decoration-none"> | <span class="badge bg-success" >ARRIVED AT GATE</span> | {{ getDifference(estimateGateArrivalDateTime, actualGateArrivalDateTime) }}
-                    <span class="badge" ng-class="{'bg-success': finalArrivalStatus == 'ON TIME', 'bg-warning': finalArrivalStatus == 'DELAYED'}">{{ finalArrivalStatus }}</span>  | <span ng-show="showPassengersBanner">Deboarding: <i class="fa-solid fa-user"></i> {{passengersSeated.length}}/{{numberOfPassengers}} <i class="fa-solid fa-suitcase"></i> {{bagsLoaded.length}}</span>
-                </a>
+                <!-- What is it Section-->
+                <section class="py-5 border-bottom">
+                    <div class="container px-5 my-5 px-5">
+                        <div class="text-center mb-5">
+                            <div class="embed-responsive embed-responsive-16by9 video-container">
+                                <video class="embed-responsive-item" autoplay loop muted>
+                                  <source src="assets/tablet-video-hd.mp4" type="video/mp4">
+                                  Your browser does not support the video.
+                                </video>
+                            </div>
+                            <div style="padding-top:20px">
+                                <h2 class="fw-bolder">What is FlightDash.io?</h2>
+                                <p class="lead mb-0">Ever found yourself toggling between multiple websites or apps to access essential information during a flight simulation? FlightDash.io addresses this exact challenge, seamlessly integrating all necessary resources into a single, streamlined platform. Tailored for flight simulation enthusiasts, our platform brings a comprehensive suite of tools into one cohesive, easy-to-navigate interface.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+        
+        <!-- Features section-->
+        <section class="py-5 border-bottom" id="features">
+            <div class="container px-5 my-5">
+                <h1 class="text-center">Features</h1>
+                <hr>
+                <!-- 1st row -->
+                <div class="row gx-5">
+                    <div class="col-lg-4 mb-5 mb-lg-0">
+                        <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="fa-regular fa-clipboard"></i></div>
+                        <h2 class="h4 fw-bolder">Checklists</h2>
+                        <p>Utilize written and readout checklists for ease of use. Experience the freedom of hands-free voice recognition.</p>
+                        <a class="text-decoration-none" href="https://youtu.be/JNDOho6CG_E" target="_blank">
+                            See it in Action
+                            <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                    <div class="col-lg-4 mb-5 mb-lg-0">
+                        <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="fa-solid fa-plane-arrival"></i></div>
+                        <h2 class="h4 fw-bolder">Airport & Runway Data</h2>
+                        <p>Gain insights on airport details, frequencies, and runway specifics. Receive suggestions on in-use runways based on the latest wind conditions.</p>
+                        <a class="text-decoration-none" href="https://youtu.be/uUI9kjP0n9M" target="_blank">
+                            See it in Action
+                            <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="fa-solid fa-cloud"></i></div>
+                        <h2 class="h4 fw-bolder">Weather</h2>
+                        <p>Providing real-time METAR data from AviationWeather.gov or VATSIM. Suitable runways for takeoff and landing based on current weather conditions.</p>
+                        <a class="text-decoration-none" href="https://youtu.be/cpNZAvV4w9M" target="_blank">
+                            See it in Action
+                            <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <hr>
+                <!-- 2nd row -->
+                <div class="row gx-5">
+                    <div class="col-lg-4 mb-5 mb-lg-0">
+                        <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="fa-solid fa-rotate"></i></div>
+                        <h2 class="h4 fw-bolder">Flight Plan Sync</h2>
+                        <p>Seamless integration with SimBrief ensures that your flight plans are up to date and synchronized. The full flight plan is viewable directly in the tool, and automatically configures other features such as Flight Stats Tracking, AI Cabin Crew Announcements and more!</p>
+                        <a class="text-decoration-none" href="https://youtu.be/2BB_hPundjY" target="_blank">
+                            See it in Action
+                            <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                    <div class="col-lg-4 mb-5 mb-lg-0">
+                        <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="fa-solid fa-map"></i></div>
+                        <h2 class="h4 fw-bolder">Charts</h2>
+                        <p><strong>Coming Soon: </strong>Stay tuned for the integration of Navigraph Charts in our upcoming releases. We're always looking to add value for our users!</p>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="fa-solid fa-list"></i></div>
+                        <h2 class="h4 fw-bolder">Live Flight Status Tracking</h2>
+                        <p>Monitor your flight's on-time vs. delayed statuses. Keep track of the timeliness of each flight phase and ensure you're always in the know.</p>
+                        <a class="text-decoration-none" href="https://youtu.be/txuKL20e9Ak" target="_blank">
+                            See it in Action
+                            <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <hr>
+                <!-- 3rd row -->
+                <div class="row gx-5">
+                    <div class="col-lg-4 mb-5 mb-lg-0">
+                        <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="fa-solid fa-bullhorn"></i></div>
+                        <h2 class="h4 fw-bolder">AI Flight Crew Announcements</h2>
+                        <p>Open AI powered, realistic sounding cabin crew announcements.</p>
+                        <a class="text-decoration-none" href="https://youtu.be/nqWGfSXbS_w" target="_blank">
+                            See it in Action
+                            <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                    <div class="col-lg-4 mb-5 mb-lg-0">
+                        <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="fa-solid fa-person-walking-luggage"></i></div>
+                        <h2 class="h4 fw-bolder">Simulated Live Passenger and Cargo Boarding/Deboarding</h2>
+                        <p>Live Passenger Manifest that shows passengers' boarding status, seat assignments, and the status of their checked baggage.</p>
+                        <a class="text-decoration-none" href="https://youtu.be/YyWgtG9sixk" target="_blank">
+                            See it in Action
+                            <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="fa-solid fa-chart-line"></i></div>
+                        <h2 class="h4 fw-bolder">Post Flight Reports</h2>
+                        <p>After your flight, see a summary report showing how on time you were for each phase of your flight.</p>
+                        <a class="text-decoration-none" href="https://youtu.be/zQcNaCmx2Bg" target="_blank">
+                            See it in Action
+                            <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Pricing section-->
+        <section class="bg-light py-5 border-bottom">
+            <div class="container px-5 my-5">
+                <div class="text-center mb-5">
+                    <h2 class="fw-bolder">Integrated Experience</h2>
+                    <p class="lead mb-0">All of your favorite flight resources in one place</p>
+                </div>
+                <div class="row gx-5 justify-content-center">
+                    <!-- Pricing card free-->
+                    <div class="col-lg-6 col-xl-6">
+                        <div class="card mb-5 mb-xl-0">
+                            <div class="card-body p-5">
+                                <div class="small text-uppercase fw-bold text-muted">Free Integrated Features</div>
+                                <div class="mb-3">
+                                    <span class="display-4 fw-bold">$0</span>
+                                </div>
+                                <ul class="list-unstyled mb-4">
+                                    <li class="mb-2">
+                                        <i class="fa-solid fa-sun fa-2xs text-warning"></i>
+                                        aviationweather.gov weather
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="fa-solid fa-cloud fa-2xs text-primary"></i>
+                                        VATSIM Network weather
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="fa-solid fa-plane-arrival fa-2xs"></i>
+                                        Airportdb.io airport + runway data
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="fa-regular fa-file-lines fa-2xs text-success"></i>
+                                        Simbrief Flight Plans
+                                    </li>
+                                    <li class="mb-2 text-muted">
+                                        <i class="fa-regular fa-map fa-2xs"></i>
+                                        Charts (Coming Soon!)
+                                    </li>
+                                    <li class="mb-2 text-muted">
+                                        <i class="fa-solid fa-plane-arrival fa-2xs"></i>
+                                        Live VATSIM Arrivals/Departues (Coming Soon!)
+                                    </li>
+                                    <li class="text-muted">
+                                        <i class="fa-solid fa-headset fa-2xs"></i>
+                                        Live VATSIM Controller Status (Coming Soon!)
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Pricing card pro-->
+                    <div class="col-lg-6 col-xl-6">
+                        <div class="card mb-5 mb-xl-0">
+                            <div class="card-body p-5">
+                                <div class="small text-uppercase fw-bold">
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                    Premium Integrated Features
+                                </div>
+                                <div class="mb-3">
+                                    <span class="display-4 fw-bold">$0.50</span>
+                                    <span class="display-8 text-secondary">/ flight (Estimate)</span>
+                                </div>
+                                <ul class="list-unstyled mb-4">
+                                    <li class="mb-2">
+                                        <i class="fa-solid fa-headset fa-2xs"></i>
+                                        <strong>Open AI Powered</strong> Cabin Crew Announcements (Open Beta)
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="bi bi-check text-primary"></i>
+                                        GPT-4 Powered Dynamic Announcement Scripts based on flight plan
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="bi bi-check text-primary"></i>
+                                        Open AI TTS (text-to-speech) provides realistic sounding announcments in multiple voices
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="fa-solid fa-circle-exclamation fa-2xs text-danger"></i>
+                                        Use of your own Open AI Account REQUIRED
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="fa-solid fa-money-bill fa-2xs text-success"></i>
+                                        All payment handled directly with OpenAI. FlightDash.io does not handle any payments.
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="fa-solid fa-money-bill fa-2xs text-success"></i>
+                                        *Estimate*: < $0.50 / one full flight's worth of announcements
+                                    </li>
+                                    <li class="mb-2">
+                                        <a href="https://openai.com/pricing#language-models" target="_blank">Click here to view OpenAI's API Pricing Policy</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Testimonials section-->
+        <section class="py-5 border-bottom">
+            <div class="container px-5 my-5 px-5">
+                <div class="text-center mb-5">
+                    <h2 class="fw-bolder">User testimonials</h2>
+                    <p class="lead mb-0">Our users love flight simming with FlightDash.io!</p>
+                </div>
+                <div class="row gx-5 justify-content-center">
+                    <div class="col-lg-6">
+                        <!-- Testimonial 1-->
+                        <div class="card mb-4">
+                            <div class="card-body p-4">
+                                <div class="d-flex">
+                                    <div class="flex-shrink-0"><i class="bi bi-chat-right-quote-fill text-primary fs-1"></i></div>
+                                    <div class="ms-4">
+                                        <p class="mb-1">just randomly discovered your stuff, your work is actually incredible 🔥</p>
+                                        <div class="small text-muted">- @pitchtransition, YouTube</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Testimonial 2-->
+                        <div class="card">
+                            <div class="card-body p-4">
+                                <div class="d-flex">
+                                    <div class="flex-shrink-0"><i class="bi bi-chat-right-quote-fill text-primary fs-1"></i></div>
+                                    <div class="ms-4">
+                                        <p class="mb-1">Awesome man. Can't wait to show case it on one of my streams once it's released 🙌</p>
+                                        <div class="small text-muted">-  @AvioMan, YouTube</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Support section-->
+        <section class="bg-light py-5">
+            <div class="container px-5 my-5 px-5">
+                <div class="text-center mb-5">
+                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="fa-solid fa-book"></i></div>
+                    <h2 class="fw-bolder">Knowledgebase</h2>
+                    <p class="lead mb-0">Learn all about how to use FlightDash.io</p>
+                    <p><br>
+                        <a class="btn btn-success btn-lg px-4" href="./guide" target="_blank">Knowledgebase</a>
+                    </p>
+                </div>
+                <hr>
+                <div class="text-center mb-5" id="forum-section">
+                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="fa-solid fa-comments"></i></div>
+                    <h2 class="fw-bolder">Community Forum</h2>
+                    <p class="lead mb-0">View announcements, ask questions, share ideas!</p>
+                    <p><br>
+                        <a class="btn btn-dark btn-lg px-4" href="https://github.com/brian-mckeown/flightdash/discussions" target="_blank"><i class="fab fa-github" style="vertical-align: middle;"></i> Community Forum</a>
+                    </p>
+                    <div class="row gx-5 justify-content-center">
+                        <p> Our community forum is on <i class="fab fa-github" style="vertical-align: middle;"></i> <strong>Github</strong>.</p>
+                    
+                        <p><strong>Note:</strong> In order to post in the Community Forum, you will need a GitHub account.
+                            Please consider <a href="https://docs.github.com/en/github/site-policy/github-terms-of-service"
+                                target="_blank">GitHub's Terms of Service</a> and <a
+                                href="https://docs.github.com/en/github/site-policy/github-privacy-statement" target="_blank">Privacy
+                                Policy</a> before creating an account and participating.</p>
+                    </div>
+                </div>
+                <hr>
+                <div class="text-center mb-5" id="support-section">
+                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+                    <h2 class="fw-bolder">Support</h2>
+                    <p class="lead mb-0">We'd love to hear your feedback</p>
+                    <p><br>
+                        <a class="btn btn-dark btn-lg px-4" href="https://github.com/brian-mckeown/flightdash/issues" target="_blank"><i class="fab fa-github" style="vertical-align: middle;"></i> Open Issues</a>
+                    </p>
+                </div>
+                <div class="row gx-5 justify-content-center">
+                    <p> We use <i class="fab fa-github" style="vertical-align: middle;"></i> <strong>Github</strong> for support.</p>
+                    <p> To submit feedback, report an issue, or request an enhancement, please create a <i class="fab fa-github" style="vertical-align: middle;"></i> <strong>Github Issue</strong>. These are used to track
+                        todos, bugs, feature requests, and more. As issues are created, they’ll appear in a searchable and filterable
+                        list. To get started, you can create an issue below.</p>
+                
+                    <h5>Tracking Issues</h5>
+                    <p>
+                        You can track and view all existing issues at:
+                        <a href="https://github.com/brian-mckeown/flightdash/issues" target="_blank">
+                            <i class="fab fa-github" style="vertical-align: middle;"></i>
+                            Track Issues
+                        </a>
+                    </p>
+                
+                    <h5>Report a New Issue</h5>
+                    <p>
+                        To report a new issue or enhancement request, visit:
+                        <a href="https://github.com/brian-mckeown/flightdash/issues/new" target="_blank">
+                            <i class="fab fa-github" style="vertical-align: middle;"></i>
+                            Report Issue
+                        </a>
+                    </p>
+                
+                    <p><strong>Note:</strong> In order to participate and interact with the issues, you will need a GitHub account.
+                        Please consider <a href="https://docs.github.com/en/github/site-policy/github-terms-of-service"
+                            target="_blank">GitHub's Terms of Service</a> and <a
+                            href="https://docs.github.com/en/github/site-policy/github-privacy-statement" target="_blank">Privacy
+                            Policy</a> before creating an account and participating.</p>
+                    <p>Any other inquiries can be directed to the developer:</p>
+                    <a href="mailto:example@example.com">bmckeown2011@gmail.com</a>
+                </div>
+            </div>
+        </section>
+        <!-- Footer-->
+        <footer class="py-5 bg-dark">
+            <div class="container px-5">
+                <p class="m-0 text-center text-white">Copyright &copy; FlightDash.io 2024</p>
+                <p class="m-0 text-center text-white">
+                    <a href="./privacy-policy" target="_blank">Privacy Policy</a> | <a href="./terms" target="_blank">Terms of Use</a>
+                </p>
+                <p class="m-0 text-center text-white">
+                    <a href="https://www.facebook.com/profile.php?id=61553297903915" target="_blank" style="text-decoration: none;">
+                        <i class="fa-brands fa-facebook fa-lg"></i>
+                    </a> 
+                    <a href="https://www.youtube.com/@FlightDashIO" target="_blank" style="text-decoration: none;">
+                        <i class="fa-brands fa-youtube fa-lg text-danger"></i>
+                    </a>
                 </p>
             </div>
-            
-            <!-- Toggler for mobile -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-    
-            <!-- Navbar content -->
-            <div class="collapse navbar-collapse" id="navbarContent">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    <!-- Settings Icon -->
-                    <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="modal" data-bs-target="#settingsModal" href="#"><i class="fas fa-cog"></i> Settings</a>
-                    </li>
-                    <!-- Info Icon -->
-                    <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="modal" data-bs-target="#aboutModal" href="#"><i class="fas fa-info-circle"></i> About</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <div class="container mt-4 pt-5 main-content-container">
-        <div class="row mb-5 clearfix">
-            <!-- Chat Window -->
-            <div class="col-md-4">
-                <div class="border bg-light p-3 chat-container">
-                    <div class="bg-primary text-white p-2">Pilot Log</div>
-                    <div class="mt-3 chat-content chat-bg" id="chat-content" ng-ref="chatContentDiv">
-                        <!-- Rendering Messages with ng-repeat -->
-                        <div ng-repeat="message in messages" class="text-{{message.color}} chat-msg-bg">
-                            <span ng-bind-html="message.text"></span>
-                        </div>
-                    </div>
-                    <input type="text" class="form-control mt-3" ng-model="chatMessage" ng-keypress="sendMessage($event)" id="chat-message" placeholder="Type your message...">
-
-                    <div class="d-flex mt-2 justify-content-start align-items-center">
-                        <button class="btn btn-primary" ng-click="sendMessage()" id="send-button">Send</button>
-                        <!-- New Colored Buttons -->
-                        <button class="btn btn-success ml-2" ng-click="handleButtonPress('A')">A</button>
-                        <button class="btn btn-warning ml-2" ng-click="handleButtonPress('B')">B</button>
-                        <button class="btn btn-warning ml-2" ng-click="handleButtonPress('C')">C</button>
-                        <button class="btn btn-danger ml-2"  ng-click="handleButtonPress('D')">D</button>
-                        <button class="btn btn-outline-primary ml-2" ng-click="toggleMicrophone()" id="microphoneButton">
-                            <i class="fas fa-microphone"></i>
-                            <i class="fas fa-dot-circle text-danger" ng-show="recognitionSignalStarted"></i>
-                        </button>
-                    </div>
-                    </div>
-            </div>
-            <!-- Panel of Buttons -->
-            <div class="col-md-8">
-                <!-- Tabs Header -->
-                <ul class="nav nav-tabs">
-                    <li class="nav-item">
-                        <a class="nav-link" ng-click="activeTab='checklists'" ng-class="{'active': activeTab === 'checklists'}">Checklists</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" ng-click="activeTab='airports'" ng-class="{'active': activeTab === 'airports'}">Airports</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" ng-click="activeTab='flightPlan'" ng-class="{'active': activeTab === 'flightPlan'}">Flight Plan</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" ng-click="activeTab='charts'" ng-class="{'active': activeTab === 'charts'}">Charts</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" ng-click="activeTab='flightStats'" ng-class="{'active': activeTab === 'flightStats'}">Flight Stats</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" ng-click="activeTab='passengers'" ng-class="{'active': activeTab === 'passengers'}">Passengers</a>
-                    </li>
-                </ul>
-
-                <hr>
-
-                <!-- Checklists Tab -->
-                <div ng-show="activeTab === 'checklists'">
-                    <div class="row no-gutter">
-                        <!-- Preflight -->
-                        <div class="col d-flex flex-column align-items-center" ng-repeat="table in tables">
-                            <h5 class="custom-header text-center">{{table.name}}</h5>
-                            <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" 
-                                ng-repeat="checklist in table.rows"
-                                ng-click="handleChecklistButtonPress(checklist)">
-                                {{checklist.checklist}}
-                            </button>
-                        </div>  
-                    </div>
-                </div>
-
-                <!-- Airports Tab -->
-                <div ng-show="activeTab === 'airports'">
-                    <!-- Content for Airports -->
-                    <h5>Airport Data</h5>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-group d-flex align-items-center">
-                                <input type="text" class="form-control mr-2" id="icaoCode" ng-model="icao" maxlength="4" ng-change="convertToUpperCase()" placeholder="ICAO">
-                                <button class="btn btn-primary" ng-click="fetchAirportInfo()">Request</button>
-                            </div>
-                        </div>
-                        <div class="col-md-8">
-                            <div class="form-group d-flex align-items-center">
-                                <p>Need to find the ICAO? Try searching <a href="https://ourairports.com/" target="_blank">ourairports.com</a></p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="container mt-5" ng-show="airportRequested">
-                        <!-- Header for the airport name -->
-                        <h3 class="mb-4">{{airportInfo.name}}</h3>
-
-                        <!-- Form with airport details -->
-                        <div class="container mb-5">
-                            <div class="row mb-3">
-                                <div class="col-md-4">
-                                    <label class="fw-bold">Municipality:</label>
-                                    <p>{{airportInfo.municipality}}</p>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="fw-bold">ICAO:</label>
-                                    <p>{{airportInfo.icao}}</p>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="fw-bold">Type:</label>
-                                    <p>{{airportInfo.type}}</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <label class="fw-bold">Wikipedia:</label>
-                                    <a href="{{airportInfo.wikipedia}}" target="_blank">{{airportInfo.wikipedia}}</a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Weather section -->
-                            <div class="container mt-4">
-                                <div class="alert alert-secondary" role="alert" data-bs-toggle="collapse" href="#weatherSection">
-                                    <h4 class="mb-3 d-inline">
-                                        Weather Information <i class="fas fa-caret-right" aria-hidden="true" id="weatherCaret"></i>
-                                    </h4>
-                                </div>
-                                <div class="collapse" id="weatherSection">
-                                <div class="row mb-2">
-                                    <div class="col-md-8">
-                                        <label class="fw-bold">METAR:</label>
-                                        <p class="small">{{airportInfo.metar}}</p>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="fw-bold">METAR Source:</label>
-                                        <p class="small">{{airportInfo.metarSource}}</p>
-                                    </div>
-                                </div>
-
-                                <div class="row mb-2">
-                                    <div class="col-md-3">
-                                        <label class="fw-bold">UTC DateTime:</label>
-                                        <p class="small">{{metarDateTime}}</p>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="fw-bold">Local DateTime:</label>
-                                        <p class="small">{{localDateTime}}</p>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="fw-bold">Wind:</label>
-                                        <p class="small">{{metarWind}}</p>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="fw-bold">Visibility:</label>
-                                        <p class="small">{{metarVisibility}}</p>
-                                    </div>
-                                </div>
-
-                                <div class="row mb-2">
-                                    <div class="col-md-3">
-                                        <label class="fw-bold">Weather:</label>
-                                        <p class="small">{{metarWeather}}</p>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="fw-bold">Clouds:</label>
-                                        <p class="small">{{metarClouds}}</p>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="fw-bold">Temperature / Dewpoint:</label>
-                                        <span class="small">
-                                            {{metarTemperatureDewpoint.split('/')[0]}}°C / {{metarTemperatureDewpoint.split('/')[1]}}°C
-                                            <br>
-                                            {{convertCelsiusToFahrenheit(metarTemperatureDewpoint.split('/')[0]) | number:1}}°F / {{convertCelsiusToFahrenheit(metarTemperatureDewpoint.split('/')[1]) | number:1}}°F
-                                        </span>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="fw-bold">Altimeter:</label>
-                                        <p class="small">{{metarAltimeter}}</p>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <label class="fw-bold">Remarks:</label>
-                                        <p class="small">{{metarRemarks}}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            </div>
-
-                            <!-- Frequencies section -->
-                            <div class="container mt-4">
-                                <div class="alert alert-secondary" role="alert" data-bs-toggle="collapse" href="#frequenciesSection">
-                                    <h4 class="mb-3 d-inline">
-                                        Frequencies <i class="fas fa-caret-right" aria-hidden="true" id="frequenciesCaret"></i>
-                                    </h4>
-                                </div>
-                                <div class="collapse" id="frequenciesSection">
-                                
-                                <form>
-                                    <div class="row mb-2" ng-repeat="freq in airportData.freqs">
-                                        <div class="col-md-3">
-                                            <label class="fw-bold small">{{freq.description}}:</label>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <p class="small">{{freq.frequency_mhz}}</p>
-                                        </div>
-                                        <!-- You can add more columns if needed. For now, I've reserved space for two columns per frequency -->
-                                    </div>
-                                </form>
-                            </div>
-                            </div>
-
-                            <!-- Runways section -->
-                            <div class="container mt-4">
-                                <div class="alert alert-secondary" role="alert" data-bs-toggle="collapse" href="#runwaysSection">
-                                    <h4 class="mb-3 d-inline">
-                                        Runways <i class="fas fa-caret-right" aria-hidden="true" id="runwaysCaret"></i>
-                                    </h4>
-                                </div>
-
-                                <div class="collapse" id="runwaysSection">
-                                    <div class="row">
-                                        <!-- Iterate for each flattened runway -->
-                                        <div class="col-md-3" ng-repeat="runway in flattenedRunways">
-                                            <div class="card mb-3">
-                                                <div class="card-header small" ng-class="getCardHeaderColor(runway, runway.ident)">
-                                                    {{runway.ident}}
-                                                </div>
-                                                <div class="card-body small">
-                                                    <p><strong>Runway Heading:</strong> {{runway.heading_degT}}°</p>
-                                                    <p><strong>Length:</strong> {{runway.length_ft}} ft</p>
-                                                    <p><strong>Width:</strong> {{runway.width_ft}} ft</p>
-                                                    <p><strong>Headwind:</strong> {{getHeadwind(runway.heading_degT, windSpeed, windDirection)}} kts</p>
-                                                    <p><strong>Crosswind:</strong> {{getCrosswind(runway.heading_degT, windSpeed, windDirection)}} kts ({{getCrosswindDirection(runway.heading_degT, windDirection)}})</p>
-                                                    <p ng-if="runway.ils"><strong>ILS:</strong> {{runway.ils.freq}} / {{runway.ils.course}}°</p>
-                                                    <p><strong>Surface:</strong> {{runway.surface}}</p>
-                                                    <p>
-                                                        <strong>Lighted:</strong>
-                                                        <span ng-if="runway.lighted == '1'">🟡</span>
-                                                        <span ng-if="runway.lighted == '0'">⚫</span>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                        </div>
-                    
-                </div>
-                
-                
-
-                <!-- Flight Plan Tab -->
-                <div ng-show="activeTab === 'flightPlan'">
-                    <a href="https://dispatch.simbrief.com/options/new" target="_blank" class="btn btn-primary">
-                        Create SimBrief Flight Plan
-                    </a>
-                    <button class="btn btn-success" ng-click="fetchFlightPlan()">Load Flight Plan</button>
-                    <hr>
-                    <div class="fp-scrollable-content" ng-bind-html="flightPlanTrustedHtml"></div>
-                </div>
-
-                
-
-                <!-- Charts Tab -->
-                <div ng-show="activeTab === 'charts'">
-                    <div class="container mt-4">
-                        <h2>Navigraph Charts</h2>
-                        <p>
-                            Use <a href="https://www.navigraph.com" target="_blank" rel="noopener noreferrer">Navigraph Charts</a> directly at Navigraph.com.
-                        </p>
-                        <p class="text-danger">
-                            Per Navigraph's Developer Restrictions, displaying their charts on physical EFBs or Desktop Applications is 
-                            <a href="https://developers.navigraph.com/docs/general/restrictions" target="_blank" rel="noopener noreferrer">prohibited by Navigraph at this time</a>.
-                        </p>
-                        <p>We will look into options in the future.</p>
-                    </div> 
-                </div>
-
-                    <!-- Flight Stats Tab -->
-                <div ng-show="activeTab === 'flightStats' || activeTab === 'dataEntry' || activeTab === 'controller' || activeTab === 'report'">
-
-                    <!-- Tabs Header -->
-                <ul class="nav nav-tabs">
-                    <li class="nav-item">
-                        <a class="nav-link" ng-click="activeTab='dataEntry'" ng-class="{'active': activeTab === 'dataEntry'}">Data Entry</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" ng-click="activeTab='controller'" ng-class="{'active': activeTab === 'controller'}">Controller</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" ng-click="activeTab='report'" ng-class="{'active': activeTab === 'report'}">Report</a>
-                    </li>
-                </ul>
-
-                <hr>
-                    <!-- Data Entry Sub Tab-->
-                    <div class="container mt-4" ng-show="activeTab === 'flightStats' || activeTab === 'dataEntry'">
-                          <form>
-                            <!-- Row 1 -->
-                            <div class="row mb-3">
-                                <!-- Call Sign Input -->
-                                <div class="col-md-4">
-                                    <label for="callSignInput" class="form-label">Call Sign</label>
-                                    <input type="text" class="form-control" id="callSignInput" placeholder="Enter Call Sign" ng-model="callSign">
-                                </div>
-                        
-                                <!-- Departure ICAO Input -->
-                                <div class="col-md-4">
-                                    <label for="departureICAOInput" class="form-label">Departure ICAO</label>
-                                    <input type="text" class="form-control" id="departureICAOInput" maxlength="4" oninput="this.value = this.value.toUpperCase()" placeholder="Enter Departure ICAO" ng-model="departureIcao">
-                                </div>
-                        
-                                <!-- Arrival ICAO Input -->
-                                <div class="col-md-4">
-                                    <label for="arrivalICAOInput" class="form-label">Arrival ICAO</label>
-                                    <input type="text" class="form-control" id="arrivalICAOInput" maxlength="4" oninput="this.value = this.value.toUpperCase()" placeholder="Enter Arrival ICAO" ng-model="arrivalIcao">
-                                </div>
-                            </div>
-                        
-                            <!-- Row 2 -->
-                            <div class="row mb-3">
-                                <!-- Scheduled Boarding Input -->
-                                <div class="col-md-6">
-                                    <label for="boardingDateTime" class="form-label">Scheduled Boarding</label>
-                                    <input type="datetime-local" class="form-control" id="boardingDateTime" ng-model="scheduledBoardingDateTime">
-                                </div>
-                                
-                                <!-- Scheduled Departure Input -->
-                                <div class="col-md-6">
-                                    <label for="departureDateTimeInput" class="form-label">Scheduled Departure</label>
-                                    <input type="datetime-local" class="form-control" id="departureDateTimeInput" ng-model="scheduledDepartureDateTime">
-                                </div>
-                            </div>
-                        
-                            <!-- Row 3 -->
-                            <div class="row mb-3">
-                                <!-- Estimated Arrival Input -->
-                                <div class="col-md-6">
-                                    <label for="arrivalDateTimeInput" class="form-label">Estimated Arrival</label>
-                                    <input type="datetime-local" class="form-control" id="arrivalDateTimeInput" ng-model="estimateArrivalDateTime">
-                                </div>
-                                
-                                <!-- Estimated Gate Arrival Input -->
-                                <div class="col-md-6">
-                                    <label for="gateArrivalDateTimeInput" class="form-label">Estimated Gate Arrival</label>
-                                    <input type="datetime-local" class="form-control" id="gateArrivalDateTimeInput" ng-model="estimateGateArrivalDateTime">
-                                </div>
-                            </div>
-
-                            <!-- Row 3 -->
-                            <div class="row mb-3">
-                                <!-- Passengers Input -->
-                                <div class="col-md-6">
-                                    <label for="numberOfPassengers" class="form-label">Passengers</label>
-                                    <input type="number" class="form-control" id="numberOfPassengers" ng-model="numberOfPassengers">
-                                </div>
-
-                            </div>
-                        </form>
-                        
-                    </div>  
-                    
-                    <!-- Controller SubTab -->
-                <div ng-show="activeTab === 'controller'">
-                    <div class="container mt-4">
-                          <form>
-                            <!-- Current Flight Status Label and Buttons -->
-                            <div class="row mb-3">
-                                <div class="col-md-12">
-                                    <label class="form-label">Current Flight Status</label>
-                                </div>
-                                <div class="col-md-2">
-                                    <button type="button" class="btn btn-sm btn-outline-primary" ng-class="{'btn-primary text-white': currentFlightStatus == 'Boarding'}" ng-click="setFlightStatus('Boarding'); boardPassengersAndBags()">Boarding</button>
-                                </div>
-                                <div class="col-md-2">
-                                    <button type="button" class="btn btn-sm btn-outline-primary" ng-class="{'btn-primary text-white': currentFlightStatus == 'Departed'}" ng-click="setFlightStatus('Departed')">Departed</button>
-                                </div>
-                                <div class="col-md-2">
-                                    <button type="button" class="btn btn-sm btn-outline-primary" ng-class="{'btn-primary text-white': currentFlightStatus == 'Landed'}" ng-click="setFlightStatus('Landed')">Landed</button>
-                                </div>
-                                <div class="col-md-2">
-                                    <button type="button" class="btn btn-sm btn-outline-primary" ng-class="{'btn-primary text-white': currentFlightStatus == 'Arrived'}" ng-click="setFlightStatus('Arrived')">Arrived</button>
-                                </div>
-                                <div class="col-md-2">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary" ng-click="setFlightStatus('Idle')">Reset</button>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-md-12">
-                                    <label class="form-label">Passenger Actions</label>
-                                </div>
-                                <div class="col-md-auto">
-                                    <button type="button" class="btn btn-sm btn-outline-success" ng-click="createManifest(numberOfPassengers, scheduledBoardingDateTime)">Begin Check Ins</button>
-                                </div>
-                                <div class="col-md-auto">
-                                    <button type="button" class="btn btn-sm btn-outline-success" ng-click="deBoardPassengersAndBags()">Begin Deboarding</button>
-                                </div>
-                                <div class="col-md-auto">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary" ng-click="resetPassengers()">Reset Passengers</button>
-                                </div>
-                            </div>
-                        </form>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="flightStatBannerCheckbox" ng-model="showFlightStatBanner">
-                            <label class="form-check-label" for="flightStatBannerCheckbox">
-                              Show Flight Stats Banner
-                            </label>
-                          </div>
-                          <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="passengersBannerCheckbox" ng-model="showPassengersBanner">
-                            <label class="form-check-label" for="passengersBannerCheckbox">
-                              Show Passenger Stats in Banner
-                            </label>
-                          </div>
-                    </div> 
-                </div>
-
-                   <!-- Report SubTab -->
-                   <div ng-show="activeTab === 'report'">
-                    <div class="container mt-4">
-                        <form>
-                            <!-- Row for Boarding Time -->
-                            <div class="row mb-3">
-                                <div class="col-md-4">
-                                    <label class="form-label fw-bold">Scheduled Boarding Time</label>
-                                    <p>{{ scheduledBoardingDateTime | toLocalTime}}</p>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label fw-bold">Actual Boarding Time</label>
-                                    <p>{{ actualBoardingDateTime | toLocalTime }}</p>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label fw-bold">Difference</label>
-                                    <p ng-style="getDifferenceStyle(scheduledBoardingDateTime, actualBoardingDateTime)">{{ getDifference(scheduledBoardingDateTime, actualBoardingDateTime) }}</p>
-                                </div>
-                            </div>
-                    
-                            <!-- Row for Departure Time -->
-                            <div class="row mb-3">
-                                <div class="col-md-4">
-                                    <label class="form-label fw-bold">Scheduled Departure Time</label>
-                                    <p>{{ scheduledDepartureDateTime | toLocalTime }}</p>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label fw-bold">Actual Departure Time</label>
-                                    <p>{{ actualDepartedDateTime | toLocalTime }}</p>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label fw-bold">Difference</label>
-                                    <p ng-style="getDifferenceStyle(scheduledDepartureDateTime, actualDepartedDateTime)">{{ getDifference(scheduledDepartureDateTime, actualDepartedDateTime) }}</p>
-                                </div>
-                            </div>
-                    
-                            <!-- Row for Arrival Time -->
-                            <div class="row mb-3">
-                                <div class="col-md-4">
-                                    <label class="form-label fw-bold">Estimated Arrival Time</label>
-                                    <p>{{ estimateArrivalDateTime | toLocalTime }}</p>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label fw-bold">Actual Arrival Time</label>
-                                    <p>{{ actualArrivalDateTime | toLocalTime }}</p>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label fw-bold">Difference</label>
-                                    <p ng-style="getDifferenceStyle(estimateArrivalDateTime, actualArrivalDateTime)">{{ getDifference(estimateArrivalDateTime, actualArrivalDateTime) }}</p>
-                                </div>
-                            </div>
-                    
-                            <!-- Row for Gate Arrival Time -->
-                            <div class="row mb-3">
-                                <div class="col-md-4">
-                                    <label class="form-label fw-bold">Estimated Gate Arrival Time</label>
-                                    <p>{{ estimateGateArrivalDateTime | toLocalTime }}</p>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label fw-bold">Actual Gate Arrival Time</label>
-                                    <p>{{ actualGateArrivalDateTime | toLocalTime }}</p>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label fw-bold">Difference</label>
-                                    <p ng-style="getDifferenceStyle(estimateGateArrivalDateTime, actualGateArrivalDateTime)">{{ getDifference(estimateGateArrivalDateTime, actualGateArrivalDateTime) }}</p>
-                                </div>
-                            </div>
-                    
-                        </form>
-                    </div> 
-                </div>
-                </div>
-
-                <!-- Passengers Tab -->
-                <div ng-show="activeTab === 'passengers'">
-                    <div class="container mt-4">
-                        <div class="container mt-4">
-                            <h4>Flight Manifest</h4>
-<div class="row">
-    <div class="col-md-6">
-        <pre>Passengers
-----------
-Not Checked In: {{ passengersNotCheckedIn.length }}/{{ numberOfPassengers }}
-Checked In: {{ passengersCheckedIn.length }}/{{ numberOfPassengers }}
-Boarding: {{ passengersBoarded.length }}/{{ numberOfPassengers }}
-Seated: {{ passengersSeated.length }}/{{ numberOfPassengers }}
-Deboarded: {{ passengersDeboarded.length }}/{{ numberOfPassengers }}</pre>
-    </div>
-    <div class="col-md-6">
-        <pre>Checked Bags
-------------
-Not Checked In: {{ bagsNotCheckedIn.length }}
-Checked In: {{ bagsCheckedIn.length }}
-Loaded: {{ bagsLoaded.length }}
-Unloaded: {{ bagsUnloaded.length }}
-Baggage Claim: {{ bagsBaggageClaim.length }}
-</pre>
-    </div>
-</div>
-
-
-                            <table class="table table-sm table-bordered table-dark text-nowrap fs-6">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Seat</th>
-                                        <th scope="col">Name</th>
-                                        <th scope="col">Status</th>
-                                        <th scope="col">Bags</th>
-                                        <th scope="col">Bag Details</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr ng-repeat="passenger in (passengersNotCheckedIn.concat(passengersCheckedIn).concat(passengersBoarded).concat(passengersSeated).concat(passengersDeboarded) | orderBy:'passengerId')">
-                                        <th scope="row">{{ passenger.seat }}</th>
-                                        <td>{{ passenger.name }}</td>
-                                        <td>
-                                            <span class="badge" ng-class="{
-                                                'bg-secondary': passenger.status === 'Not Checked In',
-                                                'bg-primary': passenger.status === 'Checked In',
-                                                'bg-magenta': passenger.status === 'Boarding',
-                                                'bg-success': passenger.status === 'Seated',
-                                                'bg-danger': passenger.status === 'Deboarded'
-                                            }">
-                                                {{ passenger.status }}
-                                            </span>
-                                        </td>
-                                        <td>{{ passenger.bagsArray.length }}</td>
-                                        <td>
-                                            <div class="bg-dark" ng-repeat="bag in passenger.bagsArray">
-                                                Bag {{ $index + 1 }}: 
-                                                <span class="badge bg-light text-dark" ng-class="{
-                                                    'bg-secondary': bag.status === 'Not Checked In',
-                                                    'bg-primary': bag.status === 'Checked In',
-                                                    'bg-success': bag.status === 'Loaded',
-                                                    'bg-warning': bag.status == 'Unloaded',
-                                                    'bg-information': bag.status === 'Baggage Claim'
-                                                }">
-                                                    {{ bag.status }}
-                                                </span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            
-                            
-                            
-                            
-                            
-                        </div>                                                
-                    </div> 
-                </div>
-                </div>
-                
-            </div>
-        </div>
-    </div>
-
-    <!-- Modals-->
-    <!-- Settings Modal -->
-<div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="settingsModalLabel">Settings</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <div class="mb-3">
-                <label for="importFile" class="form-label">Import Config File:</label>
-                <input type="file" id="importFile" class="form-control" onchange="angular.element(this).scope().importConfig(this)">
-            </div>
-            <label for="metarSourceDropdown" class="mt-3">METAR Source</label>
-                <select class="form-select" id="metarSourceDropdown" ng-model="metarSource">
-                    <option>aviationweather_gov</option>
-                    <option>metar_vatsim_net</option>
-                </select>
-                <div>
-                    <label for="simbriefPilotId">SimBrief Pilot ID</label>
-                    <input type="text" class="form-control" id="simbriefPilotId" ng-model="simbriefPilotId">
-                </div>
-            <div class="form-group">
-                <label for="checklistDropdown">Aircraft Checklist Bundle</label>
-                <select class="form-select" id="checklistDropdown" ng-model="selectedChecklist" ng-change="updateSelectedChecklistBundle()">
-                    <option ng-repeat="checklist in defaultChecklists" value="{{checklist.bundleName}}">{{checklist.bundleName}}</option>
-                </select>
-                <div class="form-check form-switch mt-3">
-                    <input class="form-check-input" type="checkbox" id="customChecklistToggle">
-                    <label class="form-check-label" for="customChecklistToggle">Customize Checklist Bundle</label>
-                </div>
-                <div id="customChecklistUploader" style="display: none;">
-                    <div class="mb-3">
-                        <label for="bundleName" class="form-label">Checklist Bundle Name:</label>
-                        <input type="text" id="bundleName" class="form-control" ng-model="bundleName">
-                    </div>
-                    <div class="container mt-5">
-                        <div ng-repeat="table in tables">
-                            <h3>{{table.name}}</h3>
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Checklist</th>
-                                        <th><button class="btn btn-success" ng-click="addRow(table)"><i class="bi bi-plus-lg"></i></button></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr ng-repeat-start="row in table.rows">
-                                        <td><input type="text" ng-model="row.checklist" class="form-control"></td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-danger" ng-click="removeRow(table, $index)"><i class="bi bi-dash-lg"></i></button>
-                                            <button class="btn btn-sm btn-outline-primary" ng-click="row.expanded = !row.expanded">{{ row.expanded ? 'Collapse' : 'Expand' }}</button>
-                                        </td>
-                                    </tr>
-                                    <tr ng-repeat-end ng-if="row.expanded">
-                                        <td colspan="2">
-                                            <table class="table">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Checklist Prompt</th>
-                                                        <th>Positive Answer</th>
-                                                        <th>Neutral Answer 1</th>
-                                                        <th>Neutral Answer 2</th>
-                                                        <th>Cancel Answer</th>
-                                                        <th><button class="btn btn-sm btn-outline-success" ng-click="addSubRow(row)"><i class="bi bi-plus-lg"></i></button></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr ng-repeat="subRow in row.subRows">
-                                                        <td><input type="text" ng-model="subRow.prompt" class="form-control"></td>
-                                                        <td><input type="text" ng-model="subRow.positive" class="form-control"></td>
-                                                        <td><input type="text" ng-model="subRow.neutral1" class="form-control"></td>
-                                                        <td><input type="text" ng-model="subRow.neutral2" class="form-control"></td>
-                                                        <td><input type="text" ng-model="subRow.cancel" class="form-control"></td>
-                                                        <td><button class="btn btn-sm btn-outline-danger" ng-click="removeSubRow(row, $index)"><i class="bi bi-dash-lg"></i></button></td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                
-            </div>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-primary mt-3 me-auto" ng-click="saveConfig()">Export Config File</button>
-          <button type="button" class="btn btn-success" data-bs-dismiss="modal">Save and Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <!-- About Modal -->
-  <div class="modal fade" id="aboutModal" tabindex="-1" aria-labelledby="aboutModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="aboutModalLabel">About</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <div id="about"></div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Terms of Use Modal-->
-  <div class="modal fade" id="termsOfUseModal" tabindex="-1" role="dialog" aria-labelledby="termsOfUseModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="termsOfUseModalLabel">Terms of Use</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div id="terms"></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Privacy Policy Modal-->
-<div class="modal fade" id="privacyPolicyModal" tabindex="-1" role="dialog" aria-labelledby="privacyPolicyModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="privacyPolicyLabel">Privacy Policy</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div id="privacy-policy"></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Support Modal-->
-<div class="modal fade" id="supportModal" tabindex="-1" role="dialog" aria-labelledby="supportModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="supportModalLabel">Support & Contact</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div id="support"></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Welcome Modal-->
-<div class="modal fade" id="welcomeModal" tabindex="-1" role="dialog" aria-labelledby="welcomeModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header"></div>
-            <div class="modal-body">
-                <div id="welcome"></div>
-            </div>
-            <div class="modal-footer">
-                <!-- Changed the button text to "Begin" and the class to "btn-primary" -->
-                <button type="button" class="btn btn-cyan full-width" data-bs-dismiss="modal">Begin</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-  <footer class="footer">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <a href="#" data-bs-toggle="modal" data-bs-target="#termsOfUseModal">Terms of Use</a> |
-                <a href="#" data-bs-toggle="modal" data-bs-target="#privacyPolicyModal">Privacy Policy</a> |
-                <a href="#" data-bs-toggle="modal" data-bs-target="#supportModal">Support & Contact</a>
-            </div>
-            <div class="col-md-3 text-danger">
-                Flight Simulation Use Only
-            </div>
-            <div class="col-md-3 text-end">
-                Version: {{ versionNumber }}
-            </div>
-        </div>
-    </div>
-</footer>
-
-
-    <!-- custom JS-->
-    <script src="./script.js"></script>
-    <script src="./vanilla-js.js"></script>
-    
-</body>
+        </footer>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="js/scripts.js"></script>
+        <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
+        <!-- * *                               SB Forms JS                               * *-->
+        <!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->
+        <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
+        <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+    </body>
 </html>

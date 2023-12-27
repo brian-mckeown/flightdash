@@ -1,3 +1,9 @@
+//initialized bootstrap tooltips. 
+var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+
 document.getElementById('customChecklistToggle').addEventListener('change', function() {
     var uploader = document.getElementById('customChecklistUploader');
     if (this.checked) {
@@ -15,28 +21,6 @@ window.onload = function() {
     toastList.forEach(toast => toast.show());
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Show the welcome modal
-    var modal = new bootstrap.Modal(document.getElementById('welcomeModal'), {
-      keyboard: false
-    });
-    modal.show();
-
-    // Warning message and overlay logic
-    let alertEl = document.getElementById('warning-message');
-    let overlayEl = document.getElementById('overlay');
-
-    // Show overlay when the alert is open and the screen width is less than 1200px
-    if (window.innerWidth < 1200) {
-        overlayEl.style.display = 'block';
-    }
-
-    // Add an event listener for the close button on the alert
-    alertEl.addEventListener('closed.bs.alert', function () {
-        overlayEl.style.display = 'none';
-    });
-});
-
 fetch('/privacy-policy')
     .then(response => response.text())
     .then(content => {
@@ -47,18 +31,6 @@ fetch('/terms')
     .then(response => response.text())
     .then(content => {
         document.getElementById('terms').innerHTML = content;
-    });
-
-fetch('/support')
-    .then(response => response.text())
-    .then(content => {
-        document.getElementById('support').innerHTML = content;
-    });
-
-fetch('/about')
-    .then(response => response.text())
-    .then(content => {
-        document.getElementById('about').innerHTML = content;
     });
 
 fetch('/welcome')
