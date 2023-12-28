@@ -42,12 +42,14 @@ fetch('/welcome')
     document.addEventListener('DOMContentLoaded', function() {
         const weatherSection = document.getElementById('weatherSection');
         const frequenciesSection = document.getElementById('frequenciesSection');
+        const vatsimSection = document.getElementById('vatsimSection');
         
         const weatherCaret = document.getElementById('weatherCaret');
         const frequenciesCaret = document.getElementById('frequenciesCaret');
 
         const runwaysSection = document.getElementById('runwaysSection');
         const runwaysCaret = document.getElementById('runwaysCaret');
+        const vatsimCaret = document.getElementById('vatsimCaret');
     
         // Event listener for Weather section
         weatherSection.addEventListener('show.bs.collapse', function () {
@@ -80,5 +82,16 @@ fetch('/welcome')
         runwaysSection.addEventListener('hide.bs.collapse', function () {
             runwaysCaret.classList.remove('fa-caret-down');
             runwaysCaret.classList.add('fa-caret-right');
+        });
+
+        // Event listener for Vatsim section
+        vatsimSection.addEventListener('show.bs.collapse', function () {
+            vatsimCaret.classList.remove('fa-caret-right');
+            vatsimCaret.classList.add('fa-caret-down');
+        });
+
+        vatsimSection.addEventListener('hide.bs.collapse', function () {
+            vatsimCaret.classList.remove('fa-caret-down');
+            vatsimCaret.classList.add('fa-caret-right');
         });
     });

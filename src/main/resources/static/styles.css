@@ -372,3 +372,19 @@ div.bg-black {
     margin-left: 30px; /* Space to the right of the navigation bar */
     width: calc(100% - 230px); /* Adjust based on the width of the nav bar */
 }
+
+.small-alert {
+    padding: 5px 10px; /* Smaller padding */
+    font-size: 0.8rem; /* Smaller font size */
+}
+
+.custom-card-header {
+    color: inherit; /* Use the parent's text color */
+    text-decoration: none; /* Remove underline */
+    font-weight: normal; /* Optional: Adjust the font weight as needed */
+}
+
+.custom-card-header:hover, .custom-card-header:focus {
+    text-decoration: none; /* Remove underline on hover/focus */
+    color: inherit; /* Maintain the same color on hover/focus */
+}

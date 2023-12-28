@@ -6,7 +6,7 @@ var app = angular.module('checklistApp', []);
 app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$document', '$interval', function($scope, $sce, $timeout, $http, $document, $interval) {
     
 
-    $scope.versionNumber = '1.3.0'; 
+    $scope.versionNumber = '1.4.0'; 
 
     $scope.state = 'Idle';
     $scope.messages = [];
@@ -1463,6 +1463,25 @@ $scope.deBoardPassengersAndBags = function() {
         toast.show();
     }
 
+    function displayVatsimErrorToast() {
+        var toastHTML = `
+        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1050; min-width: 300px;">
+            <div class="toast-header">
+                <strong class="me-auto">Error</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                There was an error retrieving the vatsim data. It is possible that this service is down. Please try again after a few minutes.
+            </div>
+        </div>`;
+    
+        var toastElement = angular.element(toastHTML);
+        angular.element(document.body).append(toastElement);
+    
+        var toast = new bootstrap.Toast(toastElement[0]);
+        toast.show();
+    }
+
     $scope.fetchDefaultChecklists = function() {
         $http.get('/api/v1/default-checklists')
             .then(function(response) {
@@ -1487,7 +1506,6 @@ $scope.deBoardPassengersAndBags = function() {
             .then(function(response) {
                 // Handle the returned data here
                 $scope.chartsData = response.data;
-                console.log($scope.chartsData);
             })
             .catch(function(error) {
                 console.error('Error fetching charts data:', error);
@@ -1496,6 +1514,78 @@ $scope.deBoardPassengersAndBags = function() {
                 displayChartsErrorToast();
             });
     };
+
+    //Vatsim API Call
+    $scope.vatsimControllersData = [];
+    $scope.vatsimArrivalsData = [];
+    $scope.vatsimDeparturesData = [];
+    $scope.vatsimAtisData = [];
+    var vatsimFullData = {};
+    
+    $scope.fetchVatsim = function() {
+
+        //clear arrays:
+        $scope.vatsimControllersData = [];
+        $scope.vatsimArrivalsData = [];
+        $scope.vatsimDeparturesData = [];
+        $scope.vatsimAtisData = [];
+        vatsimFullData = [];
+
+        $http.post('/api/v1/vatsim', { icao: $scope.icao})
+            .then(function(response) {
+                //Handle the returned data here
+                vatsimFullData = response.data;
+                // Loop through each pilot in the pilots array
+                vatsimFullData.pilots.forEach(function(pilot) {
+                    // Check for departure match
+                    if (pilot.flight_plan && pilot.flight_plan.departure === $scope.icao) {
+                        $scope.vatsimDeparturesData.push(pilot);
+                    }
+
+                    // Check for arrival match
+                    if (pilot.flight_plan && pilot.flight_plan.arrival === $scope.icao) {
+                        $scope.vatsimArrivalsData.push(pilot);
+                    }
+                });
+
+                // Loop through each controller in the controllers array
+                vatsimFullData.controllers.forEach(function(controller) {
+                    // Check if the first 4 characters of callsign match $scope.icao
+                    if (controller.callsign.substring(0, 4) === $scope.icao || controller.callsign.substring(0, 3) === $scope.icao.substring(1, 4)) {
+                        $scope.vatsimControllersData.push(controller);
+                    }
+                });
+                // Loop through each ATIS in the Atis array array
+                vatsimFullData.atis.forEach(function(controller) {
+                    // Check if the first 4 characters of callsign match $scope.icao
+                    if (controller.callsign.substring(0, 4) === $scope.icao || controller.callsign.substring(0, 3) === $scope.icao.substring(1, 4)) {
+                        $scope.vatsimAtisData.push(controller);
+                    }
+                });
+                //Set each object to collapsed:
+                $scope.vatsimControllersData.forEach(function(controller) {
+                    controller.isCollapsed = true;
+                });
+            
+                $scope.vatsimAtisData.forEach(function(atis) {
+                    atis.isCollapsed = true;
+                });
+            
+                $scope.vatsimDeparturesData.forEach(function(departure) {
+                    departure.isCollapsed = true;
+                });
+            
+                $scope.vatsimArrivalsData.forEach(function(arrival) {
+                    arrival.isCollapsed = true;
+                });
+            })
+            .catch(function(error) {
+                console.error('Error fetching vatsim data:', error);
+                
+                // Display the toast with an error message
+                displayVatsimErrorToast();
+            });
+    }
 
     $scope.selectedPdfUrl = null;
     $scope.activeChart = null;

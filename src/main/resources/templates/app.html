@@ -294,7 +294,7 @@
 
                         <!-- Weather section -->
                             <div class="container mt-4">
-                                <div class="alert alert-secondary" role="alert" data-bs-toggle="collapse" href="#weatherSection">
+                                <div class="alert alert-secondary small-alert" role="alert" data-bs-toggle="collapse" href="#weatherSection">
                                     <h4 class="mb-3 d-inline">
                                         Weather Information <i class="fas fa-caret-right" aria-hidden="true" id="weatherCaret"></i>
                                     </h4>
@@ -364,7 +364,7 @@
 
                             <!-- Frequencies section -->
                             <div class="container mt-4">
-                                <div class="alert alert-secondary" role="alert" data-bs-toggle="collapse" href="#frequenciesSection">
+                                <div class="alert alert-secondary small-alert" role="alert" data-bs-toggle="collapse" href="#frequenciesSection">
                                     <h4 class="mb-3 d-inline">
                                         Frequencies <i class="fas fa-caret-right" aria-hidden="true" id="frequenciesCaret"></i>
                                     </h4>
@@ -387,7 +387,7 @@
 
                             <!-- Runways section -->
                             <div class="container mt-4">
-                                <div class="alert alert-secondary" role="alert" data-bs-toggle="collapse" href="#runwaysSection">
+                                <div class="alert alert-secondary small-alert" role="alert" data-bs-toggle="collapse" href="#runwaysSection">
                                     <h4 class="mb-3 d-inline">
                                         Runways <i class="fas fa-caret-right" aria-hidden="true" id="runwaysCaret"></i>
                                     </h4>
@@ -419,6 +419,123 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+
+                            <!-- Vatsim section -->
+                            <div class="container mt-4">
+                                <div class="alert alert-secondary small-alert" role="alert" data-bs-toggle="collapse" href="#vatsimSection">
+                                    <h4 class="mb-3 d-inline">
+                                        Vatsim <i class="fas fa-caret-right" aria-hidden="true" id="vatsimCaret"></i>
+                                    </h4>
+                                </div>
+
+                                <div class="collapse" id="vatsimSection">
+                                    <div class="row">
+                                        <div class="mt-3">
+                                            <button class="btn btn-small btn-success" ng-click="fetchVatsim()">Request</button>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <!-- ATC Column -->
+                                        <div class="col-md-3">
+                                            <h6>ATC</h6>
+                                            <div ng-repeat="controller in vatsimControllersData">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <button class="btn btn-link custom-card-header" ng-click="controller.isCollapsed = !controller.isCollapsed">
+                                                            <i class="fa-solid fa-headset"></i> {{controller.callsign}} - {{controller.frequency}}
+                                                        </button>
+                                                    </div>
+                                                    <div class="collapse" ng-class="{'show': !controller.isCollapsed}">
+                                                        <div class="card-body">
+                                                            <ul>
+                                                                <li ng-repeat="(key, value) in controller" ng-if="key !== 'isCollapsed'"><strong>{{key}}:</strong> {{value}}</li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    
+                                        <!-- ATIS Column -->
+                                        <div class="col-md-3">
+                                            <h6>ATIS</h6>
+                                            <div ng-repeat="atis in vatsimAtisData">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <button class="btn btn-link custom-card-header" ng-click="atis.isCollapsed = !atis.isCollapsed">
+                                                            <i class="fa-solid fa-tower-broadcast"></i> {{atis.callsign}} - {{atis.frequency}}
+                                                        </button>
+                                                    </div>
+                                                    <div class="collapse" ng-class="{'show': !atis.isCollapsed}">
+                                                        <div class="card-body">
+                                                            <ul>
+                                                                <li ng-repeat="(key, value) in atis" ng-if="key !== 'isCollapsed'"><strong>{{key}}:</strong> {{value}}</li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    
+                                        <!-- Departures Column -->
+                                        <div class="col-md-3">
+                                            <h6>Departures</h6>
+                                            <div ng-repeat="departure in vatsimDeparturesData">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <button class="btn btn-link custom-card-header" ng-click="departure.isCollapsed = !departure.isCollapsed">
+                                                            <i class="fa-solid fa-plane-departure"></i> {{departure.callsign}} to: {{departure.flight_plan.arrival}}
+                                                        </button>
+                                                    </div>
+                                                    <div class="collapse" ng-class="{'show': !departure.isCollapsed}">
+                                                        <div class="card-body">
+                                                            <ul>
+                                                                <li ng-repeat="(key, value) in departure" ng-if="key !== 'isCollapsed'">
+                                                                    <span ng-if="key !== 'flight_plan'"><strong>{{key}}:</strong> {{value}}</span>
+                                                                    <ul ng-if="key === 'flight_plan'">
+                                                                        <li ng-repeat="(fpKey, fpValue) in value" ng-if="fpKey !== 'isCollapsed'"><strong>{{fpKey}}:</strong> {{fpValue}}</li>
+                                                                    </ul>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Arrivals Column -->
+                                        <div class="col-md-3">
+                                            <h6>Arrivals</h6>
+                                            <div ng-repeat="arrival in vatsimArrivalsData">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <button class="btn btn-link custom-card-header" ng-click="arrival.isCollapsed = !arrival.isCollapsed">
+                                                            <i class="fa-solid fa-plane-arrival"></i> {{arrival.callsign}} from: {{arrival.flight_plan.departure}}
+                                                        </button>
+                                                    </div>
+                                                    <div class="collapse" ng-class="{'show': !arrival.isCollapsed}">
+                                                        <div class="card-body">
+                                                            <ul>
+                                                                <li ng-repeat="(key, value) in arrival" ng-if="key !== 'isCollapsed'">
+                                                                    <span ng-if="key !== 'flight_plan'"><strong>{{key}}:</strong> {{value}}</span>
+                                                                    <ul ng-if="key === 'flight_plan'">
+                                                                        <li ng-repeat="(fpKey, fpValue) in value" ng-if="fpKey !== 'isCollapsed'"><strong>{{fpKey}}:</strong> {{fpValue}}</li>
+                                                                    </ul>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                    
+                                    
+                                </div>
+                                
                             </div>
 
 
