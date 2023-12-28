@@ -444,16 +444,101 @@
                 <!-- Charts Tab -->
                 <div ng-show="activeTab === 'charts'">
                     <div class="container mt-4">
-                        <h2>Navigraph Charts</h2>
-                        <p>
-                            Use <a href="https://www.navigraph.com" target="_blank" rel="noopener noreferrer">Navigraph Charts</a> directly at Navigraph.com.
-                        </p>
-                        <p class="text-danger">
-                            Per Navigraph's Developer Restrictions, displaying their charts on physical EFBs or Desktop Applications is 
-                            <a href="https://developers.navigraph.com/docs/general/restrictions" target="_blank" rel="noopener noreferrer">prohibited by Navigraph at this time</a>.
-                        </p>
-                        <p>We will look into options in the future.</p>
-                        <div>
+                        <h2>Charts</h2>
+                        <h6 class="text-secondary">Powered by AviationAPI.com</h6>
+                        <!-- Charts ICAO Search Row-->
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group d-flex align-items-center">
+                                    <input type="text" class="form-control mr-2" id="icaoCodeCharts" ng-model="icao" maxlength="4" ng-change="convertToUpperCase()" placeholder="ICAO">
+                                    <button class="btn btn-primary" ng-click="fetchCharts()">Request</button>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="form-group d-flex align-items-center">
+                                    <p>Need to find the ICAO? Try searching <a href="https://ourairports.com/" target="_blank">ourairports.com</a></p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Charts Window Row-->
+                        <div class="row" style="padding-top:20px">
+                            <!-- Tab Links -->
+                            <ul class="nav nav-tabs" id="chartTabs">
+                                <li class="nav-item">
+                                    <a class="nav-link" ng-class="{'bg-success text-white': selectedTab === 'star', 'bg-dark text-success': selectedTab !== 'star'}" ng-click="selectTab('star')">STAR</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" ng-class="{'bg-warning text-white': selectedTab === 'app', 'bg-dark text-warning': selectedTab !== 'app'}" ng-click="selectTab('app')">APP</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" ng-class="{'bg-primary text-white': selectedTab === 'taxi', 'bg-dark text-primary': selectedTab !== 'taxi'}" ng-click="selectTab('taxi')">TAXI</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" ng-class="{'bg-danger text-white': selectedTab === 'sid', 'bg-dark text-danger': selectedTab !== 'sid'}" ng-click="selectTab('sid')">SID</a>
+                                </li>
+                            </ul>
+
+                            <!-- Chart Tab Content -->
+                            <div id="tabContent" class="d-flex">
+                                <!-- Navigation Bar with id="chartOptions" -->
+                                <div id="chartOptions" class="flex-shrink-0">
+                                    <!-- STAR Tab -->
+                                    <div ng-show="selectedTab === 'star'">
+                                        <ul class="nav flex-column bg-dark">
+                                            <li class="nav-item" ng-repeat="chart in chartsData[chartsICAOplaceholder].STAR" ng-show="chartsData[chartsICAOplaceholder].STAR.length > 0">
+                                                <a class="nav-link" href="#" ng-click="openPdf(chart.pdf_path, chart.chart_name)" ng-class="{'active-chart': activeChart === chart.chart_name}">{{chart.chart_name}}</a>
+                                            </li>
+                                            <li class="nav-item" ng-if="!chartsData[chartsICAOplaceholder].STAR.length">
+                                                <a class="nav-link disabled">No charts found</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <!-- APP Tab -->
+                                    <div ng-show="selectedTab === 'app'">
+                                        <ul class="nav flex-column bg-dark">
+                                            <li class="nav-item" ng-repeat="chart in chartsData[chartsICAOplaceholder].CAPP" ng-show="chartsData[chartsICAOplaceholder].CAPP.length > 0">
+                                                <a class="nav-link" href="#" ng-click="openPdf(chart.pdf_path, chart.chart_name)" ng-class="{'active-chart': activeChart === chart.chart_name}">{{chart.chart_name}}</a>
+                                            </li>
+                                            <li class="nav-item" ng-if="!chartsData[chartsICAOplaceholder].CAPP.length">
+                                                <a class="nav-link disabled">No charts found</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <!-- TAXI Tab -->
+                                    <div ng-show="selectedTab === 'taxi'">
+                                        <ul class="nav flex-column bg-dark">
+                                            <li class="nav-item" ng-repeat="chart in chartsData[chartsICAOplaceholder].General" ng-show="chartsData[chartsICAOplaceholder].General.length > 0">
+                                                <a class="nav-link" href="#" ng-click="openPdf(chart.pdf_path, chart.chart_name)" ng-class="{'active-chart': activeChart === chart.chart_name}">{{chart.chart_name}}</a>
+                                            </li>
+                                            <li class="nav-item" ng-if="!chartsData[chartsICAOplaceholder].General.length">
+                                                <a class="nav-link disabled">No charts found</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <!-- SID Tab -->
+                                    <div ng-show="selectedTab === 'sid'">
+                                        <ul class="nav flex-column bg-dark">
+                                            <li class="nav-item" ng-repeat="chart in chartsData[chartsICAOplaceholder].DP" ng-show="chartsData[chartsICAOplaceholder].DP.length > 0">
+                                                <a class="nav-link" href="#" ng-click="openPdf(chart.pdf_path, chart.chart_name)" ng-class="{'active-chart': activeChart === chart.chart_name}">{{chart.chart_name}}</a>
+                                            </li>
+                                            <li class="nav-item" ng-if="!chartsData[chartsICAOplaceholder].DP.length">
+                                                <a class="nav-link disabled">No charts found</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <!-- PDF Viewer -->
+                                <div class="flex-grow-1 pdf-viewer-container">
+                                    <embed ng-src="{{selectedPdfUrl}}" type="application/pdf" width="100%" height="600px" ng-show="selectedPdfUrl"></embed>
+                                </div>
+                            </div>
+
+
+
                         </div>
                     </div> 
                 </div>

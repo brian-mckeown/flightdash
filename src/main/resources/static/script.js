@@ -6,7 +6,7 @@ var app = angular.module('checklistApp', []);
 app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$document', '$interval', function($scope, $sce, $timeout, $http, $document, $interval) {
     
 
-    $scope.versionNumber = '1.2.0'; 
+    $scope.versionNumber = '1.3.0'; 
 
     $scope.state = 'Idle';
     $scope.messages = [];
@@ -1444,6 +1444,25 @@ $scope.deBoardPassengersAndBags = function() {
         toast.show();
     }
 
+    function displayChartsErrorToast() {
+        var toastHTML = `
+        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1050; min-width: 300px;">
+            <div class="toast-header">
+                <strong class="me-auto">Error</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                There was an error retrieving the charts. It is possible that this airport is not supported by AviationAPI at this time.
+            </div>
+        </div>`;
+    
+        var toastElement = angular.element(toastHTML);
+        angular.element(document.body).append(toastElement);
+    
+        var toast = new bootstrap.Toast(toastElement[0]);
+        toast.show();
+    }
+
     $scope.fetchDefaultChecklists = function() {
         $http.get('/api/v1/default-checklists')
             .then(function(response) {
@@ -1458,6 +1477,32 @@ $scope.deBoardPassengersAndBags = function() {
             });
     };
     $scope.fetchDefaultChecklists();
+
+    //Charts API call
+    $scope.chartsData = {};
+    $scope.chartsICAOplaceholder = '';
+    $scope.fetchCharts = function() {
+        $scope.chartsICAOplaceholder = $scope.icao;
+        $http.post('/api/v1/charts', { icao: $scope.icao })
+            .then(function(response) {
+                // Handle the returned data here
+                $scope.chartsData = response.data;
+                console.log($scope.chartsData);
+            })
+            .catch(function(error) {
+                console.error('Error fetching charts data:', error);
+                
+                // Display the toast with an error message
+                displayChartsErrorToast();
+            });
+    };
+
+    $scope.selectedPdfUrl = null;
+    $scope.activeChart = null;
+    $scope.openPdf = function(pdfUrl, chartName) {
+        $scope.selectedPdfUrl = $sce.trustAsResourceUrl(pdfUrl);
+        $scope.activeChart = chartName;
+    };
 
 
     $scope.playDingThenCallback = function(callback) {
@@ -1578,6 +1623,13 @@ $scope.deBoardPassengersAndBags = function() {
             noiseAudio.pause();
             noiseAudio.currentTime = 0; // Reset the audio to the start
         }, 750000); // 12.5 minutes (2 + 3 + 3 + 2 + 2)
+    };
+
+    //Charts Tabs
+    $scope.selectedTab = 'star'; // default selected tab
+
+    $scope.selectTab = function(tab) {
+        $scope.selectedTab = tab;
     };
     
 }]);

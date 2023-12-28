@@ -321,3 +321,54 @@ div.bg-black {
 .bg-black .dropdown-menu {
     margin-top: 0;
 }
+
+#chartTabs .nav-link {
+    color: white; /* Default color */
+}
+
+#chartTabs .nav-link.bg-dark.text-success {
+    color: #28a745 !important; /* Bootstrap success color, adjust as needed */
+}
+
+#chartTabs .nav-link.bg-dark.text-warning {
+    color: #ffc107 !important; /* Bootstrap warning color, adjust as needed */
+}
+
+#chartTabs .nav-link.bg-dark.text-primary {
+    color: #007bff !important; /* Bootstrap primary color, adjust as needed */
+}
+
+#chartTabs .nav-link.bg-dark.text-danger {
+    color: #dc3545 !important; /* Bootstrap danger color, adjust as needed */
+}
+
+#chartTabs + #tabContent {
+    display: flex;
+    margin-top: 20px; /* Adjust as needed for spacing below the tabs */
+}
+
+#chartOptions .nav-link:hover, #chartOptions .nav-link.active-chart {
+    background-color: var(--bs-info); /* Bootstrap info color */
+    color: black; /* Black text color */
+}
+
+#chartOptions .nav-link.active {
+    background-color: var(--bs-primary); /* Bootstrap primary color */
+    color: black; /* Black text color */
+}
+
+#chartOptions .nav-link.disabled {
+    pointer-events: none; /* Makes the link non-clickable */
+    color: gray; /* Optional: Gray out the text */
+}
+
+#tabContent > .flex-shrink-0 {
+    /* Adjust width as needed or use flex properties */
+    min-width: 200px; /* Example width for the nav bar */
+}
+
+.pdf-viewer-container {
+    flex-grow: 1;
+    margin-left: 30px; /* Space to the right of the navigation bar */
+    width: calc(100% - 230px); /* Adjust based on the width of the nav bar */
+}
