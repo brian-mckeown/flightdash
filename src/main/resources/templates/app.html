@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,19 +8,22 @@
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-RKZ370CHNJ"></script>
     <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
 
-    gtag('config', 'G-RKZ370CHNJ');
+        gtag('config', 'G-RKZ370CHNJ');
     </script>
     <!-- Favicon-->
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css" rel="stylesheet">
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>   
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
     <!-- Include FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- Google Fonts-->
@@ -32,19 +36,27 @@
     <link th:href="@{/styles.css}" rel="stylesheet">
 
 </head>
+
 <body ng-app="checklistApp" ng-controller="ChecklistController">
 
     <div id="overlay" class=""></div>
     <!-- Warning message -->
     <div id="warning-message" class="alert alert-warning alert-dismissible fade show">
-        FlightDash.io is currently meant to be displayed on computers or tablets in landscape mode, with a screen width of at least 1200 pixels. Please try another device to use FlightDash.io.
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> 
+        FlightDash.io is currently meant to be displayed on computers or tablets in landscape mode, with a screen width
+        of at least 1200 pixels. Please try another device to use FlightDash.io.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 
     <!-- Initial Agreement-->
-    <div class="toast align-items-center bg-primary border-0 position-fixed" style="top: 50%; left: 50%; transform: translate(-50%, -50%);" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+    <div class="toast align-items-center bg-primary border-0 position-fixed"
+        style="top: 50%; left: 50%; transform: translate(-50%, -50%);" role="alert" aria-live="assertive"
+        aria-atomic="true" data-bs-autohide="false">
         <div class="toast-body">
-            By using FlightDash.io, you acknowledge and consent to our <a href="#" data-bs-toggle="modal" data-bs-target="#termsOfUseModal">Terms of Use</a> and <a href="#" data-bs-toggle="modal" data-bs-target="#privacyPolicyModal">Privacy Policy</a>, which detail our cookie practices. Furthermore, you understand that this application is exclusively for flight simulation and must not be used for real-world aviation endeavors.
+            By using FlightDash.io, you acknowledge and consent to our <a href="#" data-bs-toggle="modal"
+                data-bs-target="#termsOfUseModal">Terms of Use</a> and <a href="#" data-bs-toggle="modal"
+                data-bs-target="#privacyPolicyModal">Privacy Policy</a>, which detail our cookie practices. Furthermore,
+            you understand that this application is exclusively for flight simulation and must not be used for
+            real-world aviation endeavors.
         </div>
         <div class="d-flex justify-content-center mt-2">
             <button type="button" class="btn btn-white btn-lg fw-bold" data-bs-dismiss="toast">Agree</button>
@@ -53,7 +65,7 @@
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div class="container-fluid">
-            
+
             <!-- Branding Text -->
             <a class="navbar-brand" href="./">
                 <i class="fas fa-plane"></i> FlightDash.io
@@ -61,39 +73,68 @@
             <div ng-show="showFlightStatBanner" class="text-white d-flex align-items-center ms-2">
                 <p class="mb-0">
                     {{callSign}} {{departureIcao}}->{{arrivalIcao}}
-                <a ng-show="currentFlightStatus == 'Idle'" class="text-white text-decoration-none"> | Boarding in: <span id="boardingCountdown">{{boardingHours}}h {{boardingMinutes}}m {{boardingSeconds}}s</span>
-                    <span class="badge" ng-class="{'bg-success': boardingStatus == 'ON TIME', 'bg-warning': boardingStatus == 'DELAYED'}">{{ boardingStatus }}</span> | <span ng-show="showPassengersBanner">Checked In: <i class="fa-solid fa-user"></i> {{passengersCheckedIn.length}}/{{numberOfPassengers}} <i class="fa-solid fa-suitcase"></i> {{bagsCheckedIn.length}}</span>
-                </a>
-                <a ng-show="currentFlightStatus == 'Boarding'" class="text-white text-decoration-none"> | <span class="badge bg-info" >BOARDING</span> | Departing in: <span id="departureCountdown">{{departureHours}}h {{departureMinutes}}m {{departureSeconds}}s</span>
-                    <span class="badge" ng-class="{'bg-success': departureStatus == 'ON TIME', 'bg-warning': departureStatus == 'DELAYED'}">{{ departureStatus }}</span>  | <span ng-show="showPassengersBanner">Boarded: <i class="fa-solid fa-user"></i> {{passengersSeated.length}}/{{numberOfPassengers}} <i class="fa-solid fa-suitcase"></i> {{bagsLoaded.length}}</span>
-                </a>
-                <a ng-show="currentFlightStatus == 'Departed'" class="text-white text-decoration-none"> | <span class="badge bg-info" >DEPARTED</span> | Landing in: <span id="landingCountdown">{{landingHours}}h {{landingMinutes}}m {{landingSeconds}}s</span>
-                    <span class="badge" ng-class="{'bg-success': landingStatus == 'ON TIME', 'bg-warning': landingStatus == 'DELAYED'}">{{ landingStatus }}</span>
-                </a>
-                <a ng-show="currentFlightStatus == 'Landed'" class="text-white text-decoration-none"> | <span class="badge bg-success" >LANDED</span> | Arriving at Gate in: <span id="arrivalCountdown">{{arrivalHours}}h {{arrivalMinutes}}m {{arrivalSeconds}}s</span>
-                    <span class="badge" ng-class="{'bg-success': arrivalStatus == 'ON TIME', 'bg-warning': arrivalStatus == 'DELAYED'}">{{ arrivalStatus }}</span>
-                </a>
-                <a ng-show="currentFlightStatus == 'Arrived'" class="text-white text-decoration-none"> | <span class="badge bg-success" >ARRIVED AT GATE</span> | {{ getDifference(estimateGateArrivalDateTime, actualGateArrivalDateTime) }}
-                    <span class="badge" ng-class="{'bg-success': finalArrivalStatus == 'ON TIME', 'bg-warning': finalArrivalStatus == 'DELAYED'}">{{ finalArrivalStatus }}</span>  | <span ng-show="showPassengersBanner">Deboarding: <i class="fa-solid fa-user"></i> {{passengersSeated.length}}/{{numberOfPassengers}} <i class="fa-solid fa-suitcase"></i> {{bagsLoaded.length}}</span>
-                </a>
+                    <a ng-show="currentFlightStatus == 'Idle'" class="text-white text-decoration-none"> | Boarding in:
+                        <span id="boardingCountdown">{{boardingHours}}h {{boardingMinutes}}m {{boardingSeconds}}s</span>
+                        <span class="badge"
+                            ng-class="{'bg-success': boardingStatus == 'ON TIME', 'bg-warning': boardingStatus == 'DELAYED'}">{{
+                            boardingStatus }}</span> | <span ng-show="showPassengersBanner">Checked In: <i
+                                class="fa-solid fa-user"></i> {{passengersCheckedIn.length}}/{{numberOfPassengers}} <i
+                                class="fa-solid fa-suitcase"></i> {{bagsCheckedIn.length}}</span>
+                    </a>
+                    <a ng-show="currentFlightStatus == 'Boarding'" class="text-white text-decoration-none"> | <span
+                            class="badge bg-info">BOARDING</span> | Departing in: <span
+                            id="departureCountdown">{{departureHours}}h {{departureMinutes}}m
+                            {{departureSeconds}}s</span>
+                        <span class="badge"
+                            ng-class="{'bg-success': departureStatus == 'ON TIME', 'bg-warning': departureStatus == 'DELAYED'}">{{
+                            departureStatus }}</span> | <span ng-show="showPassengersBanner">Boarded: <i
+                                class="fa-solid fa-user"></i> {{passengersSeated.length}}/{{numberOfPassengers}} <i
+                                class="fa-solid fa-suitcase"></i> {{bagsLoaded.length}}</span>
+                    </a>
+                    <a ng-show="currentFlightStatus == 'Departed'" class="text-white text-decoration-none"> | <span
+                            class="badge bg-info">DEPARTED</span> | Landing in: <span
+                            id="landingCountdown">{{landingHours}}h {{landingMinutes}}m {{landingSeconds}}s</span>
+                        <span class="badge"
+                            ng-class="{'bg-success': landingStatus == 'ON TIME', 'bg-warning': landingStatus == 'DELAYED'}">{{
+                            landingStatus }}</span>
+                    </a>
+                    <a ng-show="currentFlightStatus == 'Landed'" class="text-white text-decoration-none"> | <span
+                            class="badge bg-success">LANDED</span> | Arriving at Gate in: <span
+                            id="arrivalCountdown">{{arrivalHours}}h {{arrivalMinutes}}m {{arrivalSeconds}}s</span>
+                        <span class="badge"
+                            ng-class="{'bg-success': arrivalStatus == 'ON TIME', 'bg-warning': arrivalStatus == 'DELAYED'}">{{
+                            arrivalStatus }}</span>
+                    </a>
+                    <a ng-show="currentFlightStatus == 'Arrived'" class="text-white text-decoration-none"> | <span
+                            class="badge bg-success">ARRIVED AT GATE</span> | {{
+                        getDifference(estimateGateArrivalDateTime, actualGateArrivalDateTime) }}
+                        <span class="badge"
+                            ng-class="{'bg-success': finalArrivalStatus == 'ON TIME', 'bg-warning': finalArrivalStatus == 'DELAYED'}">{{
+                            finalArrivalStatus }}</span> | <span ng-show="showPassengersBanner">Deboarding: <i
+                                class="fa-solid fa-user"></i> {{passengersSeated.length}}/{{numberOfPassengers}} <i
+                                class="fa-solid fa-suitcase"></i> {{bagsLoaded.length}}</span>
+                    </a>
                 </p>
             </div>
-            
+
             <!-- Toggler for mobile -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-    
+
             <!-- Navbar content -->
             <div class="collapse navbar-collapse" id="navbarContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     <!-- Settings Icon -->
                     <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="modal" data-bs-target="#settingsModal" href="#"><i class="fas fa-cog"></i> Settings</a>
+                        <a class="nav-link" data-bs-toggle="modal" data-bs-target="#settingsModal" href="#"><i
+                                class="fas fa-cog"></i> Settings</a>
                     </li>
                     <!-- Info Icon -->
                     <li class="nav-item">
-                        <a class="nav-link" href="/guide" target="_blank"><i class="fa-solid fa-book"></i> Knowledgebase</a>
+                        <a class="nav-link" href="/guide" target="_blank"><i class="fa-solid fa-book"></i>
+                            Knowledgebase</a>
                     </li>
                 </ul>
             </div>
@@ -102,7 +143,8 @@
     <!-- side nav-->
     <div class="row flex-nowrap">
         <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-black">
-            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100 bg-black">
+            <div
+                class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100 bg-black">
                 <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
                     <span class="fs-5 d-none d-sm-inline"></span>
                 </a>
@@ -113,10 +155,19 @@
                             <i class="fs-4 bi-house"></i><span class="ms-1 d-none d-sm-inline"></span>
                         </a>
                     </li>
+                    <!-- Vat-Track icon-->
+                    <li class="nav-item py-3 d-flex justify-content-center" ng-click="activeTab='vat-track'"
+                        ng-class="{'active': activeTab === 'vat-track'}">
+                        <a href="#" class="nav-link align-middle px-0">
+                            <i class="fa-solid fa-globe fa-2xl"></i></i><span class="ms-1 d-none d-sm-inline"></span>
+                        </a>
+                    </li>
                     <!--Checklist Icon-->
-                    <li class="nav-item py-3 d-flex justify-content-center" ng-click="activeTab='checklists'" ng-class="{'active': activeTab === 'checklists'}">
+                    <li class="nav-item py-3 d-flex justify-content-center" ng-click="activeTab='checklists'"
+                        ng-class="{'active': activeTab === 'checklists'}">
                         <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
-                            <i class="fa-solid fa-list-check fa-2xl"></i><span class="ms-1 d-none d-sm-inline"></span> </a>
+                            <i class="fa-solid fa-list-check fa-2xl"></i><span class="ms-1 d-none d-sm-inline"></span>
+                        </a>
                         <ul class="collapse show nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
                             <li class="w-100">
                                 <a href="#" class="nav-link px-0"> </a>
@@ -127,18 +178,23 @@
                         </ul>
                     </li>
                     <!-- Airport icon-->
-                    <li class="nav-item py-3 d-flex justify-content-center" ng-click="activeTab='airports'" ng-class="{'active': activeTab === 'airports'}">
+                    <li class="nav-item py-3 d-flex justify-content-center" ng-click="activeTab='airports'"
+                        ng-class="{'active': activeTab === 'airports'}">
                         <a href="#" class="nav-link align-middle px-0">
-                            <i class="fa-solid fa-plane-arrival fa-2xl"></i><span class="ms-1 d-none d-sm-inline"></span>
+                            <i class="fa-solid fa-plane-arrival fa-2xl"></i><span
+                                class="ms-1 d-none d-sm-inline"></span>
                         </a>
                     </li>
                     <!-- Flight Plan Icon -->
-                    <li class="nav-item py-3 d-flex justify-content-center" ng-click="activeTab='flightPlan'" ng-class="{'active': activeTab === 'flightPlan'}">
+                    <li class="nav-item py-3 d-flex justify-content-center" ng-click="activeTab='flightPlan'"
+                        ng-class="{'active': activeTab === 'flightPlan'}">
                         <a href="#" class="nav-link px-0 align-middle">
-                            <i class="fa-regular fa-file-lines fa-2xl"></i><span class="ms-1 d-none d-sm-inline"></span></a>
+                            <i class="fa-regular fa-file-lines fa-2xl"></i><span
+                                class="ms-1 d-none d-sm-inline"></span></a>
                     </li>
                     <!-- Charts Icon -->
-                    <li class="nav-item py-3 d-flex justify-content-center" ng-click="activeTab='charts'" ng-class="{'active': activeTab === 'charts'}">
+                    <li class="nav-item py-3 d-flex justify-content-center" ng-click="activeTab='charts'"
+                        ng-class="{'active': activeTab === 'charts'}">
                         <a href="#submenu2" data-bs-toggle="collapse" class="nav-link px-0 align-middle ">
                             <i class="fa-regular fa-map fa-2xl"></i><span class="ms-1 d-none d-sm-inline"></span></a>
                         <ul class="collapse nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
@@ -151,10 +207,12 @@
                         </ul>
                     </li>
                     <!-- Flight Stats Config Icon-->
-                    <li class="nav-item py-3 d-flex justify-content-center" ng-click="activeTab='dataEntry'" ng-class="{'active': activeTab === 'dataEntry'}">
+                    <li class="nav-item py-3 d-flex justify-content-center" ng-click="activeTab='dataEntry'"
+                        ng-class="{'active': activeTab === 'dataEntry'}">
                         <a href="#submenu3" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
-                            <i class="fa-regular fa-pen-to-square fa-2xl"></i><span class="ms-1 d-none d-sm-inline"></span> </a>
-                            <ul class="collapse nav flex-column ms-1" id="submenu3" data-bs-parent="#menu">
+                            <i class="fa-regular fa-pen-to-square fa-2xl"></i><span
+                                class="ms-1 d-none d-sm-inline"></span> </a>
+                        <ul class="collapse nav flex-column ms-1" id="submenu3" data-bs-parent="#menu">
                             <li class="w-100">
                                 <a href="#" class="nav-link px-0"> </a>
                             </li>
@@ -170,224 +228,257 @@
                         </ul>
                     </li>
                     <!-- In-Flight Actions Icon -->
-                    <li class="nav-item py-3 d-flex justify-content-center" ng-click="activeTab='controller'" ng-class="{'active': activeTab === 'controller'}">
+                    <li class="nav-item py-3 d-flex justify-content-center" ng-click="activeTab='controller'"
+                        ng-class="{'active': activeTab === 'controller'}">
                         <a href="#" class="nav-link px-0 align-middle">
                             <i class="fa-regular fa-clock fa-2xl"></i><span class="ms-1 d-none d-sm-inline"></span> </a>
                     </li>
                     <!-- Passenger Announcement Icon -->
-                    <li class="nav-item py-3 d-flex justify-content-center" ng-click="activeTab='announcements'" ng-class="{'active': activeTab === 'announcements'}">
+                    <li class="nav-item py-3 d-flex justify-content-center" ng-click="activeTab='announcements'"
+                        ng-class="{'active': activeTab === 'announcements'}">
                         <a href="#" class="nav-link px-0 align-middle">
-                            <i class="fa-solid fa-bullhorn fa-2xl"></i><span class="ms-1 d-none d-sm-inline"></span> </a>
+                            <i class="fa-solid fa-bullhorn fa-2xl"></i><span class="ms-1 d-none d-sm-inline"></span>
+                        </a>
                     </li>
                     <!-- Passenger Manifest Icon -->
-                    <li class="nav-item py-3 d-flex justify-content-center" ng-click="activeTab='passengers'" ng-class="{'active': activeTab === 'passengers'}">
+                    <li class="nav-item py-3 d-flex justify-content-center" ng-click="activeTab='passengers'"
+                        ng-class="{'active': activeTab === 'passengers'}">
                         <a href="#" class="nav-link px-0 align-middle">
-                            <i class="fa-solid fa-person-walking-luggage fa-2xl"></i><span class="ms-1 d-none d-sm-inline"></span> </a>
+                            <i class="fa-solid fa-person-walking-luggage fa-2xl"></i><span
+                                class="ms-1 d-none d-sm-inline"></span> </a>
                     </li>
                     <!-- Flight Report Icon -->
-                    <li class="nav-item py-3 d-flex justify-content-center" ng-click="activeTab='report'" ng-class="{'active': activeTab === 'report'}">
+                    <li class="nav-item py-3 d-flex justify-content-center" ng-click="activeTab='report'"
+                        ng-class="{'active': activeTab === 'report'}">
                         <a href="#" class="nav-link px-0 align-middle">
-                            <i class="fa-solid fa-chart-line fa-2xl"></i><span class="ms-1 d-none d-sm-inline"></span> </a>
+                            <i class="fa-solid fa-chart-line fa-2xl"></i><span class="ms-1 d-none d-sm-inline"></span>
+                        </a>
                     </li>
                 </ul>
             </div>
         </div>
-    
 
-    <div class="container mt-4 pt-5 main-content-container">
-        <div class="row mb-5 clearfix">
-            <!-- Panel of Buttons -->
-            <div class="col-md-10">
 
-                <!-- Checklists Tab -->
-                <div ng-show="activeTab === 'checklists'">
-                    <div class="row">
-                        <!-- Chat Window Column -->
-                        <div class="col-md-4">
-                            <div class="border bg-light p-3 chat-container">
-                                <div class="bg-primary text-white p-2">Checklist Log</div>
-                                <div class="mt-3 chat-content chat-bg" id="chat-content" ng-ref="chatContentDiv">
-                                    <!-- Rendering Messages with ng-repeat -->
-                                    <div ng-repeat="message in messages" class="text-{{message.color}} chat-msg-bg">
-                                        <span ng-bind-html="message.text"></span>
+        <div class="container mt-4 pt-5 main-content-container">
+            <div class="row mb-5 clearfix">
+                <!-- Panel of Buttons -->
+                <div class="col-md-10">
+
+                    <!-- Vat-Track Tab -->
+                    <div ng-show="activeTab === 'vat-track'">
+                        <iframe src="../vat-track" frameborder="0" scrolling="no" seamless="seamless"
+                            style="display:block; width:100%; height:85vh;"></iframe>
+                    </div>
+
+                    <!-- Checklists Tab -->
+                    <div ng-show="activeTab === 'checklists'">
+                        <div class="row">
+                            <!-- Chat Window Column -->
+                            <div class="col-md-4">
+                                <div class="border bg-light p-3 chat-container">
+                                    <div class="bg-primary text-white p-2">Checklist Log</div>
+                                    <div class="mt-3 chat-content chat-bg" id="chat-content" ng-ref="chatContentDiv">
+                                        <!-- Rendering Messages with ng-repeat -->
+                                        <div ng-repeat="message in messages" class="text-{{message.color}} chat-msg-bg">
+                                            <span ng-bind-html="message.text"></span>
+                                        </div>
+                                    </div>
+                                    <input type="text" class="form-control mt-3" ng-model="chatMessage"
+                                        ng-keypress="sendMessage($event)" id="chat-message"
+                                        placeholder="Type your message...">
+
+                                    <div class="d-flex mt-2 justify-content-start align-items-center">
+                                        <button class="btn btn-primary" ng-click="sendMessage()"
+                                            id="send-button">Send</button>
+                                        <!-- New Colored Buttons -->
+                                        <button class="btn btn-success ml-2"
+                                            ng-click="handleButtonPress('A')">A</button>
+                                        <button class="btn btn-warning ml-2"
+                                            ng-click="handleButtonPress('B')">B</button>
+                                        <button class="btn btn-warning ml-2"
+                                            ng-click="handleButtonPress('C')">C</button>
+                                        <button class="btn btn-danger ml-2" ng-click="handleButtonPress('D')">D</button>
+                                        <button class="btn btn-outline-primary ml-2" ng-click="toggleMicrophone()"
+                                            id="microphoneButton">
+                                            <i class="fas fa-microphone"></i>
+                                            <i class="fas fa-dot-circle text-danger"
+                                                ng-show="recognitionSignalStarted"></i>
+                                        </button>
                                     </div>
                                 </div>
-                                <input type="text" class="form-control mt-3" ng-model="chatMessage" ng-keypress="sendMessage($event)" id="chat-message" placeholder="Type your message...">
-
-                                <div class="d-flex mt-2 justify-content-start align-items-center">
-                                    <button class="btn btn-primary" ng-click="sendMessage()" id="send-button">Send</button>
-                                    <!-- New Colored Buttons -->
-                                    <button class="btn btn-success ml-2" ng-click="handleButtonPress('A')">A</button>
-                                    <button class="btn btn-warning ml-2" ng-click="handleButtonPress('B')">B</button>
-                                    <button class="btn btn-warning ml-2" ng-click="handleButtonPress('C')">C</button>
-                                    <button class="btn btn-danger ml-2" ng-click="handleButtonPress('D')">D</button>
-                                    <button class="btn btn-outline-primary ml-2" ng-click="toggleMicrophone()" id="microphoneButton">
-                                        <i class="fas fa-microphone"></i>
-                                        <i class="fas fa-dot-circle text-danger" ng-show="recognitionSignalStarted"></i>
-                                    </button>
-                                </div>
                             </div>
-                        </div>
 
-                        <!-- Checklist Column -->
-                        <div class="col-md-8">
-                            <div class="row no-gutter">
-                                <!-- Preflight -->
-                                <div class="col d-flex flex-column align-items-center" ng-repeat="table in tables">
-                                    <h5 class="custom-header text-center">{{table.name}}</h5>
-                                    <button class="btn btn-secondary mb-2 uniform-width small-text slim-button" 
+                            <!-- Checklist Column -->
+                            <div class="col-md-8">
+                                <div class="row no-gutter">
+                                    <!-- Preflight -->
+                                    <div class="col d-flex flex-column align-items-center" ng-repeat="table in tables">
+                                        <h5 class="custom-header text-center">{{table.name}}</h5>
+                                        <button class="btn btn-secondary mb-2 uniform-width small-text slim-button"
                                             ng-repeat="checklist in table.rows"
                                             ng-click="handleChecklistButtonPress(checklist)">
-                                        {{checklist.checklist}}
-                                    </button>
-                                </div>  
+                                            {{checklist.checklist}}
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
 
-                <!-- Airports Tab -->
-                <div ng-show="activeTab === 'airports'">
-                    <!-- Content for Airports -->
-                    <h5>Airport Data</h5>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-group d-flex align-items-center">
-                                <input type="text" class="form-control mr-2" id="icaoCode" ng-model="icao" maxlength="4" ng-change="convertToUpperCase()" placeholder="ICAO">
-                                <button class="btn btn-primary" ng-click="fetchAirportInfo()">Request</button>
-                            </div>
-                        </div>
-                        <div class="col-md-8">
-                            <div class="form-group d-flex align-items-center">
-                                <p>Need to find the ICAO? Try searching <a href="https://ourairports.com/" target="_blank">ourairports.com</a></p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="container mt-5" ng-show="airportRequested">
-                        <!-- Header for the airport name -->
-                        <h3 class="mb-4">{{airportInfo.name}}</h3>
-
-                        <!-- Form with airport details -->
-                        <div class="container mb-5">
-                            <div class="row mb-3">
-                                <div class="col-md-4">
-                                    <label class="fw-bold">Municipality:</label>
-                                    <p>{{airportInfo.municipality}}</p>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="fw-bold">ICAO:</label>
-                                    <p>{{airportInfo.icao}}</p>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="fw-bold">Type:</label>
-                                    <p>{{airportInfo.type}}</p>
+                    <!-- Airports Tab -->
+                    <div ng-show="activeTab === 'airports'">
+                        <!-- Content for Airports -->
+                        <h5>Airport Data</h5>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group d-flex align-items-center">
+                                    <input type="text" class="form-control mr-2" id="icaoCode" ng-model="icao"
+                                        maxlength="4" ng-change="convertToUpperCase()" placeholder="ICAO">
+                                    <button class="btn btn-primary" ng-click="fetchAirportInfo()">Request</button>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <label class="fw-bold">Wikipedia:</label>
-                                    <a href="{{airportInfo.wikipedia}}" target="_blank">{{airportInfo.wikipedia}}</a>
+                            <div class="col-md-8">
+                                <div class="form-group d-flex align-items-center">
+                                    <p>Need to find the ICAO? Try searching <a href="https://ourairports.com/"
+                                            target="_blank">ourairports.com</a></p>
                                 </div>
                             </div>
                         </div>
+                        <div class="container mt-5" ng-show="airportRequested">
+                            <!-- Header for the airport name -->
+                            <h3 class="mb-4">{{airportInfo.name}}</h3>
 
-                        <!-- Weather section -->
+                            <!-- Form with airport details -->
+                            <div class="container mb-5">
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <label class="fw-bold">Municipality:</label>
+                                        <p>{{airportInfo.municipality}}</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="fw-bold">ICAO:</label>
+                                        <p>{{airportInfo.icao}}</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="fw-bold">Type:</label>
+                                        <p>{{airportInfo.type}}</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label class="fw-bold">Wikipedia:</label>
+                                        <a href="{{airportInfo.wikipedia}}"
+                                            target="_blank">{{airportInfo.wikipedia}}</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Weather section -->
                             <div class="container mt-4">
-                                <div class="alert alert-secondary small-alert" role="alert" data-bs-toggle="collapse" href="#weatherSection">
+                                <div class="alert alert-secondary small-alert" role="alert" data-bs-toggle="collapse"
+                                    href="#weatherSection">
                                     <h4 class="mb-3 d-inline">
-                                        Weather Information <i class="fas fa-caret-right" aria-hidden="true" id="weatherCaret"></i>
+                                        Weather Information <i class="fas fa-caret-right" aria-hidden="true"
+                                            id="weatherCaret"></i>
                                     </h4>
                                 </div>
                                 <div class="collapse" id="weatherSection">
-                                <div class="row mb-2">
-                                    <div class="col-md-8">
-                                        <label class="fw-bold">METAR:</label>
-                                        <p class="small">{{airportInfo.metar}}</p>
+                                    <div class="row mb-2">
+                                        <div class="col-md-8">
+                                            <label class="fw-bold">METAR:</label>
+                                            <p class="small">{{airportInfo.metar}}</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="fw-bold">METAR Source:</label>
+                                            <p class="small">{{airportInfo.metarSource}}</p>
+                                        </div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <label class="fw-bold">METAR Source:</label>
-                                        <p class="small">{{airportInfo.metarSource}}</p>
-                                    </div>
-                                </div>
 
-                                <div class="row mb-2">
-                                    <div class="col-md-3">
-                                        <label class="fw-bold">UTC DateTime:</label>
-                                        <p class="small">{{metarDateTime}}</p>
+                                    <div class="row mb-2">
+                                        <div class="col-md-3">
+                                            <label class="fw-bold">UTC DateTime:</label>
+                                            <p class="small">{{metarDateTime}}</p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="fw-bold">Local DateTime:</label>
+                                            <p class="small">{{localDateTime}}</p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="fw-bold">Wind:</label>
+                                            <p class="small">{{metarWind}}</p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="fw-bold">Visibility:</label>
+                                            <p class="small">{{metarVisibility}}</p>
+                                        </div>
                                     </div>
-                                    <div class="col-md-3">
-                                        <label class="fw-bold">Local DateTime:</label>
-                                        <p class="small">{{localDateTime}}</p>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="fw-bold">Wind:</label>
-                                        <p class="small">{{metarWind}}</p>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="fw-bold">Visibility:</label>
-                                        <p class="small">{{metarVisibility}}</p>
-                                    </div>
-                                </div>
 
-                                <div class="row mb-2">
-                                    <div class="col-md-3">
-                                        <label class="fw-bold">Weather:</label>
-                                        <p class="small">{{metarWeather}}</p>
+                                    <div class="row mb-2">
+                                        <div class="col-md-3">
+                                            <label class="fw-bold">Weather:</label>
+                                            <p class="small">{{metarWeather}}</p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="fw-bold">Clouds:</label>
+                                            <p class="small">{{metarClouds}}</p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="fw-bold">Temperature / Dewpoint:</label>
+                                            <span class="small">
+                                                {{metarTemperatureDewpoint.split('/')[0]}}°C /
+                                                {{metarTemperatureDewpoint.split('/')[1]}}°C
+                                                <br>
+                                                {{convertCelsiusToFahrenheit(metarTemperatureDewpoint.split('/')[0]) |
+                                                number:1}}°F /
+                                                {{convertCelsiusToFahrenheit(metarTemperatureDewpoint.split('/')[1]) |
+                                                number:1}}°F
+                                            </span>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="fw-bold">Altimeter:</label>
+                                            <p class="small">{{metarAltimeter}}</p>
+                                        </div>
                                     </div>
-                                    <div class="col-md-3">
-                                        <label class="fw-bold">Clouds:</label>
-                                        <p class="small">{{metarClouds}}</p>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="fw-bold">Temperature / Dewpoint:</label>
-                                        <span class="small">
-                                            {{metarTemperatureDewpoint.split('/')[0]}}°C / {{metarTemperatureDewpoint.split('/')[1]}}°C
-                                            <br>
-                                            {{convertCelsiusToFahrenheit(metarTemperatureDewpoint.split('/')[0]) | number:1}}°F / {{convertCelsiusToFahrenheit(metarTemperatureDewpoint.split('/')[1]) | number:1}}°F
-                                        </span>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="fw-bold">Altimeter:</label>
-                                        <p class="small">{{metarAltimeter}}</p>
-                                    </div>
-                                </div>
 
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <label class="fw-bold">Remarks:</label>
-                                        <p class="small">{{metarRemarks}}</p>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label class="fw-bold">Remarks:</label>
+                                            <p class="small">{{metarRemarks}}</p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
                             </div>
 
                             <!-- Frequencies section -->
                             <div class="container mt-4">
-                                <div class="alert alert-secondary small-alert" role="alert" data-bs-toggle="collapse" href="#frequenciesSection">
+                                <div class="alert alert-secondary small-alert" role="alert" data-bs-toggle="collapse"
+                                    href="#frequenciesSection">
                                     <h4 class="mb-3 d-inline">
-                                        Frequencies <i class="fas fa-caret-right" aria-hidden="true" id="frequenciesCaret"></i>
+                                        Frequencies <i class="fas fa-caret-right" aria-hidden="true"
+                                            id="frequenciesCaret"></i>
                                     </h4>
                                 </div>
                                 <div class="collapse" id="frequenciesSection">
-                                
-                                <form>
-                                    <div class="row mb-2" ng-repeat="freq in airportData.freqs">
-                                        <div class="col-md-3">
-                                            <label class="fw-bold small">{{freq.description}}:</label>
+
+                                    <form>
+                                        <div class="row mb-2" ng-repeat="freq in airportData.freqs">
+                                            <div class="col-md-3">
+                                                <label class="fw-bold small">{{freq.description}}:</label>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <p class="small">{{freq.frequency_mhz}}</p>
+                                            </div>
+                                            <!-- You can add more columns if needed. For now, I've reserved space for two columns per frequency -->
                                         </div>
-                                        <div class="col-md-3">
-                                            <p class="small">{{freq.frequency_mhz}}</p>
-                                        </div>
-                                        <!-- You can add more columns if needed. For now, I've reserved space for two columns per frequency -->
-                                    </div>
-                                </form>
-                            </div>
+                                    </form>
+                                </div>
                             </div>
 
                             <!-- Runways section -->
                             <div class="container mt-4">
-                                <div class="alert alert-secondary small-alert" role="alert" data-bs-toggle="collapse" href="#runwaysSection">
+                                <div class="alert alert-secondary small-alert" role="alert" data-bs-toggle="collapse"
+                                    href="#runwaysSection">
                                     <h4 class="mb-3 d-inline">
                                         Runways <i class="fas fa-caret-right" aria-hidden="true" id="runwaysCaret"></i>
                                     </h4>
@@ -398,16 +489,22 @@
                                         <!-- Iterate for each flattened runway -->
                                         <div class="col-md-3" ng-repeat="runway in flattenedRunways">
                                             <div class="card mb-3">
-                                                <div class="card-header small" ng-class="getCardHeaderColor(runway, runway.ident)">
+                                                <div class="card-header small"
+                                                    ng-class="getCardHeaderColor(runway, runway.ident)">
                                                     {{runway.ident}}
                                                 </div>
                                                 <div class="card-body small">
                                                     <p><strong>Runway Heading:</strong> {{runway.heading_degT}}°</p>
                                                     <p><strong>Length:</strong> {{runway.length_ft}} ft</p>
                                                     <p><strong>Width:</strong> {{runway.width_ft}} ft</p>
-                                                    <p><strong>Headwind:</strong> {{getHeadwind(runway.heading_degT, windSpeed, windDirection)}} kts</p>
-                                                    <p><strong>Crosswind:</strong> {{getCrosswind(runway.heading_degT, windSpeed, windDirection)}} kts ({{getCrosswindDirection(runway.heading_degT, windDirection)}})</p>
-                                                    <p ng-if="runway.ils"><strong>ILS:</strong> {{runway.ils.freq}} / {{runway.ils.course}}°</p>
+                                                    <p><strong>Headwind:</strong> {{getHeadwind(runway.heading_degT,
+                                                        windSpeed, windDirection)}} kts</p>
+                                                    <p><strong>Crosswind:</strong> {{getCrosswind(runway.heading_degT,
+                                                        windSpeed, windDirection)}} kts
+                                                        ({{getCrosswindDirection(runway.heading_degT, windDirection)}})
+                                                    </p>
+                                                    <p ng-if="runway.ils"><strong>ILS:</strong> {{runway.ils.freq}} /
+                                                        {{runway.ils.course}}°</p>
                                                     <p><strong>Surface:</strong> {{runway.surface}}</p>
                                                     <p>
                                                         <strong>Lighted:</strong>
@@ -423,7 +520,8 @@
 
                             <!-- Vatsim section -->
                             <div class="container mt-4">
-                                <div class="alert alert-secondary small-alert" role="alert" data-bs-toggle="collapse" href="#vatsimSection">
+                                <div class="alert alert-secondary small-alert" role="alert" data-bs-toggle="collapse"
+                                    href="#vatsimSection">
                                     <h4 class="mb-3 d-inline">
                                         Vatsim <i class="fas fa-caret-right" aria-hidden="true" id="vatsimCaret"></i>
                                     </h4>
@@ -432,7 +530,8 @@
                                 <div class="collapse" id="vatsimSection">
                                     <div class="row">
                                         <div class="mt-3">
-                                            <button class="btn btn-small btn-success" ng-click="fetchVatsim()">Request</button>
+                                            <button class="btn btn-small btn-success"
+                                                ng-click="fetchVatsim()">Request</button>
                                         </div>
                                     </div>
                                     <div class="row mt-3">
@@ -442,59 +541,74 @@
                                             <div ng-repeat="controller in vatsimControllersData">
                                                 <div class="card">
                                                     <div class="card-header">
-                                                        <button class="btn btn-link custom-card-header" ng-click="controller.isCollapsed = !controller.isCollapsed">
-                                                            <i class="fa-solid fa-headset"></i> {{controller.callsign}} - {{controller.frequency}}
+                                                        <button class="btn btn-link custom-card-header"
+                                                            ng-click="controller.isCollapsed = !controller.isCollapsed">
+                                                            <i class="fa-solid fa-headset"></i> {{controller.callsign}}
+                                                            - {{controller.frequency}}
                                                         </button>
                                                     </div>
                                                     <div class="collapse" ng-class="{'show': !controller.isCollapsed}">
                                                         <div class="card-body">
                                                             <ul>
-                                                                <li ng-repeat="(key, value) in controller" ng-if="key !== 'isCollapsed'"><strong>{{key}}:</strong> {{value}}</li>
+                                                                <li ng-repeat="(key, value) in controller"
+                                                                    ng-if="key !== 'isCollapsed'">
+                                                                    <strong>{{key}}:</strong> {{value}}</li>
                                                             </ul>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    
+
                                         <!-- ATIS Column -->
                                         <div class="col-md-3">
                                             <h6>ATIS</h6>
                                             <div ng-repeat="atis in vatsimAtisData">
                                                 <div class="card">
                                                     <div class="card-header">
-                                                        <button class="btn btn-link custom-card-header" ng-click="atis.isCollapsed = !atis.isCollapsed">
-                                                            <i class="fa-solid fa-tower-broadcast"></i> {{atis.callsign}} - {{atis.frequency}}
+                                                        <button class="btn btn-link custom-card-header"
+                                                            ng-click="atis.isCollapsed = !atis.isCollapsed">
+                                                            <i class="fa-solid fa-tower-broadcast"></i>
+                                                            {{atis.callsign}} - {{atis.frequency}}
                                                         </button>
                                                     </div>
                                                     <div class="collapse" ng-class="{'show': !atis.isCollapsed}">
                                                         <div class="card-body">
                                                             <ul>
-                                                                <li ng-repeat="(key, value) in atis" ng-if="key !== 'isCollapsed'"><strong>{{key}}:</strong> {{value}}</li>
+                                                                <li ng-repeat="(key, value) in atis"
+                                                                    ng-if="key !== 'isCollapsed'">
+                                                                    <strong>{{key}}:</strong> {{value}}</li>
                                                             </ul>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    
+
                                         <!-- Departures Column -->
                                         <div class="col-md-3">
                                             <h6>Departures</h6>
                                             <div ng-repeat="departure in vatsimDeparturesData">
                                                 <div class="card">
                                                     <div class="card-header">
-                                                        <button class="btn btn-link custom-card-header" ng-click="departure.isCollapsed = !departure.isCollapsed">
-                                                            <i class="fa-solid fa-plane-departure"></i> {{departure.callsign}} to: {{departure.flight_plan.arrival}}
+                                                        <button class="btn btn-link custom-card-header"
+                                                            ng-click="departure.isCollapsed = !departure.isCollapsed">
+                                                            <i class="fa-solid fa-plane-departure"></i>
+                                                            {{departure.callsign}} to: {{departure.flight_plan.arrival}}
                                                         </button>
                                                     </div>
                                                     <div class="collapse" ng-class="{'show': !departure.isCollapsed}">
                                                         <div class="card-body">
                                                             <ul>
-                                                                <li ng-repeat="(key, value) in departure" ng-if="key !== 'isCollapsed'">
-                                                                    <span ng-if="key !== 'flight_plan'"><strong>{{key}}:</strong> {{value}}</span>
+                                                                <li ng-repeat="(key, value) in departure"
+                                                                    ng-if="key !== 'isCollapsed'">
+                                                                    <span
+                                                                        ng-if="key !== 'flight_plan'"><strong>{{key}}:</strong>
+                                                                        {{value}}</span>
                                                                     <ul ng-if="key === 'flight_plan'">
-                                                                        <li ng-repeat="(fpKey, fpValue) in value" ng-if="fpKey !== 'isCollapsed'"><strong>{{fpKey}}:</strong> {{fpValue}}</li>
+                                                                        <li ng-repeat="(fpKey, fpValue) in value"
+                                                                            ng-if="fpKey !== 'isCollapsed'">
+                                                                            <strong>{{fpKey}}:</strong> {{fpValue}}</li>
                                                                     </ul>
                                                                 </li>
                                                             </ul>
@@ -510,17 +624,24 @@
                                             <div ng-repeat="arrival in vatsimArrivalsData">
                                                 <div class="card">
                                                     <div class="card-header">
-                                                        <button class="btn btn-link custom-card-header" ng-click="arrival.isCollapsed = !arrival.isCollapsed">
-                                                            <i class="fa-solid fa-plane-arrival"></i> {{arrival.callsign}} from: {{arrival.flight_plan.departure}}
+                                                        <button class="btn btn-link custom-card-header"
+                                                            ng-click="arrival.isCollapsed = !arrival.isCollapsed">
+                                                            <i class="fa-solid fa-plane-arrival"></i>
+                                                            {{arrival.callsign}} from: {{arrival.flight_plan.departure}}
                                                         </button>
                                                     </div>
                                                     <div class="collapse" ng-class="{'show': !arrival.isCollapsed}">
                                                         <div class="card-body">
                                                             <ul>
-                                                                <li ng-repeat="(key, value) in arrival" ng-if="key !== 'isCollapsed'">
-                                                                    <span ng-if="key !== 'flight_plan'"><strong>{{key}}:</strong> {{value}}</span>
+                                                                <li ng-repeat="(key, value) in arrival"
+                                                                    ng-if="key !== 'isCollapsed'">
+                                                                    <span
+                                                                        ng-if="key !== 'flight_plan'"><strong>{{key}}:</strong>
+                                                                        {{value}}</span>
                                                                     <ul ng-if="key === 'flight_plan'">
-                                                                        <li ng-repeat="(fpKey, fpValue) in value" ng-if="fpKey !== 'isCollapsed'"><strong>{{fpKey}}:</strong> {{fpValue}}</li>
+                                                                        <li ng-repeat="(fpKey, fpValue) in value"
+                                                                            ng-if="fpKey !== 'isCollapsed'">
+                                                                            <strong>{{fpKey}}:</strong> {{fpValue}}</li>
                                                                     </ul>
                                                                 </li>
                                                             </ul>
@@ -532,389 +653,463 @@
 
 
                                     </div>
-                                    
-                                    
+
+
                                 </div>
-                                
+
                             </div>
 
 
                         </div>
-                    
-                </div>
-                
-                
 
-                <!-- Flight Plan Tab -->
-                <div ng-show="activeTab === 'flightPlan'">
-                    <h3>Flight Plan</h3>
-                    <a href="https://dispatch.simbrief.com/options/new" target="_blank" class="btn btn-primary">
-                        Create SimBrief Flight Plan
-                    </a>
-                    <button class="btn btn-success" ng-click="fetchFlightPlan()">Load Flight Plan</button>
-                    <hr>
-                    <div class="fp-scrollable-content" ng-bind-html="flightPlanTrustedHtml"></div>
-                </div>
+                    </div>
 
-                
 
-                <!-- Charts Tab -->
-                <div ng-show="activeTab === 'charts'">
-                    <div class="container mt-4">
-                        <h2>Charts</h2>
-                        <h6 class="text-secondary">Powered by AviationAPI.com</h6>
-                        <!-- Charts ICAO Search Row-->
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-group d-flex align-items-center">
-                                    <input type="text" class="form-control mr-2" id="icaoCodeCharts" ng-model="icao" maxlength="4" ng-change="convertToUpperCase()" placeholder="ICAO">
-                                    <button class="btn btn-primary" ng-click="fetchCharts()">Request</button>
+
+                    <!-- Flight Plan Tab -->
+                    <div ng-show="activeTab === 'flightPlan'">
+                        <h3>Flight Plan</h3>
+                        <a href="https://dispatch.simbrief.com/options/new" target="_blank" class="btn btn-primary">
+                            Create SimBrief Flight Plan
+                        </a>
+                        <button class="btn btn-success" ng-click="fetchFlightPlan()">Load Flight Plan</button>
+                        <hr>
+                        <div class="fp-scrollable-content" ng-bind-html="flightPlanTrustedHtml"></div>
+                    </div>
+
+
+
+                    <!-- Charts Tab -->
+                    <div ng-show="activeTab === 'charts'">
+                        <div class="container mt-4">
+                            <h2>Charts</h2>
+                            <h6 class="text-secondary">Powered by AviationAPI.com</h6>
+                            <!-- Charts ICAO Search Row-->
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group d-flex align-items-center">
+                                        <input type="text" class="form-control mr-2" id="icaoCodeCharts" ng-model="icao"
+                                            maxlength="4" ng-change="convertToUpperCase()" placeholder="ICAO">
+                                        <button class="btn btn-primary" ng-click="fetchCharts()">Request</button>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-group d-flex align-items-center">
+                                        <p>Need to find the ICAO? Try searching <a href="https://ourairports.com/"
+                                                target="_blank">ourairports.com</a></p>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-8">
-                                <div class="form-group d-flex align-items-center">
-                                    <p>Need to find the ICAO? Try searching <a href="https://ourairports.com/" target="_blank">ourairports.com</a></p>
+                            <!-- Charts Window Row-->
+                            <div class="row" style="padding-top:20px">
+                                <!-- Tab Links -->
+                                <ul class="nav nav-tabs" id="chartTabs">
+                                    <li class="nav-item">
+                                        <a class="nav-link"
+                                            ng-class="{'bg-success text-white': selectedTab === 'star', 'bg-dark text-success': selectedTab !== 'star'}"
+                                            ng-click="selectTab('star')">STAR</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link"
+                                            ng-class="{'bg-warning text-white': selectedTab === 'app', 'bg-dark text-warning': selectedTab !== 'app'}"
+                                            ng-click="selectTab('app')">APP</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link"
+                                            ng-class="{'bg-primary text-white': selectedTab === 'taxi', 'bg-dark text-primary': selectedTab !== 'taxi'}"
+                                            ng-click="selectTab('taxi')">TAXI</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link"
+                                            ng-class="{'bg-danger text-white': selectedTab === 'sid', 'bg-dark text-danger': selectedTab !== 'sid'}"
+                                            ng-click="selectTab('sid')">SID</a>
+                                    </li>
+                                </ul>
+
+                                <!-- Chart Tab Content -->
+                                <div id="tabContent" class="d-flex">
+                                    <!-- Navigation Bar with id="chartOptions" -->
+                                    <div id="chartOptions" class="flex-shrink-0">
+                                        <!-- STAR Tab -->
+                                        <div ng-show="selectedTab === 'star'">
+                                            <ul class="nav flex-column bg-dark">
+                                                <li class="nav-item"
+                                                    ng-repeat="chart in chartsData[chartsICAOplaceholder].STAR"
+                                                    ng-show="chartsData[chartsICAOplaceholder].STAR.length > 0">
+                                                    <a class="nav-link" href="#"
+                                                        ng-click="openPdf(chart.pdf_path, chart.chart_name)"
+                                                        ng-class="{'active-chart': activeChart === chart.chart_name}">{{chart.chart_name}}</a>
+                                                </li>
+                                                <li class="nav-item"
+                                                    ng-if="!chartsData[chartsICAOplaceholder].STAR.length">
+                                                    <a class="nav-link disabled">No charts found</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                        <!-- APP Tab -->
+                                        <div ng-show="selectedTab === 'app'">
+                                            <ul class="nav flex-column bg-dark">
+                                                <li class="nav-item"
+                                                    ng-repeat="chart in chartsData[chartsICAOplaceholder].CAPP"
+                                                    ng-show="chartsData[chartsICAOplaceholder].CAPP.length > 0">
+                                                    <a class="nav-link" href="#"
+                                                        ng-click="openPdf(chart.pdf_path, chart.chart_name)"
+                                                        ng-class="{'active-chart': activeChart === chart.chart_name}">{{chart.chart_name}}</a>
+                                                </li>
+                                                <li class="nav-item"
+                                                    ng-if="!chartsData[chartsICAOplaceholder].CAPP.length">
+                                                    <a class="nav-link disabled">No charts found</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                        <!-- TAXI Tab -->
+                                        <div ng-show="selectedTab === 'taxi'">
+                                            <ul class="nav flex-column bg-dark">
+                                                <li class="nav-item"
+                                                    ng-repeat="chart in chartsData[chartsICAOplaceholder].General"
+                                                    ng-show="chartsData[chartsICAOplaceholder].General.length > 0">
+                                                    <a class="nav-link" href="#"
+                                                        ng-click="openPdf(chart.pdf_path, chart.chart_name)"
+                                                        ng-class="{'active-chart': activeChart === chart.chart_name}">{{chart.chart_name}}</a>
+                                                </li>
+                                                <li class="nav-item"
+                                                    ng-if="!chartsData[chartsICAOplaceholder].General.length">
+                                                    <a class="nav-link disabled">No charts found</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                        <!-- SID Tab -->
+                                        <div ng-show="selectedTab === 'sid'">
+                                            <ul class="nav flex-column bg-dark">
+                                                <li class="nav-item"
+                                                    ng-repeat="chart in chartsData[chartsICAOplaceholder].DP"
+                                                    ng-show="chartsData[chartsICAOplaceholder].DP.length > 0">
+                                                    <a class="nav-link" href="#"
+                                                        ng-click="openPdf(chart.pdf_path, chart.chart_name)"
+                                                        ng-class="{'active-chart': activeChart === chart.chart_name}">{{chart.chart_name}}</a>
+                                                </li>
+                                                <li class="nav-item"
+                                                    ng-if="!chartsData[chartsICAOplaceholder].DP.length">
+                                                    <a class="nav-link disabled">No charts found</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <!-- PDF Viewer -->
+                                    <div class="flex-grow-1 pdf-viewer-container">
+                                        <embed ng-src="{{selectedPdfUrl}}" type="application/pdf" width="100%"
+                                            height="600px" ng-show="selectedPdfUrl"></embed>
+                                    </div>
                                 </div>
+
+
+
                             </div>
                         </div>
-                        <!-- Charts Window Row-->
-                        <div class="row" style="padding-top:20px">
-                            <!-- Tab Links -->
-                            <ul class="nav nav-tabs" id="chartTabs">
-                                <li class="nav-item">
-                                    <a class="nav-link" ng-class="{'bg-success text-white': selectedTab === 'star', 'bg-dark text-success': selectedTab !== 'star'}" ng-click="selectTab('star')">STAR</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" ng-class="{'bg-warning text-white': selectedTab === 'app', 'bg-dark text-warning': selectedTab !== 'app'}" ng-click="selectTab('app')">APP</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" ng-class="{'bg-primary text-white': selectedTab === 'taxi', 'bg-dark text-primary': selectedTab !== 'taxi'}" ng-click="selectTab('taxi')">TAXI</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" ng-class="{'bg-danger text-white': selectedTab === 'sid', 'bg-dark text-danger': selectedTab !== 'sid'}" ng-click="selectTab('sid')">SID</a>
-                                </li>
-                            </ul>
-
-                            <!-- Chart Tab Content -->
-                            <div id="tabContent" class="d-flex">
-                                <!-- Navigation Bar with id="chartOptions" -->
-                                <div id="chartOptions" class="flex-shrink-0">
-                                    <!-- STAR Tab -->
-                                    <div ng-show="selectedTab === 'star'">
-                                        <ul class="nav flex-column bg-dark">
-                                            <li class="nav-item" ng-repeat="chart in chartsData[chartsICAOplaceholder].STAR" ng-show="chartsData[chartsICAOplaceholder].STAR.length > 0">
-                                                <a class="nav-link" href="#" ng-click="openPdf(chart.pdf_path, chart.chart_name)" ng-class="{'active-chart': activeChart === chart.chart_name}">{{chart.chart_name}}</a>
-                                            </li>
-                                            <li class="nav-item" ng-if="!chartsData[chartsICAOplaceholder].STAR.length">
-                                                <a class="nav-link disabled">No charts found</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-
-                                    <!-- APP Tab -->
-                                    <div ng-show="selectedTab === 'app'">
-                                        <ul class="nav flex-column bg-dark">
-                                            <li class="nav-item" ng-repeat="chart in chartsData[chartsICAOplaceholder].CAPP" ng-show="chartsData[chartsICAOplaceholder].CAPP.length > 0">
-                                                <a class="nav-link" href="#" ng-click="openPdf(chart.pdf_path, chart.chart_name)" ng-class="{'active-chart': activeChart === chart.chart_name}">{{chart.chart_name}}</a>
-                                            </li>
-                                            <li class="nav-item" ng-if="!chartsData[chartsICAOplaceholder].CAPP.length">
-                                                <a class="nav-link disabled">No charts found</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-
-                                    <!-- TAXI Tab -->
-                                    <div ng-show="selectedTab === 'taxi'">
-                                        <ul class="nav flex-column bg-dark">
-                                            <li class="nav-item" ng-repeat="chart in chartsData[chartsICAOplaceholder].General" ng-show="chartsData[chartsICAOplaceholder].General.length > 0">
-                                                <a class="nav-link" href="#" ng-click="openPdf(chart.pdf_path, chart.chart_name)" ng-class="{'active-chart': activeChart === chart.chart_name}">{{chart.chart_name}}</a>
-                                            </li>
-                                            <li class="nav-item" ng-if="!chartsData[chartsICAOplaceholder].General.length">
-                                                <a class="nav-link disabled">No charts found</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-
-                                    <!-- SID Tab -->
-                                    <div ng-show="selectedTab === 'sid'">
-                                        <ul class="nav flex-column bg-dark">
-                                            <li class="nav-item" ng-repeat="chart in chartsData[chartsICAOplaceholder].DP" ng-show="chartsData[chartsICAOplaceholder].DP.length > 0">
-                                                <a class="nav-link" href="#" ng-click="openPdf(chart.pdf_path, chart.chart_name)" ng-class="{'active-chart': activeChart === chart.chart_name}">{{chart.chart_name}}</a>
-                                            </li>
-                                            <li class="nav-item" ng-if="!chartsData[chartsICAOplaceholder].DP.length">
-                                                <a class="nav-link disabled">No charts found</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-
-                                <!-- PDF Viewer -->
-                                <div class="flex-grow-1 pdf-viewer-container">
-                                    <embed ng-src="{{selectedPdfUrl}}" type="application/pdf" width="100%" height="600px" ng-show="selectedPdfUrl"></embed>
-                                </div>
-                            </div>
-
-
-
-                        </div>
-                    </div> 
-                </div>
+                    </div>
 
                     <!-- Flight Stats Tab -->
-                <div ng-show="activeTab === 'flightStats' || activeTab === 'dataEntry' || activeTab === 'controller' || activeTab === 'report'">
+                    <div
+                        ng-show="activeTab === 'flightStats' || activeTab === 'dataEntry' || activeTab === 'controller' || activeTab === 'report'">
 
-                    <!-- Data Entry Sub Tab-->
-                    <div class="container mt-4" ng-show="activeTab === 'flightStats' || activeTab === 'dataEntry'">
-                        <h3>Flight Data</h3>
-                          <form>
-                            <!-- Row 1 -->
-                            <div class="row mb-3">
-                                <!-- Aircraft Input -->
-                                <div class="col-md-3">
-                                    <label for="aircraftInput" class="form-label">Aircraft</label>
-                                    <input type="text" class="form-control" id="aircraftInput" placeholder="Enter Aircraft Name" ng-model="aircraftName">
-                                </div>
-                                <!-- Call Sign Input -->
-                                <div class="col-md-3">
-                                    <label for="callSignInput" class="form-label">Call Sign</label>
-                                    <input type="text" class="form-control" id="callSignInput" placeholder="Enter Call Sign" ng-model="callSign">
-                                </div>
-                        
-                                <!-- Departure ICAO Input -->
-                                <div class="col-md-3">
-                                    <label for="departureICAOInput" class="form-label">Departure ICAO</label>
-                                    <input type="text" class="form-control" id="departureICAOInput" maxlength="4" oninput="this.value = this.value.toUpperCase()" placeholder="Enter Departure ICAO" ng-model="departureIcao">
-                                </div>
-                        
-                                <!-- Arrival ICAO Input -->
-                                <div class="col-md-3">
-                                    <label for="arrivalICAOInput" class="form-label">Arrival ICAO</label>
-                                    <input type="text" class="form-control" id="arrivalICAOInput" maxlength="4" oninput="this.value = this.value.toUpperCase()" placeholder="Enter Arrival ICAO" ng-model="arrivalIcao">
-                                </div>
-                            </div>
-                        
-                            <!-- Row 2 -->
-                            <div class="row mb-3">
-                                <!-- Scheduled Boarding Input -->
-                                <div class="col-md-6">
-                                    <label for="boardingDateTime" class="form-label">Scheduled Boarding</label>
-                                    <input type="datetime-local" class="form-control" id="boardingDateTime" ng-model="scheduledBoardingDateTime">
-                                </div>
-                                
-                                <!-- Scheduled Departure Input -->
-                                <div class="col-md-6">
-                                    <label for="departureDateTimeInput" class="form-label">Scheduled Departure</label>
-                                    <input type="datetime-local" class="form-control" id="departureDateTimeInput" ng-model="scheduledDepartureDateTime">
-                                </div>
-                            </div>
-                        
-                            <!-- Row 3 -->
-                            <div class="row mb-3">
-                                <!-- Estimated Arrival Input -->
-                                <div class="col-md-6">
-                                    <label for="arrivalDateTimeInput" class="form-label">Estimated Arrival</label>
-                                    <input type="datetime-local" class="form-control" id="arrivalDateTimeInput" ng-model="estimateArrivalDateTime">
-                                </div>
-                                
-                                <!-- Estimated Gate Arrival Input -->
-                                <div class="col-md-6">
-                                    <label for="gateArrivalDateTimeInput" class="form-label">Estimated Gate Arrival</label>
-                                    <input type="datetime-local" class="form-control" id="gateArrivalDateTimeInput" ng-model="estimateGateArrivalDateTime">
-                                </div>
-                            </div>
+                        <!-- Data Entry Sub Tab-->
+                        <div class="container mt-4" ng-show="activeTab === 'flightStats' || activeTab === 'dataEntry'">
+                            <h3>Flight Data</h3>
+                            <form>
+                                <!-- Row 1 -->
+                                <div class="row mb-3">
+                                    <!-- Aircraft Input -->
+                                    <div class="col-md-3">
+                                        <label for="aircraftInput" class="form-label">Aircraft</label>
+                                        <input type="text" class="form-control" id="aircraftInput"
+                                            placeholder="Enter Aircraft Name" ng-model="aircraftName">
+                                    </div>
+                                    <!-- Call Sign Input -->
+                                    <div class="col-md-3">
+                                        <label for="callSignInput" class="form-label">Call Sign</label>
+                                        <input type="text" class="form-control" id="callSignInput"
+                                            placeholder="Enter Call Sign" ng-model="callSign">
+                                    </div>
 
-                            <!-- Row 4 -->
-                            <div class="row mb-3">
-                                <!-- Passengers Input -->
-                                <div class="col-md-4">
-                                    <label for="numberOfPassengers" class="form-label">Passengers</label>
-                                    <input type="number" class="form-control" id="numberOfPassengers" ng-model="numberOfPassengers">
-                                </div>
-                        
-                                <!-- Airline -->
-                                <div class="col-md-4">
-                                    <label for="airlineInput" class="form-label">Airline</label>
-                                    <input type="text" class="form-control" id="airlienInput" placeholder="e.g. American Airlines" ng-model="airline">
-                                </div>
-                        
-                                <!-- Generate Flight Crew -->
-                                <div class="col-md-4">
-                                    <label for="generateFlightCrew" class="form-label">Generate Flight Crew</label>
-                                    <input type="button" class="btn btn-success" id="generateFlightCrew" ng-click="generateFlightCrew()" value="Generate Flight Crew">
-                                </div>
-                            </div>
+                                    <!-- Departure ICAO Input -->
+                                    <div class="col-md-3">
+                                        <label for="departureICAOInput" class="form-label">Departure ICAO</label>
+                                        <input type="text" class="form-control" id="departureICAOInput" maxlength="4"
+                                            oninput="this.value = this.value.toUpperCase()"
+                                            placeholder="Enter Departure ICAO" ng-model="departureIcao">
+                                    </div>
 
-                            <div>
-                                <h4>Flight Crew</h4>
-                                <table class="table table-sm">
-                                  <thead>
-                                    <tr>
-                                      <th scope="col">Position</th>
-                                      <th scope="col">Name</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    <tr ng-repeat="crewMember in flightCrewArray">
-                                      <td>{{ crewMember.position }}</td>
-                                      <td>{{ crewMember.firstName }} {{ crewMember.lastName }}</td>
-                                    </tr>
-                                  </tbody>
-                                </table>
-                              </div>
-                        </form>
-                        
-                    </div>  
-                    
-                    <!-- Controller SubTab -->
-                <div ng-show="activeTab === 'controller'">
-                    <div class="container mt-4">
-                        <h3>Flight Status Controls</h3>
-                          <form>
-                            <!-- Current Flight Status Label and Buttons -->
-                            <div class="row mb-3">
-                                <div class="col-md-12">
-                                    <label class="form-label">Current Flight Status</label>
+                                    <!-- Arrival ICAO Input -->
+                                    <div class="col-md-3">
+                                        <label for="arrivalICAOInput" class="form-label">Arrival ICAO</label>
+                                        <input type="text" class="form-control" id="arrivalICAOInput" maxlength="4"
+                                            oninput="this.value = this.value.toUpperCase()"
+                                            placeholder="Enter Arrival ICAO" ng-model="arrivalIcao">
+                                    </div>
                                 </div>
-                                <div class="col-md-2">
-                                    <button type="button" class="btn btn-sm btn-outline-primary" ng-class="{'btn-primary text-white': currentFlightStatus == 'Boarding'}" ng-click="setFlightStatus('Boarding'); boardPassengersAndBags()">Boarding</button>
-                                </div>
-                                <div class="col-md-2">
-                                    <button type="button" class="btn btn-sm btn-outline-primary" ng-class="{'btn-primary text-white': currentFlightStatus == 'Departed'}" ng-click="setFlightStatus('Departed')">Departed</button>
-                                </div>
-                                <div class="col-md-2">
-                                    <button type="button" class="btn btn-sm btn-outline-primary" ng-class="{'btn-primary text-white': currentFlightStatus == 'Landed'}" ng-click="setFlightStatus('Landed')">Landed</button>
-                                </div>
-                                <div class="col-md-2">
-                                    <button type="button" class="btn btn-sm btn-outline-primary" ng-class="{'btn-primary text-white': currentFlightStatus == 'Arrived'}" ng-click="setFlightStatus('Arrived')">Arrived</button>
-                                </div>
-                                <div class="col-md-2">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary" ng-click="setFlightStatus('Idle')">Reset</button>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-md-12">
-                                    <label class="form-label">Passenger Actions</label>
-                                </div>
-                                <div class="col-md-auto">
-                                    <button type="button" class="btn btn-sm btn-outline-success" ng-click="createManifest(numberOfPassengers, scheduledBoardingDateTime)">Begin Check Ins</button>
-                                </div>
-                                <div class="col-md-auto">
-                                    <button type="button" class="btn btn-sm btn-outline-success" ng-click="deBoardPassengersAndBags()">Begin Deboarding</button>
-                                </div>
-                                <div class="col-md-auto">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary" ng-click="resetPassengers()">Reset Passengers</button>
-                                </div>
-                                <div class="col-md-auto">
-                                    <button type="button" class="btn btn-sm btn-outline-info" ng-click="quickBoardPassengersAndBags()">Instant Boarding</button>
-                                </div>
-                            </div>
-                        </form>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="flightStatBannerCheckbox" ng-model="showFlightStatBanner">
-                            <label class="form-check-label" for="flightStatBannerCheckbox">
-                              Show Flight Stats Banner
-                            </label>
-                          </div>
-                          <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="passengersBannerCheckbox" ng-model="showPassengersBanner">
-                            <label class="form-check-label" for="passengersBannerCheckbox">
-                              Show Passenger Stats in Banner
-                            </label>
-                          </div>
-                    </div> 
-                </div>
 
-                   <!-- Report SubTab -->
-                   <div ng-show="activeTab === 'report'">
-                    <div class="container mt-4">
-                        <h3>Post Flight Report</h3>
-                        <form>
-                            <!-- Row for Boarding Time -->
-                            <div class="row mb-3">
-                                <div class="col-md-4">
-                                    <label class="form-label fw-bold">Scheduled Boarding Time</label>
-                                    <p>{{ scheduledBoardingDateTime | toLocalTime}}</p>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label fw-bold">Actual Boarding Time</label>
-                                    <p>{{ actualBoardingDateTime | toLocalTime }}</p>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label fw-bold">Difference</label>
-                                    <p ng-style="getDifferenceStyle(scheduledBoardingDateTime, actualBoardingDateTime)">{{ getDifference(scheduledBoardingDateTime, actualBoardingDateTime) }}</p>
-                                </div>
-                            </div>
-                    
-                            <!-- Row for Departure Time -->
-                            <div class="row mb-3">
-                                <div class="col-md-4">
-                                    <label class="form-label fw-bold">Scheduled Departure Time</label>
-                                    <p>{{ scheduledDepartureDateTime | toLocalTime }}</p>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label fw-bold">Actual Departure Time</label>
-                                    <p>{{ actualDepartedDateTime | toLocalTime }}</p>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label fw-bold">Difference</label>
-                                    <p ng-style="getDifferenceStyle(scheduledDepartureDateTime, actualDepartedDateTime)">{{ getDifference(scheduledDepartureDateTime, actualDepartedDateTime) }}</p>
-                                </div>
-                            </div>
-                    
-                            <!-- Row for Arrival Time -->
-                            <div class="row mb-3">
-                                <div class="col-md-4">
-                                    <label class="form-label fw-bold">Estimated Arrival Time</label>
-                                    <p>{{ estimateArrivalDateTime | toLocalTime }}</p>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label fw-bold">Actual Arrival Time</label>
-                                    <p>{{ actualArrivalDateTime | toLocalTime }}</p>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label fw-bold">Difference</label>
-                                    <p ng-style="getDifferenceStyle(estimateArrivalDateTime, actualArrivalDateTime)">{{ getDifference(estimateArrivalDateTime, actualArrivalDateTime) }}</p>
-                                </div>
-                            </div>
-                    
-                            <!-- Row for Gate Arrival Time -->
-                            <div class="row mb-3">
-                                <div class="col-md-4">
-                                    <label class="form-label fw-bold">Estimated Gate Arrival Time</label>
-                                    <p>{{ estimateGateArrivalDateTime | toLocalTime }}</p>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label fw-bold">Actual Gate Arrival Time</label>
-                                    <p>{{ actualGateArrivalDateTime | toLocalTime }}</p>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label fw-bold">Difference</label>
-                                    <p ng-style="getDifferenceStyle(estimateGateArrivalDateTime, actualGateArrivalDateTime)">{{ getDifference(estimateGateArrivalDateTime, actualGateArrivalDateTime) }}</p>
-                                </div>
-                            </div>
-                    
-                        </form>
-                    </div> 
-                </div>
-                </div>
+                                <!-- Row 2 -->
+                                <div class="row mb-3">
+                                    <!-- Scheduled Boarding Input -->
+                                    <div class="col-md-6">
+                                        <label for="boardingDateTime" class="form-label">Scheduled Boarding</label>
+                                        <input type="datetime-local" class="form-control" id="boardingDateTime"
+                                            ng-model="scheduledBoardingDateTime">
+                                    </div>
 
-                <!-- Passengers Tab -->
-                <div ng-show="activeTab === 'passengers'">
-                    <div class="container mt-4">
+                                    <!-- Scheduled Departure Input -->
+                                    <div class="col-md-6">
+                                        <label for="departureDateTimeInput" class="form-label">Scheduled
+                                            Departure</label>
+                                        <input type="datetime-local" class="form-control" id="departureDateTimeInput"
+                                            ng-model="scheduledDepartureDateTime">
+                                    </div>
+                                </div>
+
+                                <!-- Row 3 -->
+                                <div class="row mb-3">
+                                    <!-- Estimated Arrival Input -->
+                                    <div class="col-md-6">
+                                        <label for="arrivalDateTimeInput" class="form-label">Estimated Arrival</label>
+                                        <input type="datetime-local" class="form-control" id="arrivalDateTimeInput"
+                                            ng-model="estimateArrivalDateTime">
+                                    </div>
+
+                                    <!-- Estimated Gate Arrival Input -->
+                                    <div class="col-md-6">
+                                        <label for="gateArrivalDateTimeInput" class="form-label">Estimated Gate
+                                            Arrival</label>
+                                        <input type="datetime-local" class="form-control" id="gateArrivalDateTimeInput"
+                                            ng-model="estimateGateArrivalDateTime">
+                                    </div>
+                                </div>
+
+                                <!-- Row 4 -->
+                                <div class="row mb-3">
+                                    <!-- Passengers Input -->
+                                    <div class="col-md-4">
+                                        <label for="numberOfPassengers" class="form-label">Passengers</label>
+                                        <input type="number" class="form-control" id="numberOfPassengers"
+                                            ng-model="numberOfPassengers">
+                                    </div>
+
+                                    <!-- Airline -->
+                                    <div class="col-md-4">
+                                        <label for="airlineInput" class="form-label">Airline</label>
+                                        <input type="text" class="form-control" id="airlienInput"
+                                            placeholder="e.g. American Airlines" ng-model="airline">
+                                    </div>
+
+                                    <!-- Generate Flight Crew -->
+                                    <div class="col-md-4">
+                                        <label for="generateFlightCrew" class="form-label">Generate Flight Crew</label>
+                                        <input type="button" class="btn btn-success" id="generateFlightCrew"
+                                            ng-click="generateFlightCrew()" value="Generate Flight Crew">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h4>Flight Crew</h4>
+                                    <table class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Position</th>
+                                                <th scope="col">Name</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="crewMember in flightCrewArray">
+                                                <td>{{ crewMember.position }}</td>
+                                                <td>{{ crewMember.firstName }} {{ crewMember.lastName }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </form>
+
+                        </div>
+
+                        <!-- Controller SubTab -->
+                        <div ng-show="activeTab === 'controller'">
+                            <div class="container mt-4">
+                                <h3>Flight Status Controls</h3>
+                                <form>
+                                    <!-- Current Flight Status Label and Buttons -->
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <label class="form-label">Current Flight Status</label>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="button" class="btn btn-sm btn-outline-primary"
+                                                ng-class="{'btn-primary text-white': currentFlightStatus == 'Boarding'}"
+                                                ng-click="setFlightStatus('Boarding'); boardPassengersAndBags()">Boarding</button>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="button" class="btn btn-sm btn-outline-primary"
+                                                ng-class="{'btn-primary text-white': currentFlightStatus == 'Departed'}"
+                                                ng-click="setFlightStatus('Departed')">Departed</button>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="button" class="btn btn-sm btn-outline-primary"
+                                                ng-class="{'btn-primary text-white': currentFlightStatus == 'Landed'}"
+                                                ng-click="setFlightStatus('Landed')">Landed</button>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="button" class="btn btn-sm btn-outline-primary"
+                                                ng-class="{'btn-primary text-white': currentFlightStatus == 'Arrived'}"
+                                                ng-click="setFlightStatus('Arrived')">Arrived</button>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary"
+                                                ng-click="setFlightStatus('Idle')">Reset</button>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <label class="form-label">Passenger Actions</label>
+                                        </div>
+                                        <div class="col-md-auto">
+                                            <button type="button" class="btn btn-sm btn-outline-success"
+                                                ng-click="createManifest(numberOfPassengers, scheduledBoardingDateTime)">Begin
+                                                Check Ins</button>
+                                        </div>
+                                        <div class="col-md-auto">
+                                            <button type="button" class="btn btn-sm btn-outline-success"
+                                                ng-click="deBoardPassengersAndBags()">Begin Deboarding</button>
+                                        </div>
+                                        <div class="col-md-auto">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary"
+                                                ng-click="resetPassengers()">Reset Passengers</button>
+                                        </div>
+                                        <div class="col-md-auto">
+                                            <button type="button" class="btn btn-sm btn-outline-info"
+                                                ng-click="quickBoardPassengersAndBags()">Instant Boarding</button>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="flightStatBannerCheckbox"
+                                        ng-model="showFlightStatBanner">
+                                    <label class="form-check-label" for="flightStatBannerCheckbox">
+                                        Show Flight Stats Banner
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="passengersBannerCheckbox"
+                                        ng-model="showPassengersBanner">
+                                    <label class="form-check-label" for="passengersBannerCheckbox">
+                                        Show Passenger Stats in Banner
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Report SubTab -->
+                        <div ng-show="activeTab === 'report'">
+                            <div class="container mt-4">
+                                <h3>Post Flight Report</h3>
+                                <form>
+                                    <!-- Row for Boarding Time -->
+                                    <div class="row mb-3">
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bold">Scheduled Boarding Time</label>
+                                            <p>{{ scheduledBoardingDateTime | toLocalTime}}</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bold">Actual Boarding Time</label>
+                                            <p>{{ actualBoardingDateTime | toLocalTime }}</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bold">Difference</label>
+                                            <p
+                                                ng-style="getDifferenceStyle(scheduledBoardingDateTime, actualBoardingDateTime)">
+                                                {{ getDifference(scheduledBoardingDateTime, actualBoardingDateTime) }}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Row for Departure Time -->
+                                    <div class="row mb-3">
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bold">Scheduled Departure Time</label>
+                                            <p>{{ scheduledDepartureDateTime | toLocalTime }}</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bold">Actual Departure Time</label>
+                                            <p>{{ actualDepartedDateTime | toLocalTime }}</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bold">Difference</label>
+                                            <p
+                                                ng-style="getDifferenceStyle(scheduledDepartureDateTime, actualDepartedDateTime)">
+                                                {{ getDifference(scheduledDepartureDateTime, actualDepartedDateTime) }}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Row for Arrival Time -->
+                                    <div class="row mb-3">
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bold">Estimated Arrival Time</label>
+                                            <p>{{ estimateArrivalDateTime | toLocalTime }}</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bold">Actual Arrival Time</label>
+                                            <p>{{ actualArrivalDateTime | toLocalTime }}</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bold">Difference</label>
+                                            <p
+                                                ng-style="getDifferenceStyle(estimateArrivalDateTime, actualArrivalDateTime)">
+                                                {{ getDifference(estimateArrivalDateTime, actualArrivalDateTime) }}</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Row for Gate Arrival Time -->
+                                    <div class="row mb-3">
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bold">Estimated Gate Arrival Time</label>
+                                            <p>{{ estimateGateArrivalDateTime | toLocalTime }}</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bold">Actual Gate Arrival Time</label>
+                                            <p>{{ actualGateArrivalDateTime | toLocalTime }}</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bold">Difference</label>
+                                            <p
+                                                ng-style="getDifferenceStyle(estimateGateArrivalDateTime, actualGateArrivalDateTime)">
+                                                {{ getDifference(estimateGateArrivalDateTime, actualGateArrivalDateTime)
+                                                }}</p>
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Passengers Tab -->
+                    <div ng-show="activeTab === 'passengers'">
                         <div class="container mt-4">
-                            <h4>Flight Manifest</h4>
-<div class="row">
-    <div class="col-md-6">
-        <pre>Passengers
+                            <div class="container mt-4">
+                                <h4>Flight Manifest</h4>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <pre>Passengers
 ----------
 Not Checked In: {{ passengersNotCheckedIn.length }}/{{ numberOfPassengers }}
 Checked In: {{ passengersCheckedIn.length }}/{{ numberOfPassengers }}
 Boarding: {{ passengersBoarded.length }}/{{ numberOfPassengers }}
 Seated: {{ passengersSeated.length }}/{{ numberOfPassengers }}
 Deboarded: {{ passengersDeboarded.length }}/{{ numberOfPassengers }}</pre>
-    </div>
-    <div class="col-md-6">
-        <pre>Checked Bags
+                                    </div>
+                                    <div class="col-md-6">
+                                        <pre>Checked Bags
 ------------
 Not Checked In: {{ bagsNotCheckedIn.length }}
 Checked In: {{ bagsCheckedIn.length }}
@@ -922,128 +1117,155 @@ Loaded: {{ bagsLoaded.length }}
 Unloaded: {{ bagsUnloaded.length }}
 Baggage Claim: {{ bagsBaggageClaim.length }}
 </pre>
-    </div>
-</div>
+                                    </div>
+                                </div>
 
 
-                            <table class="table table-sm table-bordered table-dark text-nowrap fs-6">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Seat</th>
-                                        <th scope="col">Name</th>
-                                        <th scope="col">Status</th>
-                                        <th scope="col">Bags</th>
-                                        <th scope="col">Bag Details</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr ng-repeat="passenger in (passengersNotCheckedIn.concat(passengersCheckedIn).concat(passengersBoarded).concat(passengersSeated).concat(passengersDeboarded) | orderBy:'passengerId')">
-                                        <th scope="row">{{ passenger.seat }}</th>
-                                        <td>{{ passenger.name }}</td>
-                                        <td>
-                                            <span class="badge" ng-class="{
+                                <table class="table table-sm table-bordered table-dark text-nowrap fs-6">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Seat</th>
+                                            <th scope="col">Name</th>
+                                            <th scope="col">Status</th>
+                                            <th scope="col">Bags</th>
+                                            <th scope="col">Bag Details</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr
+                                            ng-repeat="passenger in (passengersNotCheckedIn.concat(passengersCheckedIn).concat(passengersBoarded).concat(passengersSeated).concat(passengersDeboarded) | orderBy:'passengerId')">
+                                            <th scope="row">{{ passenger.seat }}</th>
+                                            <td>{{ passenger.name }}</td>
+                                            <td>
+                                                <span class="badge" ng-class="{
                                                 'bg-secondary': passenger.status === 'Not Checked In',
                                                 'bg-primary': passenger.status === 'Checked In',
                                                 'bg-magenta': passenger.status === 'Boarding',
                                                 'bg-success': passenger.status === 'Seated',
                                                 'bg-danger': passenger.status === 'Deboarded'
                                             }">
-                                                {{ passenger.status }}
-                                            </span>
-                                        </td>
-                                        <td>{{ passenger.bagsArray.length }}</td>
-                                        <td>
-                                            <div class="bg-dark" ng-repeat="bag in passenger.bagsArray">
-                                                Bag {{ $index + 1 }}: 
-                                                <span class="badge bg-light text-dark" ng-class="{
+                                                    {{ passenger.status }}
+                                                </span>
+                                            </td>
+                                            <td>{{ passenger.bagsArray.length }}</td>
+                                            <td>
+                                                <div class="bg-dark" ng-repeat="bag in passenger.bagsArray">
+                                                    Bag {{ $index + 1 }}:
+                                                    <span class="badge bg-light text-dark" ng-class="{
                                                     'bg-secondary': bag.status === 'Not Checked In',
                                                     'bg-primary': bag.status === 'Checked In',
                                                     'bg-success': bag.status === 'Loaded',
                                                     'bg-warning': bag.status == 'Unloaded',
                                                     'bg-information': bag.status === 'Baggage Claim'
                                                 }">
-                                                    {{ bag.status }}
-                                                </span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            
-                            
-                            
-                            
-                            
-                        </div>                                                
-                    </div> 
-                </div>
-                <!-- Announcements Tab-->
-                <div ng-show="activeTab === 'announcements'">
-                    <div class="container mt-4">
-                        <h3>Announcements (Open Beta)</h3>
-                        <p>Before using this feature, you must read and agree to the <a href="/openai-usage-policy" target="_blank">OpenAI Usage Policy</a>.</p>
-                        <p>Please complete the checklist below. This ensures that you understand all terms of use, and are properly configured to receive the best possible experience with this feature. Once complete, the Announcements Controller will become available.</p>
-                        <form>
-                            <div class="form-check" ng-repeat="checkbox in announcementCheckboxes">
-                                <input class="form-check-input" type="checkbox" id="{{checkbox.id}}" ng-model="checkbox.checked">
-                                <label class="form-check-label" for="{{checkbox.id}}">
-                                    {{checkbox.label}}
-                                </label>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="container mt-4" ng-show="announcementsReady">
-                        <form>
-                        <div class="row mb-3">
-                            <div class="col-md-12">
-                                <label class="form-label">
-                                    AI Crew Announcements
-                                </label>
-                            </div>
-                            <div class="col-md-auto">
-                                <button type="button" class="btn btn-sm btn-dark" ng-click="startPreBoardingAnnouncement()" ng-disabled="isAnnouncementLoading">Pre Boarding</button>
-                            </div>
-                            <div class="col-md-auto">
-                                <button type="button" class="btn btn-sm btn-dark" ng-click="startBoardingAnnouncements()" ng-disabled="isAnnouncementLoading">Boarding</button>
-                            </div>
-                            <div class="col-md-auto">
-                                <button type="button" class="btn btn-sm btn-dark" ng-click="fetchAnnouncement('pre taxi')" ng-disabled="isAnnouncementLoading">Pre Taxi</button>
-                            </div>
-                            <div class="col-md-auto">
-                                <button type="button" class="btn btn-sm btn-dark" ng-click="fetchAnnouncement('safety')" ng-disabled="isAnnouncementLoading">Safety</button>
-                            </div>
-                            <div class="col-md-auto">
-                                <button type="button" class="btn btn-sm btn-dark" ng-click="fetchAnnouncement('cruise')" ng-disabled="isAnnouncementLoading">Cruise</button>
-                            </div>
-                            <div class="col-md-auto">
-                                <button type="button" class="btn btn-sm btn-dark" ng-click="fetchAnnouncement('descent')" ng-disabled="isAnnouncementLoading">Descent </button>
-                            </div>
-                            <div class="col-md-auto">
-                                <button type="button" class="btn btn-sm btn-dark" ng-click="fetchAnnouncement('landing')" ng-disabled="isAnnouncementLoading">Landing</button>
-                                <div ng-show="isAnnouncementLoading" class="spinner-grow spinner-grow-sm text-info" role="status">
-                                    <span class="visually-hidden"></span>
-                                </div>
-                            </div>
-                            <audio id="dingAudio" src="./airplane-ding.mp3" style="display: none;"></audio>
-                            <audio id="noiseAudio" src="./noise.mp3" style="display: none;"></audio>
-                            <audio id="announcementAudio" ng-src="{{audioSrc}}" controls></audio>
-                        </div>
-                        </form>
-                        <div class="alert alert-warning">
-                            <strong>Note:</strong> When you click an announcment button, OpenAI is processing your flight data, creating a script, recording the audio, then sending it back to you. This does not all happen instantly. Announcments may take up to 1-2 minutes, but usually much faster. This is dependent on network speeds, as well as OpenAI's current performance and availability.
-                        </div>
-                        <div class="alert alert-danger">
-                            <strong>Support:</strong> If you feel you've configured everything properly based on the checklist steps above, and are not getting any announcements after waiting a few mintues, please cease using the feature (to avoid any additional OpenAI API costs) and report the issue via <a href="/#support-section" target="_blank">Support</a>
-                        </div>
-                        <div>
-                            <p ng-model="announcementApiReport">
+                                                        {{ bag.status }}
+                                                    </span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
 
-                            </p>
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Announcements Tab-->
+                    <div ng-show="activeTab === 'announcements'">
+                        <div class="container mt-4">
+                            <h3>Announcements (Open Beta)</h3>
+                            <p>Before using this feature, you must read and agree to the <a href="/openai-usage-policy"
+                                    target="_blank">OpenAI Usage Policy</a>.</p>
+                            <p>Please complete the checklist below. This ensures that you understand all terms of use,
+                                and are properly configured to receive the best possible experience with this feature.
+                                Once complete, the Announcements Controller will become available.</p>
+                            <form>
+                                <div class="form-check" ng-repeat="checkbox in announcementCheckboxes">
+                                    <input class="form-check-input" type="checkbox" id="{{checkbox.id}}"
+                                        ng-model="checkbox.checked">
+                                    <label class="form-check-label" for="{{checkbox.id}}">
+                                        {{checkbox.label}}
+                                    </label>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="container mt-4" ng-show="announcementsReady">
+                            <form>
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <label class="form-label">
+                                            AI Crew Announcements
+                                        </label>
+                                    </div>
+                                    <div class="col-md-auto">
+                                        <button type="button" class="btn btn-sm btn-dark"
+                                            ng-click="startPreBoardingAnnouncement()"
+                                            ng-disabled="isAnnouncementLoading">Pre Boarding</button>
+                                    </div>
+                                    <div class="col-md-auto">
+                                        <button type="button" class="btn btn-sm btn-dark"
+                                            ng-click="startBoardingAnnouncements()"
+                                            ng-disabled="isAnnouncementLoading">Boarding</button>
+                                    </div>
+                                    <div class="col-md-auto">
+                                        <button type="button" class="btn btn-sm btn-dark"
+                                            ng-click="fetchAnnouncement('pre taxi')"
+                                            ng-disabled="isAnnouncementLoading">Pre Taxi</button>
+                                    </div>
+                                    <div class="col-md-auto">
+                                        <button type="button" class="btn btn-sm btn-dark"
+                                            ng-click="fetchAnnouncement('safety')"
+                                            ng-disabled="isAnnouncementLoading">Safety</button>
+                                    </div>
+                                    <div class="col-md-auto">
+                                        <button type="button" class="btn btn-sm btn-dark"
+                                            ng-click="fetchAnnouncement('cruise')"
+                                            ng-disabled="isAnnouncementLoading">Cruise</button>
+                                    </div>
+                                    <div class="col-md-auto">
+                                        <button type="button" class="btn btn-sm btn-dark"
+                                            ng-click="fetchAnnouncement('descent')"
+                                            ng-disabled="isAnnouncementLoading">Descent </button>
+                                    </div>
+                                    <div class="col-md-auto">
+                                        <button type="button" class="btn btn-sm btn-dark"
+                                            ng-click="fetchAnnouncement('landing')"
+                                            ng-disabled="isAnnouncementLoading">Landing</button>
+                                        <div ng-show="isAnnouncementLoading"
+                                            class="spinner-grow spinner-grow-sm text-info" role="status">
+                                            <span class="visually-hidden"></span>
+                                        </div>
+                                    </div>
+                                    <audio id="dingAudio" src="./airplane-ding.mp3" style="display: none;"></audio>
+                                    <audio id="noiseAudio" src="./noise.mp3" style="display: none;"></audio>
+                                    <audio id="announcementAudio" ng-src="{{audioSrc}}" controls></audio>
+                                </div>
+                            </form>
+                            <div class="alert alert-warning">
+                                <strong>Note:</strong> When you click an announcment button, OpenAI is processing your
+                                flight data, creating a script, recording the audio, then sending it back to you. This
+                                does not all happen instantly. Announcments may take up to 1-2 minutes, but usually much
+                                faster. This is dependent on network speeds, as well as OpenAI's current performance and
+                                availability.
+                            </div>
+                            <div class="alert alert-danger">
+                                <strong>Support:</strong> If you feel you've configured everything properly based on the
+                                checklist steps above, and are not getting any announcements after waiting a few
+                                mintues, please cease using the feature (to avoid any additional OpenAI API costs) and
+                                report the issue via <a href="/#support-section" target="_blank">Support</a>
+                            </div>
+                            <div>
+                                <p ng-model="announcementApiReport">
+
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
-                </div>
-                
+
             </div>
         </div>
     </div>
@@ -1068,154 +1290,180 @@ Baggage Claim: {{ bagsBaggageClaim.length }}
 
     <!-- Modals-->
     <!-- Settings Modal -->
-<div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="settingsModalLabel">Settings</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <div class="mb-3">
-                <label for="importFile" class="form-label">Import Config File:</label>
-                <input type="file" id="importFile" class="form-control" onchange="angular.element(this).scope().importConfig(this)">
-            </div>
-            <label for="metarSourceDropdown" class="mt-3">METAR Source</label>
-                <select class="form-select" id="metarSourceDropdown" ng-model="metarSource">
-                    <option>aviationweather_gov</option>
-                    <option>metar_vatsim_net</option>
-                </select>
-                <div class="mb-3">
-                    <label for="simbriefPilotId" class="form-label">SimBrief Pilot ID</label>
-                    <div class="input-group">
-                        <input type="{{simbriefIdVisible ? 'text' : 'password'}}" class="form-control" id="simbriefPilotId" ng-model="simbriefPilotId">
-                        <button class="btn btn-outline-secondary" type="button" ng-click="simbriefIdVisible = !simbriefIdVisible">
-                            <i class="bi" ng-class="simbriefIdVisible ? 'bi-eye-slash-fill' : 'bi-eye-fill'"></i>
-                        </button>
-                    </div>
+    <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="settingsModalLabel">Settings</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="mb-3">
-                    <label for="openAiApiKey" class="form-label">OpenAI API Key</label>
-                    <div class="input-group">
-                        <input type="{{openAiKeyVisible ? 'text' : 'password'}}" class="form-control" id="openAiApiKey" ng-model="openAiApiKey" placeholder="Enter your API Key">
-                        <button class="btn btn-outline-secondary" type="button" ng-click="openAiKeyVisible = !openAiKeyVisible">
-                            <i class="bi" ng-class="openAiKeyVisible ? 'bi-eye-slash-fill' : 'bi-eye-fill'"></i>
-                        </button>
-                    </div>
-                </div>
-            <div class="form-group">
-                <label for="checklistDropdown">Aircraft Checklist Bundle</label>
-                <select class="form-select" id="checklistDropdown" ng-model="selectedChecklist" ng-change="updateSelectedChecklistBundle()">
-                    <option ng-repeat="checklist in defaultChecklists" value="{{checklist.bundleName}}">{{checklist.bundleName}}</option>
-                </select>
-                <div class="form-check form-switch mt-3">
-                    <input class="form-check-input" type="checkbox" id="customChecklistToggle">
-                    <label class="form-check-label" for="customChecklistToggle">Customize Checklist Bundle</label>
-                </div>
-                <div id="customChecklistUploader" style="display: none;">
+                <div class="modal-body">
                     <div class="mb-3">
-                        <label for="bundleName" class="form-label">Checklist Bundle Name:</label>
-                        <input type="text" id="bundleName" class="form-control" ng-model="bundleName">
+                        <label for="importFile" class="form-label">Import Config File:</label>
+                        <input type="file" id="importFile" class="form-control"
+                            onchange="angular.element(this).scope().importConfig(this)">
                     </div>
-                    <div class="container mt-5">
-                        <div ng-repeat="table in tables">
-                            <h3>{{table.name}}</h3>
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Checklist</th>
-                                        <th><button class="btn btn-success" ng-click="addRow(table)"><i class="bi bi-plus-lg"></i></button></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr ng-repeat-start="row in table.rows">
-                                        <td><input type="text" ng-model="row.checklist" class="form-control"></td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-danger" ng-click="removeRow(table, $index)"><i class="bi bi-dash-lg"></i></button>
-                                            <button class="btn btn-sm btn-outline-primary" ng-click="row.expanded = !row.expanded">{{ row.expanded ? 'Collapse' : 'Expand' }}</button>
-                                        </td>
-                                    </tr>
-                                    <tr ng-repeat-end ng-if="row.expanded">
-                                        <td colspan="2">
-                                            <table class="table">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Checklist Prompt</th>
-                                                        <th>Positive Answer</th>
-                                                        <th>Neutral Answer 1</th>
-                                                        <th>Neutral Answer 2</th>
-                                                        <th>Cancel Answer</th>
-                                                        <th><button class="btn btn-sm btn-outline-success" ng-click="addSubRow(row)"><i class="bi bi-plus-lg"></i></button></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr ng-repeat="subRow in row.subRows">
-                                                        <td><input type="text" ng-model="subRow.prompt" class="form-control"></td>
-                                                        <td><input type="text" ng-model="subRow.positive" class="form-control"></td>
-                                                        <td><input type="text" ng-model="subRow.neutral1" class="form-control"></td>
-                                                        <td><input type="text" ng-model="subRow.neutral2" class="form-control"></td>
-                                                        <td><input type="text" ng-model="subRow.cancel" class="form-control"></td>
-                                                        <td><button class="btn btn-sm btn-outline-danger" ng-click="removeSubRow(row, $index)"><i class="bi bi-dash-lg"></i></button></td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                    <label for="metarSourceDropdown" class="mt-3">METAR Source</label>
+                    <select class="form-select" id="metarSourceDropdown" ng-model="metarSource">
+                        <option>aviationweather_gov</option>
+                        <option>metar_vatsim_net</option>
+                    </select>
+                    <div class="mb-3">
+                        <label for="simbriefPilotId" class="form-label">SimBrief Pilot ID</label>
+                        <div class="input-group">
+                            <input type="{{simbriefIdVisible ? 'text' : 'password'}}" class="form-control"
+                                id="simbriefPilotId" ng-model="simbriefPilotId">
+                            <button class="btn btn-outline-secondary" type="button"
+                                ng-click="simbriefIdVisible = !simbriefIdVisible">
+                                <i class="bi" ng-class="simbriefIdVisible ? 'bi-eye-slash-fill' : 'bi-eye-fill'"></i>
+                            </button>
                         </div>
                     </div>
-                </div>
-                
-            </div>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-primary mt-3 me-auto" ng-click="saveConfig()">Export Config File</button>
-          <button type="button" class="btn btn-success" data-bs-dismiss="modal">Save and Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Terms of Use Modal-->
-  <div class="modal fade" id="termsOfUseModal" tabindex="-1" role="dialog" aria-labelledby="termsOfUseModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="termsOfUseModalLabel">Terms of Use</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div id="terms"></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
+                    <div class="mb-3">
+                        <label for="openAiApiKey" class="form-label">OpenAI API Key</label>
+                        <div class="input-group">
+                            <input type="{{openAiKeyVisible ? 'text' : 'password'}}" class="form-control"
+                                id="openAiApiKey" ng-model="openAiApiKey" placeholder="Enter your API Key">
+                            <button class="btn btn-outline-secondary" type="button"
+                                ng-click="openAiKeyVisible = !openAiKeyVisible">
+                                <i class="bi" ng-class="openAiKeyVisible ? 'bi-eye-slash-fill' : 'bi-eye-fill'"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="checklistDropdown">Aircraft Checklist Bundle</label>
+                        <select class="form-select" id="checklistDropdown" ng-model="selectedChecklist"
+                            ng-change="updateSelectedChecklistBundle()">
+                            <option ng-repeat="checklist in defaultChecklists" value="{{checklist.bundleName}}">
+                                {{checklist.bundleName}}</option>
+                        </select>
+                        <div class="form-check form-switch mt-3">
+                            <input class="form-check-input" type="checkbox" id="customChecklistToggle">
+                            <label class="form-check-label" for="customChecklistToggle">Customize Checklist
+                                Bundle</label>
+                        </div>
+                        <div id="customChecklistUploader" style="display: none;">
+                            <div class="mb-3">
+                                <label for="bundleName" class="form-label">Checklist Bundle Name:</label>
+                                <input type="text" id="bundleName" class="form-control" ng-model="bundleName">
+                            </div>
+                            <div class="container mt-5">
+                                <div ng-repeat="table in tables">
+                                    <h3>{{table.name}}</h3>
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Checklist</th>
+                                                <th><button class="btn btn-success" ng-click="addRow(table)"><i
+                                                            class="bi bi-plus-lg"></i></button></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat-start="row in table.rows">
+                                                <td><input type="text" ng-model="row.checklist" class="form-control">
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-danger"
+                                                        ng-click="removeRow(table, $index)"><i
+                                                            class="bi bi-dash-lg"></i></button>
+                                                    <button class="btn btn-sm btn-outline-primary"
+                                                        ng-click="row.expanded = !row.expanded">{{ row.expanded ?
+                                                        'Collapse' : 'Expand' }}</button>
+                                                </td>
+                                            </tr>
+                                            <tr ng-repeat-end ng-if="row.expanded">
+                                                <td colspan="2">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Checklist Prompt</th>
+                                                                <th>Positive Answer</th>
+                                                                <th>Neutral Answer 1</th>
+                                                                <th>Neutral Answer 2</th>
+                                                                <th>Cancel Answer</th>
+                                                                <th><button class="btn btn-sm btn-outline-success"
+                                                                        ng-click="addSubRow(row)"><i
+                                                                            class="bi bi-plus-lg"></i></button></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr ng-repeat="subRow in row.subRows">
+                                                                <td><input type="text" ng-model="subRow.prompt"
+                                                                        class="form-control"></td>
+                                                                <td><input type="text" ng-model="subRow.positive"
+                                                                        class="form-control"></td>
+                                                                <td><input type="text" ng-model="subRow.neutral1"
+                                                                        class="form-control"></td>
+                                                                <td><input type="text" ng-model="subRow.neutral2"
+                                                                        class="form-control"></td>
+                                                                <td><input type="text" ng-model="subRow.cancel"
+                                                                        class="form-control"></td>
+                                                                <td><button class="btn btn-sm btn-outline-danger"
+                                                                        ng-click="removeSubRow(row, $index)"><i
+                                                                            class="bi bi-dash-lg"></i></button></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
 
-<!-- Privacy Policy Modal-->
-<div class="modal fade" id="privacyPolicyModal" tabindex="-1" role="dialog" aria-labelledby="privacyPolicyModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="privacyPolicyLabel">Privacy Policy</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div id="privacy-policy"></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary mt-3 me-auto" ng-click="saveConfig()">Export Config File</button>
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Save and Close</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+
+    <!-- Terms of Use Modal-->
+    <div class="modal fade" id="termsOfUseModal" tabindex="-1" role="dialog" aria-labelledby="termsOfUseModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="termsOfUseModalLabel">Terms of Use</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="terms"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Privacy Policy Modal-->
+    <div class="modal fade" id="privacyPolicyModal" tabindex="-1" role="dialog"
+        aria-labelledby="privacyPolicyModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="privacyPolicyLabel">Privacy Policy</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="privacy-policy"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- custom JS-->
     <script th:src="@{/script.js}"></script>
     <script th:src="@{/vanilla-js.js}"></script>
-    
+
 </body>
+
 </html>

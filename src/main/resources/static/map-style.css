@@ -34,11 +34,12 @@ html, body {
     left: 50%;
     transform: translateX(-50%);
     background-color: rgba(0, 0, 0, 0.50); /* Dark background with 75% opacity */
-    color: white;
+    color: white !important;
     padding: 5px 10px;
     border-radius: 5px;
     z-index: 1001; /* Ensures it's above the map elements */
-    font-size: 1.25rem; /* Adjust as needed */
+    font-size: 0.75rem;
+    text-decoration: none;
 }
 .map-controls {
     display: flex; /* Aligns children elements in a row */
