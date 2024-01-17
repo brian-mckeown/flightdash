@@ -31,12 +31,23 @@
     <div ng-controller="MapController as mapCtrl">
         <div id="map" style="height: 100vh; position: relative;">
             <h5 class="map-heading">VAT TRACK by <i class="fas fa-plane"></i> FlightDash.io</h5>
-            <button type="button" ng-class="{'btn-primary': mapCtrl.isWeatherLayerActive, 'btn-outline-primary': !mapCtrl.isWeatherLayerActive}" class="btn btn-sm" ng-click="mapCtrl.toggleWeatherLayer()" style="position: absolute; top: 10px; right: 10px; z-index: 1000;">
+            <div class="map-controls" style="position: absolute; top: 10px; right: 10px; z-index: 1000;">
+            <!-- Search bar and Dropdown -->
+            <div style="position: relative;">
+                <input type="text" ng-model="mapCtrl.searchQuery" ng-change="mapCtrl.searchCallsign()" placeholder="Search Callsign" class="form-control form-control-sm" style="width: 125px;">
+                <div class="list-group" style="position: absolute; top: 100%; z-index: 1001;" ng-show="mapCtrl.searchResults.length">
+                    <a href="#" class="list-group-item list-group-item-action" ng-repeat="result in mapCtrl.searchResults" ng-click="mapCtrl.selectFlight(result)">{{result.callsign}}</a>
+                </div>
+            </div>
+             <!-- Weather Button -->
+             <button type="button" ng-class="{'btn-primary': mapCtrl.isWeatherLayerActive, 'btn-outline-primary': !mapCtrl.isWeatherLayerActive}" class="btn btn-sm" ng-click="mapCtrl.toggleWeatherLayer()">
                 <i class="fa-solid fa-cloud-sun-rain"></i>
             </button>
-            <button type="button" class="btn btn-sm btn-outline-secondary" ng-click="mapCtrl.resetAllMarkers()" style="position: absolute; top: 10px; right: 60px; z-index: 1000;">
+            <!-- Refresh Button -->
+            <button type="button" class="btn btn-sm btn-outline-secondary" ng-click="mapCtrl.resetAllMarkers()">
                 <i class="fa-solid fa-arrow-rotate-right"></i>
             </button>
+        </div>
         </div>
     </div>
 
