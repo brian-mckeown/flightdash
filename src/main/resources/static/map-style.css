@@ -40,3 +40,12 @@ html, body {
     z-index: 1001; /* Ensures it's above the map elements */
     font-size: 1.25rem; /* Adjust as needed */
 }
+.map-controls {
+    display: flex; /* Aligns children elements in a row */
+    gap: 10px; /* Adds some space between the elements */
+    align-items: center; /* Vertically centers the elements */
+}
+
+.map-controls input {
+    max-width: 200px; /* Adjusts the width of the search bar */
+}

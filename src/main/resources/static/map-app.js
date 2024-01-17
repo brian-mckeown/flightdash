@@ -10,6 +10,28 @@ angular.module('flightMapApp', [])
             maxZoom: 19
         }).addTo(map);
 
+        //SEARCH
+        vm.searchQuery = '';
+        vm.searchResults = [];
+
+        vm.searchCallsign = function() {
+            vm.searchResults = [];
+            if (vm.searchQuery.length > 0) {
+                for (var callsign in markers) {
+                    if (markers.hasOwnProperty(callsign) && callsign.toLowerCase().includes(vm.searchQuery.toLowerCase())) {
+                        vm.searchResults.push({callsign: callsign, marker: markers[callsign]});
+                    }
+                }
+            }
+        };
+
+        vm.selectFlight = function(flight) {
+            map.setView(flight.marker.getLatLng(), 12); // Zoom to level per preference
+            flight.marker.openPopup(); // Open the popup of the marker
+            vm.searchQuery = ''; // Clear search query
+            vm.searchResults = []; // Clear search results
+        };
+
         //WEATHER LAYER
         var currentRadarLayer = null;
 
