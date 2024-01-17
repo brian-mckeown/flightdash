@@ -33,12 +33,6 @@ fetch('/terms')
         document.getElementById('terms').innerHTML = content;
     });
 
-fetch('/welcome')
-    .then(response => response.text())
-    .then(content => {
-        document.getElementById('welcome').innerHTML = content;
-    });
-
     document.addEventListener('DOMContentLoaded', function() {
         const weatherSection = document.getElementById('weatherSection');
         const frequenciesSection = document.getElementById('frequenciesSection');
