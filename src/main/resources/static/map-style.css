@@ -1,0 +1,42 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+}
+
+.freq-badge {
+    font-size: 0.85rem; /* Adjust the size as needed */
+    padding: .5em .75em; /* Adjust padding as needed for better appearance */
+}
+
+.leaflet-popup-content-wrapper {
+    background-color: rgba(255, 255, 255, 0.75); /* White background with 50% opacity */
+}
+
+.leaflet-popup-tip {
+    background-color: rgba(255, 255, 255, 0.75); /* Adjust as needed to match the popup content */
+}
+.airport-detail-row {
+    padding-top: 0; /* Reduces space above the row */
+}
+
+.progress-bar-row {
+    margin-bottom: -25px !important; /* Reduces space above the row */
+}
+.map-heading {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.50); /* Dark background with 75% opacity */
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    z-index: 1001; /* Ensures it's above the map elements */
+    font-size: 1.25rem; /* Adjust as needed */
+}

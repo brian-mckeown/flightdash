@@ -21,4 +21,9 @@ public class ThymeleafController {
     public String openAIUsagePolicyContent() {
         return "openai-usage-policy"; // This refers to openai-usage-policy.html in src/main/resources/templates
     }
+
+    @GetMapping("/vat-track")
+    public String vatTrackContent() {
+        return "vat-track"; // This refers to openai-usage-policy.html in src/main/resources/templates
+    }
 }
