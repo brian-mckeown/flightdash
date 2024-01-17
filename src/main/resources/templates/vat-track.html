@@ -30,7 +30,17 @@
 <body>
     <div ng-controller="MapController as mapCtrl">
         <div id="map" style="height: 100vh; position: relative;">
+            
             <a href="/" target="_blank" class="map-heading">VAT TRACK (Beta) by <i class="fas fa-plane"></i> FlightDash.io</a>
+            <!-- Streamers Overlay -->
+            <div class="streamers-overlay" ng-show="mapCtrl.streamers.length && mapCtrl.showStreamersOverlay">
+                <p>Streamers</p>
+                <div ng-repeat="streamer in mapCtrl.streamers" class="streamer-item" ng-click="mapCtrl.selectFlightByCallsign(streamer.callsign)">
+                    <i class="fa-brands" ng-class="{'fa-youtube': streamer.platform === 'youtube', 'fa-twitch': streamer.platform === 'twitch'}"></i>
+                    {{streamer.callsign}}
+                    <span ng-if="!$last" class="streamer-separator">|</span>
+                </div>
+            </div>
             <div class="map-controls" style="position: absolute; top: 10px; right: 10px; z-index: 1000;">
             <!-- Search bar and Dropdown -->
             <div style="position: relative;">
@@ -39,6 +49,10 @@
                     <a href="#" class="list-group-item list-group-item-action" ng-repeat="result in mapCtrl.searchResults" ng-click="mapCtrl.selectFlight(result)">{{result.callsign}}</a>
                 </div>
             </div>
+             <!-- Streamers Button -->
+             <button type="button" ng-class="{'btn-primary': mapCtrl.showStreamerOverlay, 'btn-outline-primary': !mapCtrl.showStreamerOverlay}" class="btn btn-sm" ng-click="mapCtrl.toggleStreamerOverlay()">
+                Streamers
+            </button>
              <!-- Weather Button -->
              <button type="button" ng-class="{'btn-primary': mapCtrl.isWeatherLayerActive, 'btn-outline-primary': !mapCtrl.isWeatherLayerActive}" class="btn btn-sm" ng-click="mapCtrl.toggleWeatherLayer()">
                 <i class="fa-solid fa-cloud-sun-rain"></i>
@@ -48,6 +62,8 @@
                 <i class="fa-solid fa-arrow-rotate-right"></i>
             </button>
         </div>
+        
+        
         </div>
     </div>
 

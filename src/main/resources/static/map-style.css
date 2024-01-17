@@ -50,3 +50,36 @@ html, body {
 .map-controls input {
     max-width: 200px; /* Adjusts the width of the search bar */
 }
+
+.streamers-overlay {
+    position: absolute;
+    left: 50%; /* Centers horizontally */
+    bottom: 10px; /* Position it 10px from the bottom */
+    transform: translateX(-50%); /* Adjust horizontal position to truly center */
+    width: auto; /* Let it size according to content */
+    background: rgba(0, 0, 0, 0.7);
+    padding: 5px 10px;
+    border-radius: 5px;
+    z-index: 1001; /* Ensure it's above other map elements */
+    color: white; /* Text color */
+    text-align: center; /* Center the text */
+}
+
+.streamer-item {
+    margin: 0 5px; /* Adjust spacing between items */
+    animation: fadeInOut 20s infinite;
+    cursor: pointer;
+    display: inline-block;
+    margin-right: 10px;
+    color: white;
+}
+
+.streamer-separator {
+    display: inline-block;
+    margin: 0 5px;
+    color: white;
+}
+@keyframes fadeInOut {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
+}

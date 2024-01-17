@@ -2,7 +2,7 @@ angular.module('flightMapApp', [])
     .controller('MapController', ['$http', function ($http) {
         var vm = this;
         var airportData = airportBigData;
-        vm.isWeatherLayerActive = false; // Track the state of the weather layer
+        vm.isWeatherLayerActive = true; // Track the state of the weather layer
         // Initialize the map
         var map = L.map('map').setView([40.730610, -73.935242], 3);
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
@@ -32,10 +32,41 @@ angular.module('flightMapApp', [])
             vm.searchResults = []; // Clear search results
         };
 
+        //STREAMER FUCNTIONALITY
+        // Inside your controller
+        vm.showStreamersOverlay = false;
+        vm.showStreamerDropdown = false;
+
+        vm.toggleStreamerDropdown = function() {
+            vm.showStreamerDropdown = !vm.showStreamerDropdown;
+        };
+
+        vm.selectFlightByCallsign = function(callsign) {
+            let marker = markers[callsign];
+        
+            if (!marker) {
+                let icaoCode = getIcaoCodeFromCallsign(callsign);
+                marker = controllerMarkers[icaoCode];
+            }
+        
+            if (marker) {
+                map.setView(marker.getLatLng(), 12); // Adjust zoom level as needed
+                marker.openPopup(); // Optional, if you want to open the popup
+            } else {
+                console.log("Marker not found for callsign: " + callsign);
+            }
+        };
+        
+        function getIcaoCodeFromCallsign(callsign) {
+            let code = callsign.split('_')[0];
+            return code.length === 3 ? 'K' + code : code; // Adjust this based on your data format
+        }
+
         //WEATHER LAYER
         var currentRadarLayer = null;
 
         vm.initializeRadarLayer = async function () {
+            if (vm.isWeatherLayerActive) {
             try {
                 if (currentRadarLayer) {
                     map.removeLayer(currentRadarLayer); // Remove the old radar layer
@@ -46,12 +77,13 @@ angular.module('flightMapApp', [])
                 var ts = data[data.length - 1]; // Get the latest timestamp
                 currentRadarLayer = L.tileLayer('https://tilecache.rainviewer.com/v2/radar/' + ts + '/512/{z}/{x}/{y}/6/0_1.png', {
                     tileSize: 256,
-                    opacity: 0.2,
+                    opacity: 0.5,
                 });
                 currentRadarLayer.addTo(map);
             } catch (error) {
                 console.error('Error fetching radar data:', error);
             }
+        }
         };
         // Refresh interval for radar data (1 minute)
         var radarRefreshInterval = 60000;
@@ -70,8 +102,17 @@ angular.module('flightMapApp', [])
                 map.removeLayer(currentRadarLayer);
                 vm.isWeatherLayerActive = false;
             } else {
-                vm.initializeRadarLayer();
                 vm.isWeatherLayerActive = true;
+                vm.initializeRadarLayer();
+            }
+        };
+
+        // Function to toggle the streamer overlay
+        vm.toggleStreamerOverlay = function () {
+            if (vm.showStreamersOverlay) {
+                vm.showStreamersOverlay = false;
+            } else {
+                vm.showStreamersOverlay = true;
             }
         };
 
@@ -125,6 +166,27 @@ angular.module('flightMapApp', [])
                     ...response.data.pilots.map(pilot => pilot.callsign),
                     ...response.data.controllers.map(controller => controller.callsign)
                 ]);
+
+                // Clear streamers list
+                vm.streamers = [];
+
+                // Function to check and add streamers
+                function addStreamerIfPresent(entity) {
+                    var remarks = entity.flight_plan?.remarks || entity.text_atis?.join(' ') || '';
+                    if (/youtube/i.test(remarks)) {
+                        vm.streamers.push({ callsign: entity.callsign, platform: 'youtube' });
+                    } else if (/twitch/i.test(remarks)) {
+                        vm.streamers.push({ callsign: entity.callsign, platform: 'twitch' });
+                    }
+                }
+
+                // Check each pilot and controller for streaming keywords
+                response.data.pilots.forEach(addStreamerIfPresent);
+                response.data.controllers.forEach(addStreamerIfPresent);
+
+                // Randomize streamers list
+                vm.streamers.sort(() => 0.5 - Math.random());
+                console.log(vm.streamers);
 
                 // Remove markers not present in the new data
                 Object.keys(markers).forEach(function (callsign) {
