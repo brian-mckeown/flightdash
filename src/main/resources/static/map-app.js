@@ -233,6 +233,18 @@ angular.module('flightMapApp', [])
             iconAnchor: [9.5, 9.5],
             popupAnchor: [0, -19]
         });
+
+        function convertUrlsToLinks(text) {
+            var urlRegex = /(https?:\/\/[^\s]+)|(twitch\.tv\/\S+)|(youtube\.com\/\S+)/gi;
+            return text.replace(urlRegex, function(url) {
+                // Check if the URL starts with http/https, if not, prepend 'http://'
+                if (!url.match(/^https?:\/\//)) {
+                    url = 'http://' + url;
+                }
+                return '<a href="' + url + '" target="_blank">' + url + '</a>';
+            });
+        }
+
         vm.displayFlights = function (data) {
             data.pilots.forEach(function (pilot) {
                 var currentPosition = [pilot.latitude, pilot.longitude];
@@ -264,6 +276,7 @@ angular.module('flightMapApp', [])
                 }
 
                 var flightStatus = vm.getVatsimFlightStatus(pilot.groundspeed, toGoDistance);
+                var remarksWithLinks = pilot.flight_plan && pilot.flight_plan.remarks ? convertUrlsToLinks(pilot.flight_plan.remarks) : 'None';
                 var popupContent = `
                     <div class="d-flex justify-content-between align-items-center">
                         <h4><i class="fa-solid fa-plane"></i>${pilot.callsign}</h4>
@@ -315,7 +328,7 @@ angular.module('flightMapApp', [])
                         <strong>Transponder:</strong> ${pilot.transponder}<br>
                         <strong>Assigned Transponder:</strong> ${pilot.flight_plan && pilot.flight_plan.assigned_transponder ? pilot.flight_plan.assigned_transponder : 'N/A'}<br>
                         <strong>Heading:</strong> ${pilot.heading}<br>
-                        <strong>Remarks:</strong> ${pilot.flight_plan && pilot.flight_plan.remarks ? pilot.flight_plan.remarks : 'None'}
+                        <strong>Remarks:</strong> ${remarksWithLinks}
                     </div>`;
 
 
@@ -426,19 +439,18 @@ angular.module('flightMapApp', [])
 
         vm.displayControllers = function (data) {
             var controllersByLocation = {};
-
+        
             var processControllerData = function (controller) {
                 var icaoCode = getIcaoCodeFromCallsign(controller.callsign);
                 var coords = getCoordinatesForIcao(icaoCode);
-                var controllerInfo = '';
-
+        
                 if (coords) {
                     var locationKey = coords.lat + ',' + coords.lng;
-
+        
                     if (!controllersByLocation[locationKey]) {
                         var airportInfo = airportData[icaoCode];
                         var airportDetails = airportInfo ? `<strong>${airportInfo.name}, ${airportInfo.city}, ${airportInfo.state}, ${airportInfo.country}</strong><br><br>` : "<strong></strong><br><br>";
-
+        
                         controllersByLocation[locationKey] = {
                             coords: coords,
                             controllers: [],
@@ -446,41 +458,43 @@ angular.module('flightMapApp', [])
                             airportDetails: airportDetails
                         };
                     }
-
+        
                     var loginTime = new Date(controller.logon_time);
                     var now = new Date();
-                    var minutesSinceLogin = Math.round((now - loginTime) / 60000); // Convert milliseconds to minutes
-                    controllerInfo = `<strong>${controller.callsign}</strong><br>${controller.name}<br><span class="badge bg-dark freq-badge">${controller.frequency}</span><br>Rating: ${controller.rating}`;
-                    if (controller.text_atis && controller.text_atis.length > 0) {
-                        controllerInfo += `<br>${controller.text_atis.join(' ')}`;
+                    var minutesSinceLogin = Math.round((now - loginTime) / 60000);
+                    var atisTextWithLinks = controller.text_atis && controller.text_atis.length > 0 
+                                            ? convertUrlsToLinks(controller.text_atis.join(' ')) 
+                                            : '';
+        
+                    var controllerInfo = `<strong>${controller.callsign}</strong><br>${controller.name}<br><span class="badge bg-dark freq-badge">${controller.frequency}</span><br>Rating: ${controller.rating}`;
+                    if (atisTextWithLinks) {
+                        controllerInfo += `<br>${atisTextWithLinks}`;
                     }
                     controllerInfo += `<br>Logged in for: ${minutesSinceLogin} minutes`;
-
+        
                     controllersByLocation[locationKey].controllers.push(controllerInfo);
                 }
             };
-
+        
             // Process controller and ATIS data
             data.controllers.forEach(processControllerData);
             data.atis.forEach(processControllerData);
-
+        
             // Create markers for each location with aggregated controller info
             for (var key in controllersByLocation) {
                 var locationData = controllersByLocation[key];
                 var popupContent = locationData.airportDetails + locationData.controllers.join("<br><br>");
-                // Use the stored icaoCode for the location
                 var controllerIcon = createControllerIcon(locationData.controllers.join(" "), locationData.icaoCode);
-
-                // Create and add the marker to the map
+        
                 var marker = L.marker([locationData.coords.lat, locationData.coords.lng], {
                     icon: controllerIcon,
                     zIndexOffset: 1000
                 }).bindPopup(popupContent).addTo(map);
-
-                // Store the marker using a unique key
+        
                 controllerMarkers[locationData.icaoCode] = marker;
             }
         };
+        
 
 
         function getCoordinatesForIcao(callsign) {
