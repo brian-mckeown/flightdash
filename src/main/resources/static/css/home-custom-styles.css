@@ -44,3 +44,29 @@
       margin-right: auto;
     }
   }
+
+  .btn-twitch {
+    color: #fff; /* white text */
+    background-color: #6441a5; /* Twitch brand color */
+    border-color: #6441a5; /* Border color same as background */
+}
+
+.btn-twitch:hover {
+    color: #fff; /* white text on hover */
+    background-color: #472f80; /* slightly darker shade of Twitch color for hover */
+    border-color: #3c2670; /* even darker for border on hover */
+}
+
+.btn-twitch:focus, .btn-twitch.focus {
+    box-shadow: 0 0 0 0.25rem rgba(100, 65, 165, 0.5); /* focus shadow with transparency */
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-image: none;
+}
+
+.fa-arrow-left, .fa-arrow-right {
+    color: black; /* Adjust the color as needed */
+}
+

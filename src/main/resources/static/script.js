@@ -6,7 +6,7 @@ var app = angular.module('checklistApp', []);
 app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$document', '$interval', function($scope, $sce, $timeout, $http, $document, $interval) {
     
 
-    $scope.versionNumber = '1.5.1'; 
+    $scope.versionNumber = '1.5.2'; 
 
     $scope.state = 'Idle';
     $scope.messages = [];
