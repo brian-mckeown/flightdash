@@ -1258,9 +1258,18 @@ Baggage Claim: {{ bagsBaggageClaim.length }}
                                 report the issue via <a href="/#support-section" target="_blank">Support</a>
                             </div>
                             <div>
-                                <p ng-model="announcementApiReport">
-
-                                </p>
+                                <div class="form-check mb-3">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="checkbox" ng-model="showDebugLog"> Debug Log
+                                    </label>
+                                </div>
+                            
+                                <div ng-show="showDebugLog">
+                                    <label for="debugLog">Debug Log:</label>
+                                    <textarea class="form-control" rows="5" id="debugLog" name="text" 
+                                              ng-model="announcementApiReport" ng-disabled="true"
+                                              style="overflow-y: scroll;"></textarea>
+                                </div>
                             </div>
                         </div>
                     </div>
