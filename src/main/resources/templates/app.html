@@ -1254,13 +1254,22 @@ Baggage Claim: {{ bagsBaggageClaim.length }}
                             <div class="alert alert-danger">
                                 <strong>Support:</strong> If you feel you've configured everything properly based on the
                                 checklist steps above, and are not getting any announcements after waiting a few
-                                mintues, please cease using the feature (to avoid any additional OpenAI API costs) and
-                                report the issue via <a href="/#support-section" target="_blank">Support</a>
+                                mintues, please cease using the feature (to avoid any additional OpenAI API costs), copy and paste the FULL debug logs below, and
+                                report the issue via <a href="/#support-section" target="_blank">Support</a>. Paste the debug log into your support ticket or message.
                             </div>
                             <div>
-                                <p ng-model="announcementApiReport">
-
-                                </p>
+                                <div class="form-check mb-3">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="checkbox" ng-model="showDebugLog"> Debug Log
+                                    </label>
+                                </div>
+                            
+                                <div ng-show="showDebugLog">
+                                    <label for="debugLog">Debug Log:</label>
+                                    <textarea class="form-control" rows="5" id="debugLog" name="text" 
+                                              ng-model="announcementApiReport" ng-disabled="true"
+                                              style="overflow-y: scroll;"></textarea>
+                                </div>
                             </div>
                         </div>
                     </div>

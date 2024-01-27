@@ -6,7 +6,7 @@ var app = angular.module('checklistApp', []);
 app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$document', '$interval', function($scope, $sce, $timeout, $http, $document, $interval) {
     
 
-    $scope.versionNumber = '1.5.2'; 
+    $scope.versionNumber = '1.5.3'; 
 
     $scope.state = 'Idle';
     $scope.messages = [];
@@ -735,7 +735,6 @@ $scope.generateFlightCrew = function() {
         // Add the crew member to the array
         $scope.flightCrewArray.push(crewMember);
     });
-    console.log($scope.flightCrewArray);
 }
 
 
@@ -1351,7 +1350,6 @@ $scope.deBoardPassengersAndBags = function() {
                 $scope.departureIcao = $scope.flightPlanJSONData.origin.icao_code;
                 $scope.arrivalIcao = $scope.flightPlanJSONData.destination.icao_code;
                 $scope.flightLevelString = $scope.flightPlanJSONData.general.stepclimb_string;
-                console.log("STEP FLIGHT LEVEL STRING: " + $scope.flightLevelString);
 
                 $scope.numberOfPassengers = Number($scope.flightPlanJSONData.weights.pax_count);
 
@@ -1406,9 +1404,6 @@ $scope.deBoardPassengersAndBags = function() {
                 
                 $scope.runways = $scope.airportData.runways;
                 $scope.frequencies = $scope.airportData.freqs;
-                console.log($scope.airportData);
-                console.log($scope.airportData.freqs);
-                console.log($scope.airportData.runways);
 
                 $scope.parseMetar($scope.airportInfo.metar);
                 $scope.sortRunwaysByHeadwind();
@@ -1624,26 +1619,39 @@ $scope.deBoardPassengersAndBags = function() {
             aircraftName: $scope.aircraftName
         };
 
-        // Define the headers for your POST request
-        var config = {
-            headers : {
-                'Content-Type': 'application/json'
-            }
-        };
+        // Create a string representation of requestData with masked API key
+        var requestDataString = JSON.stringify({
+            ...requestData,
+            openAiApiKey: 'xxxxxxxxx'
+        }, null, 2); // Format with 2-space indentation for readability
+
         $http({
             method: 'POST',
             url: '/api/v1/announcements/universal',
             data: requestData,
-            responseType: 'blob',  // Correct way to set the expected response type for binary data
             headers: {
                 'Content-Type': 'application/json'
             },
-        })
-        .then(function(response) {
-            var blob = new Blob([response.data], { type: 'audio/mpeg' });
-            $scope.audioSrc = $sce.trustAsResourceUrl(URL.createObjectURL(blob));
+            transformResponse: function(data, headersGetter) {
+                try {
+                    // Try to parse the response as JSON
+                    return angular.fromJson(data);
+                } catch (e) {
+                    // If parsing fails, return the raw response
+                    return data;
+                }
+            }
+        }).then(function(response) {
+            // Decode the Base64 audio string to a Blob
+            var audioBlob = base64ToBlob(response.data.base64Audio, 'audio/mpeg');
+            $scope.audioSrc = $sce.trustAsResourceUrl(URL.createObjectURL(audioBlob));
     
-            // Use the reusable function
+            // Assign the API call log
+            $scope.announcementApiReport = response.data.apiCallLog;
+            // Append requestDataString to announcementApiReport
+            $scope.announcementApiReport += "\n\nRequest Data:\n" + requestDataString;
+    
+            // Play the audio
             $scope.playDingThenCallback(function() {
                 var announcementAudio = document.getElementById('announcementAudio');
                 if (announcementAudio) {
@@ -1653,16 +1661,41 @@ $scope.deBoardPassengersAndBags = function() {
                     console.error('Announcement audio element not found');
                 }
             });
-        })
-            .catch(function(error) {
-                // Handle errors here, such as displaying a message to the user
-                console.error('Error fetching announcement:', error);
-                $scope.announcementApiReport = error;
-            })
-            .finally(function() {
-                $scope.isAnnouncementLoading = false; // Hide spinner
-            });
+        }).catch(function(error) {
+            console.error('Error fetching announcement:', error);
+        
+            // Check if error.data is a string and not empty
+            if (typeof error.data === 'string' && error.data.trim()) {
+                $scope.announcementApiReport = error.data;
+                $scope.announcementApiReport += "\n\nRequest Data:\n" + requestDataString;
+            } else {
+                $scope.announcementApiReport = "Unknown error";
+                $scope.announcementApiReport += "\n\nRequest Data:\n" + requestDataString;
+            }
+        }).finally(function() {
+            $scope.isAnnouncementLoading = false;
+        });
     };
+    
+    // Helper function to convert base64 string to Blob
+    function base64ToBlob(base64, contentType) {
+        var byteCharacters = atob(base64);
+        var byteArrays = [];
+    
+        for (var offset = 0; offset < byteCharacters.length; offset += 512) {
+            var slice = byteCharacters.slice(offset, offset + 512);
+    
+            var byteNumbers = new Array(slice.length);
+            for (var i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i);
+            }
+    
+            var byteArray = new Uint8Array(byteNumbers);
+            byteArrays.push(byteArray);
+        }
+    
+        return new Blob(byteArrays, {type: contentType});
+    }
 
     $scope.startPreBoardingAnnouncement = function() {
 

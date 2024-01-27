@@ -4,12 +4,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
 import java.io.File;
 import java.util.*;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
 
 @RestController
 @RequestMapping("/api/v1/announcements")
@@ -27,6 +32,12 @@ static {
         token = System.getenv("WEATHERBIT_API_TOKEN");
     }
     weatherbitApiToken = token;
+}
+
+private String getCurrentUtcDateTime() {
+    ZonedDateTime utcNow = ZonedDateTime.now(ZoneOffset.UTC);
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm:ss.SSS 'UTC'");
+    return utcNow.format(formatter);
 }
     
 
@@ -96,15 +107,22 @@ static {
         }
         
     StringBuilder apiCallStatus = new StringBuilder();
-
     RestTemplate restTemplate = new RestTemplate();
 
-
-    ResponseEntity<Map> weatherResponse = restTemplate.getForEntity(arrivalWeatherUrl, Map.class);
-    apiCallStatus.append("Weather API Call - Status: ")
-                 .append(weatherResponse.getStatusCode())
+    ResponseEntity<Map> weatherResponse = null; // Declare before try block
+    try {
+        weatherResponse = restTemplate.getForEntity(arrivalWeatherUrl, Map.class);
+        apiCallStatus.append(getCurrentUtcDateTime()).append(" - Weather API Call - Status: ").append(weatherResponse.getStatusCode()).append("\n");
+    } catch (HttpClientErrorException e) {
+    // This will catch client errors like 401 Unauthorized and provide more details
+    apiCallStatus.append(getCurrentUtcDateTime()).append(" - Weather API Call - HttpClient Error: ")
+                 .append(e.getStatusCode())
+                 .append(" - ")
+                 .append(e.getResponseBodyAsString())
                  .append("\n");
-
+} catch (Exception e) {
+    apiCallStatus.append(getCurrentUtcDateTime()).append(" - Weather API Call - Error: ").append(e.getMessage()).append("\n");
+    }
     // Initialize response variables
     String weatherDescription = null;
     Number celsiusTemp = null;
@@ -150,7 +168,7 @@ static {
     } 
 
     // Check for successful response and extract data
-    if (weatherResponse.getStatusCode().is2xxSuccessful() && weatherResponse.getBody() != null) {
+    if (weatherResponse != null && weatherResponse.getStatusCode().is2xxSuccessful() && weatherResponse.getBody() != null) {
         List<Map<String, Object>> data = (List<Map<String, Object>>) weatherResponse.getBody().get("data");
         if (data != null && !data.isEmpty()) {
             Map<String, Object> weatherData = data.get(0);
@@ -444,8 +462,8 @@ static {
 
         // Make the POST request to OpenAI
         String openAiUrl = "https://api.openai.com/v1/chat/completions";
-        ResponseEntity<Map> openAiResponse = restTemplate.postForEntity(openAiUrl, entity, Map.class);
-        apiCallStatus.append("OpenAI GPT API Call - Status: ")
+        try {        ResponseEntity<Map> openAiResponse = restTemplate.postForEntity(openAiUrl, entity, Map.class);
+            apiCallStatus.append(getCurrentUtcDateTime()).append(" - OpenAI GPT API Call - Status: ")
                  .append(openAiResponse.getStatusCode())
                  .append("\n");
 
@@ -460,6 +478,18 @@ static {
                 }
             }
         }
+    } catch (HttpClientErrorException e) {
+        // This will catch client errors like 401 Unauthorized and provide more details
+        apiCallStatus.append(getCurrentUtcDateTime()).append(" - OpenAI GPT API Call - HttpClient Error: ")
+                     .append(e.getStatusCode())
+                     .append(" - ")
+                     .append(e.getResponseBodyAsString())
+                     .append("\n");
+    } catch (Exception e) {
+        apiCallStatus.append(getCurrentUtcDateTime()).append(" - OpenAI GPT API Call - Error: ")
+                 .append(e.getMessage())
+                 .append("\n");
+    }
 
         Map<String, Object> ttsRequestBody = new HashMap<>();
         ttsRequestBody.put("model", ttsModel);
@@ -468,23 +498,25 @@ static {
 
         HttpEntity<Map<String, Object>> ttsEntity = new HttpEntity<>(ttsRequestBody, headers);
         String ttsUrl = "https://api.openai.com/v1/audio/speech";
+        try {
         ResponseEntity<byte[]> ttsResponse = restTemplate.postForEntity(ttsUrl, ttsEntity, byte[].class);
             // Construct the response object
-        if (ttsResponse.getStatusCode().is2xxSuccessful() && ttsResponse.getBody() != null) {
+            apiCallStatus.append(getCurrentUtcDateTime()).append(" - OpenAI TTS API Call - Status: ")
+                 .append(ttsResponse.getStatusCode())
+                 .append("\n");
+            if (ttsResponse.getStatusCode().is2xxSuccessful() && ttsResponse.getBody() != null) {
+                byte[] audioData = ttsResponse.getBody();
 
-            apiCallStatus.append("OpenAI TTS API Call - Success\n");
-            // The response should be the binary data of the mp3 file
-            byte[] audioData = ttsResponse.getBody();
+                // Encode audio data to Base64 string
+                String base64Audio = Base64.getEncoder().encodeToString(audioData);
 
-            // Set up headers for audio response
-        HttpHeaders audioHeaders = new HttpHeaders();
-        audioHeaders.setContentType(MediaType.valueOf("audio/mpeg"));
-        audioHeaders.setContentDisposition(ContentDisposition.builder("inline").filename("announcement.mp3").build());
 
-        return ResponseEntity.ok()
-                .headers(audioHeaders)
-                .contentLength(audioData.length)
-                .body(new ByteArrayResource(audioData));
+           // Create a response map
+    Map<String, Object> responseBody = new HashMap<>();
+    responseBody.put("base64Audio", base64Audio); // Encoded audio
+    responseBody.put("apiCallLog", apiCallStatus.toString()); // API Call Log
+
+    return ResponseEntity.ok(responseBody); // Send back as JSON
         } else {
             // Handle error case
         // Since it's an error condition, construct a JSON response
@@ -492,6 +524,21 @@ static {
         errorResponse.put("error", apiCallStatus + "\nOpenAI TTS Call: Failed to generate audio from the text");
         return ResponseEntity.status(ttsResponse.getStatusCode()).body(new MapResource(errorResponse));
         }
+    } catch (HttpClientErrorException e) {
+        // This will catch client errors like 401 Unauthorized and provide more details
+        apiCallStatus.append(getCurrentUtcDateTime()).append(" - OpenAI TTS API Call - HttpClient Error: ")
+                     .append(e.getStatusCode())
+                     .append(" - ")
+                     .append(e.getResponseBodyAsString())
+                     .append("\n");
+    }catch (Exception e) {
+        apiCallStatus.append(getCurrentUtcDateTime()).append(" - OpenAI TTS API Call - Error: ")
+                 .append(e.getMessage())
+                 .append("\n");
+    }
+    } else {
+        // Handle the case where weather API call was not successful or body is null
+        apiCallStatus.append(getCurrentUtcDateTime()).append(" - Weather API Call - Failed or no data received\n");
     }
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiCallStatus + "\ninternal server error");
     
