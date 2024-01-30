@@ -275,7 +275,7 @@ angular.module('flightMapApp', [])
                     progressPercentage = Math.max(0, Math.min(100, ((totalDistance - toGoDistance) / totalDistance * 100)));
                 }
 
-                var flightStatus = vm.getVatsimFlightStatus(pilot.groundspeed, toGoDistance);
+                var flightStatus = vm.getVatsimFlightStatus(pilot.flight_plan, pilot.groundspeed, toGoDistance);
                 var remarksWithLinks = pilot.flight_plan && pilot.flight_plan.remarks ? convertUrlsToLinks(pilot.flight_plan.remarks) : 'None';
                 var popupContent = `
                     <div class="d-flex justify-content-between align-items-center">
@@ -378,13 +378,14 @@ angular.module('flightMapApp', [])
             });
         };
 
-        vm.getVatsimFlightStatus = function(speed, toGoDistance) {
-            if (speed === 0 && toGoDistance > 20) return { status: "Pre-Departure", class: "bg-secondary text-white" };
-            if (speed > 0 && speed < 50 && toGoDistance > 20) return { status: "Left Gate", class: "bg-info text-white" };
-            if (speed >= 50 && toGoDistance > 20) return { status: "Departed", class: "bg-primary text-white" };
-            if (speed >= 50 && toGoDistance < 20) return { status: "Arriving Shortly", class: "bg-warning text-white" };
-            if (speed < 50 && speed > 0 && toGoDistance < 20) return { status: "Landed", class: "bg-success text-white" };
-            if (speed === 0 && toGoDistance < 20) return { status: "Arrived", class: "bg-success text-white" };
+        vm.getVatsimFlightStatus = function(flight_plan ,speed, toGoDistance) {
+            if (speed === 0 && toGoDistance > 20 && flight_plan !== null) return { status: "Pre-Departure", class: "bg-secondary text-white" };
+            if (speed > 0 && speed < 50 && toGoDistance > 20 && flight_plan !== null) return { status: "Left Gate", class: "bg-info text-white" };
+            if (speed >= 50 && toGoDistance > 20 && flight_plan !== null) return { status: "Enroute", class: "bg-primary text-white" };
+            if (speed >= 50 && toGoDistance < 20 && flight_plan !== null) return { status: "Arriving Shortly", class: "bg-warning text-white" };
+            if (speed < 50 && speed > 0 && toGoDistance < 20 && flight_plan !== null) return { status: "Landed", class: "bg-success text-white" };
+            if (speed === 0 && toGoDistance < 20 && flight_plan !== null) return { status: "Arrived", class: "bg-success text-white" };
+            if (flight_plan === null) return { status: "Not Filed", class: "bg-dark text-white" };
             return { status: "Unknown", class: "bg-dark text-white" }; // Default case
         };
 
