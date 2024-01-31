@@ -19,9 +19,10 @@ angular.module('flightMapApp', ['sharedModule'])
         // Initialize the map
         var map = L.map('map').setView([40.730610, -73.935242], 3);
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-            attribution: '© OpenStreetMap contributors, © CARTO, <a href="https://github.com/brian-mckeown/flightdash" target="_blank"><i class="fa-brands fa-github"></i> FlightDash.io</a>',
+            attribution: '<a href="https://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap contributors</a>, <a href="https://carto.com/attribution/" target="_blank">© CARTO</a>, <a href="https://github.com/brian-mckeown/flightdash" target="_blank"><i class="fa-brands fa-github"></i> FlightDash.io</a>',
             maxZoom: 19
         }).addTo(map);
+
 
         //SEARCH
         vm.searchQuery = '';
@@ -179,6 +180,26 @@ angular.module('flightMapApp', ['sharedModule'])
                     ...response.data.pilots.map(pilot => pilot.callsign),
                     ...response.data.controllers.map(controller => controller.callsign)
                 ]);
+
+                // Find a pilot with a matching primary callsign
+                var matchingPilot = response.data.pilots.find(pilot => pilot.callsign === $scope.callSign);
+                if (matchingPilot) {
+                    // Calculate toGoDistance
+                    var arrivalIcao = matchingPilot.flight_plan ? matchingPilot.flight_plan.arrival : null;
+                    var toGoDistance = 0;
+                    if (arrivalIcao && airportData[arrivalIcao]) {
+                        var arrivalAirport = airportData[arrivalIcao];
+                        toGoDistance = calculateDistance(matchingPilot.latitude, matchingPilot.longitude, arrivalAirport.lat, arrivalAirport.lon);
+                    }
+
+    // Set status and toGoDistance
+    matchingPilot.status = vm.getVatsimFlightStatus(matchingPilot.flight_plan, matchingPilot.groundspeed, toGoDistance);
+    matchingPilot.toGoDistance = toGoDistance;
+
+    // Update vatTrackBannerPilot in scope and shared service
+    $scope.vatTrackBannerPilot = matchingPilot;
+    SharedService.setVatTrackBannerPilot(matchingPilot); // Set object in shared service
+}
 
                 // Clear streamers list
                 vm.streamers = [];

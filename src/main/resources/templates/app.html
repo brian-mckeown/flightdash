@@ -73,7 +73,7 @@
             <div ng-show="showFlightStatBanner" class="text-white d-flex align-items-center ms-2">
                 <p class="mb-0">
                     {{callSign}} {{departureIcao}}->{{arrivalIcao}}
-                    <a ng-show="currentFlightStatus == 'Idle'" class="text-white text-decoration-none"> | Boarding in:
+                    <a ng-show="currentFlightStatus == 'Idle' && showVatTrackBanner == false" class="text-white text-decoration-none"> | Boarding in:
                         <span id="boardingCountdown">{{boardingHours}}h {{boardingMinutes}}m {{boardingSeconds}}s</span>
                         <span class="badge"
                             ng-class="{'bg-success': boardingStatus == 'ON TIME', 'bg-warning': boardingStatus == 'DELAYED'}">{{
@@ -81,7 +81,30 @@
                                 class="fa-solid fa-user"></i> {{passengersCheckedIn.length}}/{{numberOfPassengers}} <i
                                 class="fa-solid fa-suitcase"></i> {{bagsCheckedIn.length}}</span>
                     </a>
-                    <a ng-show="currentFlightStatus == 'Boarding'" class="text-white text-decoration-none"> | <span
+
+                    <!--VatTrack Banner-->
+                    <a ng-show="showVatTrackBanner" class="text-white text-decoration-none"> | 
+                        <span class="badge"
+                            ng-class="vatTrackBannerPilot.status.class">{{
+                                vatTrackBannerPilot.status.status }}</span> | <span>
+                                    <span class="badge bg-dark text-white">A/C: {{vatTrackBannerPilot.flight_plan.aircraft_short}}</span>
+                                    <span class="badge bg-dark text-white">Speed: {{vatTrackBannerPilot.groundspeed}} kts</span>
+                                    <span class="badge bg-dark text-white">Altitude: {{vatTrackBannerPilot.altitude}} ft</span>
+                                    <span class="badge bg-dark text-white">To Go: {{vatTrackBannerPilot.toGoDistance | number:0}} nm</span> 
+                                    <div class="badge bg-secondary text-white marquee" ng-show="showVatTrackBanner">
+                                        <span>
+                                            Sched Boarding: {{ scheduledBoardingDateTime | date:'HH:mm' }}z |
+                                            Sched Departure: {{ scheduledDepartureDateTime | date:'HH:mm' }}z |
+                                            Est Landing: {{ estimateArrivalDateTime | date:'HH:mm' }}z |
+                                            Est Gate Arrival: {{ estimateGateArrivalDateTime | date:'HH:mm' }}z
+                                        </span>
+                                    </div>
+                                    
+
+                                </span>
+                    </a>
+
+                    <a ng-show="currentFlightStatus == 'Boarding' && !showVatTrackBanner" class="text-white text-decoration-none"> | <span
                             class="badge bg-info">BOARDING</span> | Departing in: <span
                             id="departureCountdown">{{departureHours}}h {{departureMinutes}}m
                             {{departureSeconds}}s</span>
@@ -91,21 +114,21 @@
                                 class="fa-solid fa-user"></i> {{passengersSeated.length}}/{{numberOfPassengers}} <i
                                 class="fa-solid fa-suitcase"></i> {{bagsLoaded.length}}</span>
                     </a>
-                    <a ng-show="currentFlightStatus == 'Departed'" class="text-white text-decoration-none"> | <span
+                    <a ng-show="currentFlightStatus == 'Departed' && !showVatTrackBanner" class="text-white text-decoration-none"> | <span
                             class="badge bg-info">DEPARTED</span> | Landing in: <span
                             id="landingCountdown">{{landingHours}}h {{landingMinutes}}m {{landingSeconds}}s</span>
                         <span class="badge"
                             ng-class="{'bg-success': landingStatus == 'ON TIME', 'bg-warning': landingStatus == 'DELAYED'}">{{
                             landingStatus }}</span>
                     </a>
-                    <a ng-show="currentFlightStatus == 'Landed'" class="text-white text-decoration-none"> | <span
+                    <a ng-show="currentFlightStatus == 'Landed' && !showVatTrackBanner" class="text-white text-decoration-none"> | <span
                             class="badge bg-success">LANDED</span> | Arriving at Gate in: <span
                             id="arrivalCountdown">{{arrivalHours}}h {{arrivalMinutes}}m {{arrivalSeconds}}s</span>
                         <span class="badge"
                             ng-class="{'bg-success': arrivalStatus == 'ON TIME', 'bg-warning': arrivalStatus == 'DELAYED'}">{{
                             arrivalStatus }}</span>
                     </a>
-                    <a ng-show="currentFlightStatus == 'Arrived'" class="text-white text-decoration-none"> | <span
+                    <a ng-show="currentFlightStatus == 'Arrived' && !showVatTrackBanner" class="text-white text-decoration-none"> | <span
                             class="badge bg-success">ARRIVED AT GATE</span> | {{
                         getDifference(estimateGateArrivalDateTime, actualGateArrivalDateTime) }}
                         <span class="badge"
@@ -1003,6 +1026,13 @@
                                         ng-model="showPassengersBanner">
                                     <label class="form-check-label" for="passengersBannerCheckbox">
                                         Show Passenger Stats in Banner
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="vatTrackBannerCheckbox"
+                                        ng-model="showVatTrackBanner">
+                                    <label class="form-check-label" for="vatTrackBannerCheckbox">
+                                        Use Vat Track Stats in Banner
                                     </label>
                                 </div>
                             </div>

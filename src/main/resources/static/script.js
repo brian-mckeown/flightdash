@@ -26,6 +26,16 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$
     $scope.announcementApiReport = '';
     $scope.announcementsReady = false;
 
+    //VatTrack Pilot Tracking data
+    $scope.vatTrackBannerPilot = {};
+    window.addEventListener('storage', function(event) {
+        if (event.key === 'vatTrackBannerPilot') {
+            $scope.$apply(function() {
+                $scope.vatTrackBannerPilot = JSON.parse(event.newValue);
+            });
+        }
+    });
+
     $scope.announcementCheckboxes = [
         { id: 'policyAgreement', label: 'I have read and agree to the OpenAI Usage Policy.', checked: false },
         { id: 'costResponsibility', label: 'I understand that all costs incurred via OpenAI are my responsibility, regardless of FlightDash.io\'s cost estimation accuracy. I do not hold FlightDash.io (including developers, members, affiliates, etc.) accountable for any costs incurred.', checked: false },
@@ -702,6 +712,7 @@ $scope.airline = '';
 $scope.flightCrewArray = [];
 $scope.showFlightStatBanner = false;
 $scope.showPassengersBanner = false;
+$scope.showVatTrackBanner = false;
 $scope.currentFlightStatus = 'Idle';
 $scope.finalArrivalStatus = '';
 $scope.scheduledBoardingDateTime = '';
