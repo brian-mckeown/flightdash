@@ -1,9 +1,9 @@
 /**************************** */
 /*** ANGULAR JS SECTION BELOW */
 /**************************** */
-var app = angular.module('checklistApp', []);
+var app = angular.module('checklistApp', ['sharedModule']);
 
-app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$document', '$interval', function($scope, $sce, $timeout, $http, $document, $interval) {
+app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$document', '$interval', 'SharedService', function($scope, $sce, $timeout, $http, $document, $interval, SharedService) {
     
 
     $scope.versionNumber = '1.5.3'; 
@@ -690,7 +690,11 @@ $scope.clearConfigValues = function() {
 //** Flight Status Section */
 // Default values for the badges
 $scope.aircraftName = '';
-$scope.callSign = '';
+$scope.callSign = SharedService.getCallsign();
+// Watch for changes in callSign and update it in SharedService
+$scope.$watch('callSign', function(newVal) {
+    SharedService.setCallsign(newVal);
+});
 $scope.departureIcao = '';
 $scope.arrivalIcao = '';
 $scope.flightLevelString = '';

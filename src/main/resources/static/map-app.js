@@ -1,5 +1,18 @@
-angular.module('flightMapApp', [])
-    .controller('MapController', ['$http', function ($http) {
+angular.module('flightMapApp', ['sharedModule'])
+    .controller('MapController', ['$http', '$scope', 'SharedService', function ($http, $scope, SharedService ) {
+        
+        // Initialize $scope.callSign from SharedService
+        $scope.callSign = SharedService.getCallsign();
+
+        // Optionally, if you need to react to changes in callSign value from localStorage:
+        window.addEventListener('storage', function(event) {
+            if (event.key === 'callsign') {
+                $scope.$apply(function() {
+                    $scope.callSign = event.newValue;
+                });
+            }
+        });
+        
         var vm = this;
         var airportData = airportBigData;
         vm.isWeatherLayerActive = true; // Track the state of the weather layer
