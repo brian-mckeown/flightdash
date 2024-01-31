@@ -1230,6 +1230,37 @@ Baggage Claim: {{ bagsBaggageClaim.length }}
                                             AI Crew Announcements
                                         </label>
                                     </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="autopilotCheckbox" onclick="toggleAutopilotAnnouncementCheckboxes()">
+                                        <label class="form-check-label" for="autopilotCheckbox">
+                                            Enable Announcement Autopilot
+                                        </label>
+                                    </div>
+                                    
+                                    <div id="additionalAutopilotAnnouncementCheckboxes" class="mt-2" style="display: none;">
+                                        <p class="text-danger">This feature only works when flying on the VATSIM network with a Simbrief flightplan!</p>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="preBoarding" ng-model="autoPilotAnnouncementPreBoardingChecked" ng-disabled="autoPilotAnnouncementPreBoardingPlayed">
+                                            <label class="form-check-label" for="preBoarding">Pre Boarding - Will play 10min before scheduled boarding</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="boarding" ng-model="autoPilotAnnouncementBoardingChecked" ng-disabled="autoPilotAnnouncementBoardingPlayed">
+                                            <label class="form-check-label" for="boarding">Boarding - Will play at scheduled boarding</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="safety" ng-model="autoPilotAnnouncementSafetyChecked" ng-disabled="autoPilotAnnouncementSafetyPlayed">
+                                            <label class="form-check-label" for="safety">Safety - Will play once Vat Track status is "Left Gate"</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="landing" ng-model="autoPilotAnnouncementLandingChecked" ng-disabled="autoPilotAnnouncementLandingPlayed">
+                                            <label class="form-check-label" for="landing">Landing - Will play once Vat Track status is "Landed"</label>
+                                        </div>
+                                        <div>
+                                            <button class="btn btn-link btn-sm" ng-click="resetAutoPilotAnnouncements()">Reset Autopilot Announcements</button>
+                                            <i class="fa-solid fa-circle-exclamation text-warning" data-bs-toggle="tooltip" title="Ensure your newest flightplan is imported and filed on Vatsim before resetting between flights."></i>
+                                        </div>
+                                    </div>
+                                    
                                     <div class="col-md-auto">
                                         <button type="button" class="btn btn-sm btn-dark"
                                             ng-click="startPreBoardingAnnouncement()"
