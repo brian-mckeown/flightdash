@@ -331,7 +331,7 @@ angular.module('flightMapApp', ['sharedModule'])
                 var remarksWithLinks = pilot.flight_plan && pilot.flight_plan.remarks ? convertUrlsToLinks(pilot.flight_plan.remarks) : 'None';
                 var popupContent = `
                     <div class="d-flex justify-content-between align-items-center">
-                        <h4><i class="fa-solid fa-plane"></i>${pilot.callsign}</h4>
+                    <h4><i class="fa-solid fa-plane"></i>${pilot.callsign}</h4>
                         <h6 class="rounded px-2 ${flightStatus.class}">${flightStatus.status}</h6>
                     </div>
                     <h4 class="small text-secondary">${pilot.flight_plan && pilot.flight_plan.aircraft_short ? pilot.flight_plan.aircraft_short : 'N/A'} - ${pilot.name}</h4>

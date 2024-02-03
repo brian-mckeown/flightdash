@@ -91,7 +91,7 @@ body, div, section {
     overflow-y: scroll;
 }
 .text-magenta {
-    color: magenta;
+    color: magenta !important;
 }
 .no-gutter > .col {
     padding-right: 5px;

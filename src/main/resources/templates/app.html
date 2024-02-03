@@ -997,7 +997,13 @@
                                             </thead>
                                             <tbody>
                                                 <tr ng-repeat="pilot in groupPilots | orderBy:'toGoDistance':false" ng-class="{'text-magenta': pilot.callsign === callSign}">
-                                                    <td>{{pilot.callsign}}</td>
+                                                    <td>
+                                                        <img ng-src="./assets/logos/{{pilot.callsign.substring(0, 3)}}.png" 
+                                                             alt="{{pilot.callsign}}" 
+                                                             style="height: 25px; width: 25px; margin-right: 5px;"
+                                                             onerror="this.src='./assets/logos/default.png';">
+                                                        {{pilot.callsign}}
+                                                      </td>
                                                     <td>{{pilot.flight_plan.aircraft_short}}</td>
                                                     <td>{{pilot.flight_plan.departure}}</td>
                                                     <td>{{pilot.flight_plan.arrival}}</td>
