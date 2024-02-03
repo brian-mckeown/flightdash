@@ -4,6 +4,7 @@ angular.module('sharedModule', [])
 
     var vatTrackBannerPilotKey = 'vatTrackBannerPilot';
     var similarFlightPlanPilotsKey = 'similarFlightPlanPilots';
+    var proximityPilotsKey = 'proximityPilots';
 
     return {
         getCallsign: function() {
@@ -23,6 +24,12 @@ angular.module('sharedModule', [])
         },
         getSimilarFlightPlanPilots: function() {
             return JSON.parse($window.localStorage.getItem(similarFlightPlanPilotsKey)) || [];
+        },
+        setProximityPilots: function(pilots) {
+            $window.localStorage.setItem(proximityPilotsKey, JSON.stringify(pilots));
+        },
+        getProximityPilots: function() {
+            return JSON.parse($window.localStorage.getItem(proximityPilotsKey)) || [];
         }
     };
 }]);

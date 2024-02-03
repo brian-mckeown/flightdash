@@ -200,7 +200,6 @@ angular.module('flightMapApp', ['sharedModule'])
                     // Update vatTrackBannerPilot in scope and shared service
                     $scope.vatTrackBannerPilot = matchingPilot;
                     SharedService.setVatTrackBannerPilot(matchingPilot); // Set object in shared service
-                
                     // Find pilots with the same departure and arrival and set status and toGoDistance for each
                     var similarFlightPlanPilots = response.data.pilots.filter(pilot => 
                         pilot.flight_plan &&
@@ -217,6 +216,52 @@ angular.module('flightMapApp', ['sharedModule'])
 
                     // Set the array of similar flight plan pilots in the shared service
                     SharedService.setSimilarFlightPlanPilots(similarFlightPlanPilots);
+                    // Find pilots within 200nm of current pilot's location
+
+                    var currentCallsignForProximity = SharedService.getCallsign();
+                    var currentPilotForProximity = response.data.pilots.find(pilot => pilot.callsign === currentCallsignForProximity);
+
+                    if (!currentPilotForProximity) {
+                        console.error('Current pilot for proximity not found');
+                        return;
+                    }
+                    var proximityPilots = response.data.pilots.filter(pilot => {
+                        // Calculate the distance from the current pilot for proximity to each pilot in the list
+                        var distance = calculateDistance(
+                            currentPilotForProximity.latitude,
+                            currentPilotForProximity.longitude,
+                            pilot.latitude,
+                            pilot.longitude
+                        );
+                        // Filter pilots within 200nm (not including the current pilot for proximity)
+                        return distance <= 200 && pilot.callsign !== currentCallsignForProximity;
+                    }).map(pilot => {
+                        var arrivalAirportData = pilot.flight_plan ? airportData[pilot.flight_plan.arrival] : null;
+                        var pilotToGoDistance = null; // Default to null
+                        // Only calculate distance if arrivalAirportData is available
+                        if (arrivalAirportData) {
+                            pilotToGoDistance = calculateDistance(
+                                pilot.latitude, 
+                                pilot.longitude, 
+                                arrivalAirportData.lat, 
+                                arrivalAirportData.lon
+                            );
+                        }
+                        return {
+                            ...pilot,
+                            distance: calculateDistance(
+                                currentPilotForProximity.latitude,
+                                currentPilotForProximity.longitude,
+                                pilot.latitude,
+                                pilot.longitude
+                            ),
+                            status: vm.getVatsimFlightStatus(pilot.flight_plan, pilot.groundspeed, pilotToGoDistance),
+                            toGoDistance: pilotToGoDistance
+                        };
+                    });
+                
+                    // Set the array of proximity pilots in the shared service
+                        SharedService.setProximityPilots(proximityPilots);
                 }
 
                 // Clear streamers list
@@ -238,7 +283,6 @@ angular.module('flightMapApp', ['sharedModule'])
 
                 // Randomize streamers list
                 vm.streamers.sort(() => 0.5 - Math.random());
-                console.log(vm.streamers);
 
                 // Remove markers not present in the new data
                 Object.keys(markers).forEach(function (callsign) {

@@ -28,7 +28,15 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$
 
     // VatTrack Pilot Tracking data
     $scope.vatTrackBannerPilot = {};
-    $scope.groupPilots = []; 
+    $scope.groupPilots = [];
+    $scope.proximityPilots = [];
+
+    $scope.proximityDistances = [1, 2, 5, 10, 20, 50, 100, 200];
+    $scope.proximityDistance = $scope.proximityDistances[0];
+
+    $scope.setProximityDistance = function(distance) {
+        $scope.proximityDistance = distance;
+    };
 
     window.addEventListener('storage', function(event) {
         // Check for changes in vatTrackBannerPilot
@@ -44,11 +52,22 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$
                 $scope.groupPilots = JSON.parse(event.newValue) || [];
             });
         }
+
+        // Independently check for changes in proximityPilots
+        if (event.key === 'proximityPilots') {
+            $scope.$apply(function() {
+                $scope.proximityPilots = JSON.parse(event.newValue) || [];
+            });
+        }
     });
 
     //custom filter for group pilots to exclude current callsign
     $scope.excludeCallsign = function(pilot) {
         return pilot.callsign !== $scope.callSign;
+    };
+
+    $scope.distanceFilter = function(pilot) {
+        return pilot.distance <= $scope.proximityDistance;
     };
 
     //Announcement Autopilot checkboxes

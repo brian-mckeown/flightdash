@@ -979,6 +979,60 @@
                                         Show Vatsim Group Flight Members Table
                                     </label>
                                 </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="vatTrackProximityTableCheckbox"
+                                        ng-model="showVatTrackProximityTable">
+                                    <label class="form-check-label" for="vatTrackProximityTableCheckbox">
+                                        Show Vatsim Proximity Table
+                                    </label>
+                                </div>
+                                <div ng-show="showVatTrackProximityTable">
+                                    <h4>Proxmity</h4>
+                                    <p>This table shows Vatsim aircraft within a selected distance from your current location.</p>
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Distance (nm)
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <li ng-repeat="distance in proximityDistances"><a class="dropdown-item" href="#" ng-click="setProximityDistance(distance)">{{distance}}</a></li>
+                                        </ul>
+                                    </div>
+                                    <span style="margin-left: 15px;">{{proximityDistance}} nm</span>
+                                    <table class="table table-sm table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Callsign</th>
+                                                <th scope="col">A/C</th>
+                                                <th scope="col">Departure</th>
+                                                <th scope="col">Arrival</th>
+                                                <th scope="col">Status</th>
+                                                <th scope="col">Speed</th>
+                                                <th scope="col">Altitude</th>
+                                                <th scope="col">Distance</th>
+                                                <th scope="col">To Go</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="pilot in proximityPilots | filter:distanceFilter | orderBy:'distance'" ng-class="{'text-magenta': pilot.callsign === callSign}">
+                                                <td>
+                                                    <img ng-src="./assets/logos/{{pilot.callsign.substring(0, 3)}}.png" 
+                                                         alt="{{pilot.callsign}}" 
+                                                         style="height: 25px; width: 25px; margin-right: 5px;"
+                                                         onerror="this.src='./assets/logos/default.png';">
+                                                    {{pilot.callsign}}
+                                                  </td>
+                                                <td>{{pilot.flight_plan.aircraft_short}}</td>
+                                                <td>{{pilot.flight_plan.departure}}</td>
+                                                <td>{{pilot.flight_plan.arrival}}</td>
+                                                <td><span class="badge {{pilot.status.class}}">{{pilot.status.status}}</span></td>
+                                                <td>{{pilot.groundspeed}} kts</td>
+                                                <td>{{pilot.altitude}} ft</td>
+                                                <td>{{pilot.distance | number:2}} nm</td>
+                                                <td>{{pilot.toGoDistance | number:0}} nm</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                                 <div ng-show="showVatTrackGroupTable">
                                     <h4>Group Flight</h4>
                                     <p>This table shows Vatsim flights that have the same departure and arrival as your flight plan.</p>
