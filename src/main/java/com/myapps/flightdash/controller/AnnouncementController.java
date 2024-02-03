@@ -127,6 +127,7 @@ private String getCurrentUtcDateTime() {
     String weatherDescription = null;
     Number celsiusTemp = null;
     String announcementVoice = null;
+    String announcementPersonality = null;
     Map<String, Object> response = new HashMap<>();
 
     if (announcementType.equals("landing") || announcementType.equals("safety")) {
@@ -135,6 +136,7 @@ private String getCurrentUtcDateTime() {
             for (Map<String, Object> crewMember : flightCrewArray) {
                 if ("Lead Flight Attendant".equals(crewMember.get("position"))) {
                     announcementVoice = (String) crewMember.get("voice");
+                    announcementPersonality = (String) crewMember.get("personality");
                     break; // Stop the loop once the lead flight attendant is found
                 }
             }
@@ -145,6 +147,7 @@ private String getCurrentUtcDateTime() {
             for (Map<String, Object> crewMember : flightCrewArray) {
                 if ("Captain".equals(crewMember.get("position"))) {
                     announcementVoice = (String) crewMember.get("voice");
+                    announcementPersonality = (String) crewMember.get("personality");
                     break; // Stop the loop once the Captain is found
                 }
             }
@@ -161,6 +164,7 @@ private String getCurrentUtcDateTime() {
             for (Map<String, Object> crewMember : flightCrewArray) {
                 if ("Gate Attendant".equals(crewMember.get("position"))) {
                     announcementVoice = (String) crewMember.get("voice");
+                    announcementPersonality = (String) crewMember.get("personality");
                     break; // Stop the loop once the Gate Attendant is found
                 }
             }
@@ -192,6 +196,8 @@ private String getCurrentUtcDateTime() {
         + airline 
         + ", on flight number: " 
         + flightNumber
+        +". Your personality is: "
+        + announcementPersonality
         + ". You are flying from " 
         + departureIcao 
         + " to "
@@ -202,7 +208,7 @@ private String getCurrentUtcDateTime() {
         + " degrees celsius. The date and time in UTC is " 
         + currentDateTime;
 
-        instruction = "Write a script for an after-landing announcement for the flight. When mentioning the flight number, only mention the number portion as individual digits, not the letters. Include all standard content in a typical airliner announcment, and also include brief information on on local attractions. If it is a holiday today or a holiday is upcoming, be sure to speak to this briefly. Always convert the temperature to fareinheit unless celsius is standard to the region. Also, provide the time in AM/PM format. Never say the icao codes directly, always say the actual city name.";
+        instruction = "In the style of a " + announcementPersonality + ", " + "Write a script for an after-landing announcement for the flight. When mentioning the flight number, only mention the number portion as individual digits, not the letters. Include all standard content in a typical airliner announcment, and also include brief information on on local attractions. If it is a holiday today or a holiday is upcoming, be sure to speak to this briefly. Always convert the temperature to fareinheit unless celsius is standard to the region. Also, provide the time in AM/PM format. Never say the icao codes directly, always say the actual city name.";
         }
         else if (announcementType.equals("pre taxi")) {
         systemRole = 
@@ -210,6 +216,8 @@ private String getCurrentUtcDateTime() {
         + airline 
         + ", on flight number: " 
         + flightNumber
+        +". Your personality is: "
+        + announcementPersonality
         + ". You are flying from " 
         + departureIcao 
         + " to "
@@ -234,7 +242,7 @@ private String getCurrentUtcDateTime() {
         + flightLevelString
         +" . Always read this in thousand feet. Example: 0320 is Thirty two thousand feet.";
 
-        instruction = "Write a script for your captain's announcement before a flight begins, welcoming the passengers and introducing the flight crew. When mentioning the flight number, only mention the number portion as individual digits, not the letters. Include all standard content in a typical preflight airliner announcment to passengers, and also mention the estimated time to arrive and expected weather conditions. Always convert the temperature to fareinheit unless celsius is standard to the region. Also, provide the time in AM/PM format and in the correct timezone for the destination, and be sure to account for correct daylight savings. Don't talk about the timezone or daylight savings though. The flight level should be said in feet. Never say the icao codes directly, always say the actual city name. Safety briefings to follow will be made by the flight attendants.";
+        instruction = "In the style of a " + announcementPersonality + ", " + "Write a script for your captain's announcement before a flight begins, welcoming the passengers and introducing the flight crew. When mentioning the flight number, only mention the number portion as individual digits, not the letters. Include all standard content in a typical preflight airliner announcment to passengers, and also mention the estimated time to arrive and expected weather conditions. Always convert the temperature to fareinheit unless celsius is standard to the region. Also, provide the time in AM/PM format and in the correct timezone for the destination, and be sure to account for correct daylight savings. Don't talk about the timezone or daylight savings though. The flight level should be said in feet. Never say the icao codes directly, always say the actual city name. Safety briefings to follow will be made by the flight attendants.";
         
         }
         else if (announcementType.equals("safety")) {
@@ -243,6 +251,8 @@ private String getCurrentUtcDateTime() {
         + airline 
         + ", on flight number: " 
         + flightNumber
+        +". Your personality is: "
+        + announcementPersonality
         + ". You are flying from " 
         + departureIcao 
         + " to "
@@ -252,7 +262,7 @@ private String getCurrentUtcDateTime() {
         + ". Your name is: " 
         + leadFaFirstName;
 
-        instruction = "Write a script for your safety breifing before the flight begins. Be sure to introduce yourself. Include all standard and important information that would be include in a modern airline safety announcement. When stating the flight number, just say the number portion in individual digits, not the letters.";
+        instruction = "In the style of a " + announcementPersonality + ", " + "Write a script for your safety breifing before the flight begins. Be sure to introduce yourself. Include all standard and important information that would be include in a modern airline safety announcement. When stating the flight number, just say the number portion in individual digits, not the letters.";
         }
         else if (announcementType.equals("cruise")) {
         systemRole = 
@@ -260,6 +270,8 @@ private String getCurrentUtcDateTime() {
         + airline 
         + ", on flight number: " 
         + flightNumber
+        +". Your personality is: "
+        + announcementPersonality
         + ". You are flying from " 
         + departureIcao 
         + " to "
@@ -277,7 +289,7 @@ private String getCurrentUtcDateTime() {
         + flightLevelString
          +" . Always read this in thousand feet. Example: 0320 is Thirty two thousand feet.";
 
-        instruction = "Write a script for a brief captain's announcement for reaching cruise altitude during the flight. When mentioning the flight number, only mention the number portion as individual digits, not the letters. Include all standard content in a typical cruise level airliner announcment to passengers, and also mention the estimated time to arrive and expected weather conditions. Always convert the temperature to fareinheit unless celsius is standard to the region. Also, provide the time in AM/PM format and in the correct timezone for the destination, and be sure to account for correct daylight savings. Don't talk about the timezone or daylight savings though. The flight level should be said in feet. Never say the icao codes directly, always say the actual city name. Mention that the flight attendants will be providing in flight services shortly.";
+        instruction = "In the style of a " + announcementPersonality + ", " + "Write a script for a brief captain's announcement for reaching cruise altitude during the flight. When mentioning the flight number, only mention the number portion as individual digits, not the letters. Include all standard content in a typical cruise level airliner announcment to passengers, and also mention the estimated time to arrive and expected weather conditions. Always convert the temperature to fareinheit unless celsius is standard to the region. Also, provide the time in AM/PM format and in the correct timezone for the destination, and be sure to account for correct daylight savings. Don't talk about the timezone or daylight savings though. The flight level should be said in feet. Never say the icao codes directly, always say the actual city name. Mention that the flight attendants will be providing in flight services shortly.";
         }
         else if (announcementType.equals("descent")) {
         systemRole = 
@@ -285,6 +297,8 @@ private String getCurrentUtcDateTime() {
         + airline 
         + ", on flight number: " 
         + flightNumber
+        +". Your personality is: "
+        + announcementPersonality
         + ". You are flying from " 
         + departureIcao 
         + " to "
@@ -297,7 +311,7 @@ private String getCurrentUtcDateTime() {
         + flightLevelString
          +" . Always read this in thousand feet. Example: 0320 is Thirty two thousand feet.";
 
-        instruction = "Write a script for a brief captain's announcement for beginning descent during the flight, which has just begun. When mentioning the flight number, only mention the number portion as individual digits, not the letters. Include all standard content in a typical descent airliner announcment to passengers, and also mention the estimated time to arrive and expected weather conditions. Always convert the temperature to fareinheit unless celsius is standard to the region. Also, provide the time in AM/PM format and in the correct timezone for the destination, and be sure to account for correct daylight savings. Don't talk about the timezone or daylight savings though. The flight level should be said in feet. Never say the icao codes directly, always say the actual city name.";
+        instruction = "In the style of a " + announcementPersonality + ", " + "Write a script for a brief captain's announcement for beginning descent during the flight, which has just begun. When mentioning the flight number, only mention the number portion as individual digits, not the letters. Include all standard content in a typical descent airliner announcment to passengers, and also mention the estimated time to arrive and expected weather conditions. Always convert the temperature to fareinheit unless celsius is standard to the region. Also, provide the time in AM/PM format and in the correct timezone for the destination, and be sure to account for correct daylight savings. Don't talk about the timezone or daylight savings though. The flight level should be said in feet. Never say the icao codes directly, always say the actual city name.";
         }
         else if (announcementType.equals("pre boarding")) {
         systemRole = 
@@ -307,6 +321,8 @@ private String getCurrentUtcDateTime() {
         + airline 
         + ", flight number: " 
         + flightNumber
+        +". Your personality is: "
+        + announcementPersonality
         + ". The flight departs from " 
         + departureIcao 
         + ", and is flying to "
@@ -319,7 +335,7 @@ private String getCurrentUtcDateTime() {
         + scheduledBoardingTime
         + ". Always convert from the timezone given in the departure and boarding times to the timezone of the departure location. ";
 
-        instruction = "Write a script for a brief, semi-casual, pre boarding announcement for passengers. This is the first announcement they are hearing. Start the announcement with a phrase like attention passengers for airline flight and number from departure to arrival. When mentioning the flight number, only mention airline name followed by the number portion as individual digits, not the letters. Be sure to introduce yourself. Include all standard content in a typical pre boarding airline announcment to passengers, and also mention the estimated time until boarding begins. Also, provide the time in AM/PM format, and be sure to account for correct daylight savings. Don't talk about the timezone or daylight savings though. Never say the icao codes directly, always say the actual city name. Keep the announcement short, and to the point. Don't use too many extra adjectives or other fluff words.";
+        instruction = "In the style of a " + announcementPersonality + ", " + "Write a script for a brief, semi-casual, pre boarding announcement for passengers. This is the first announcement they are hearing. Start the announcement with a phrase like attention passengers for airline flight and number from departure to arrival. When mentioning the flight number, only mention airline name followed by the number portion as individual digits, not the letters. Be sure to introduce yourself. Include all standard content in a typical pre boarding airline announcment to passengers, and also mention the estimated time until boarding begins. Also, provide the time in AM/PM format, and be sure to account for correct daylight savings. Don't talk about the timezone or daylight savings though. Never say the icao codes directly, always say the actual city name. Keep the announcement short, and to the point. Don't use too many extra adjectives or other fluff words.";
         }
         else if (announcementType.equals("boarding1")) {
         systemRole = 
@@ -327,6 +343,8 @@ private String getCurrentUtcDateTime() {
         + airline 
         + ", flight number: " 
         + flightNumber
+        +". Your personality is: "
+        + announcementPersonality
         + ". The flight departs from " 
         + departureIcao 
         + ", and is flying to "
@@ -339,7 +357,7 @@ private String getCurrentUtcDateTime() {
         + scheduledBoardingTime
         + ". Always convert from the timezone given in the departure and boarding times to the timezone of the departure location. ";
 
-        instruction = "Write a script for a very brief announcement that Passengers needing wheel chair assistance, families with small children and Group 1 passengers can begin boarding at this time. Add a quick bit about any airline specific memberships. Don't introduce yourself. When mentioning the flight number, only mention airline name followed by the number portion as individual digits, not the letters. Never say the icao codes directly, always say the actual city name. Keep the announcement short, and to the point. Don't use too many extra adjectives or other fluff words.";
+        instruction = "In the style of a " + announcementPersonality + ", " + "Write a script for a very brief announcement that Passengers needing wheel chair assistance, families with small children and Group 1 passengers can begin boarding at this time. Add a quick bit about any airline specific memberships. Don't introduce yourself. When mentioning the flight number, only mention airline name followed by the number portion as individual digits, not the letters. Never say the icao codes directly, always say the actual city name. Keep the announcement short, and to the point. Don't use too many extra adjectives or other fluff words.";
         }
         else if (announcementType.equals("boarding2")) {
         systemRole = 
@@ -347,6 +365,8 @@ private String getCurrentUtcDateTime() {
         + airline 
         + ", flight number: " 
         + flightNumber
+        +". Your personality is: "
+        + announcementPersonality
         + ". The flight departs from " 
         + departureIcao 
         + ", and is flying to "
@@ -359,7 +379,7 @@ private String getCurrentUtcDateTime() {
         + scheduledBoardingTime
         + ". Always convert from the timezone given in the departure and boarding times to the timezone of the departure location.";
 
-        instruction = "Write a script for a very brief announcement that Group 2 passengers can begin boarding at this time. Don't introduce yourself. When mentioning the flight number, only mention airline name followed by the number portion as individual digits, not the letters. Never say the icao codes directly, always say the actual city name. Keep the announcement short, and to the point. Don't use too many extra adjectives or other fluff words.";
+        instruction = "In the style of a " + announcementPersonality + ", " + "Write a script for a very brief announcement that Group 2 passengers can begin boarding at this time. Don't introduce yourself. When mentioning the flight number, only mention airline name followed by the number portion as individual digits, not the letters. Never say the icao codes directly, always say the actual city name. Keep the announcement short, and to the point. Don't use too many extra adjectives or other fluff words.";
         }
         else if (announcementType.equals("boarding3")) {
         systemRole = 
@@ -367,6 +387,8 @@ private String getCurrentUtcDateTime() {
         + airline 
         + ", flight number: " 
         + flightNumber
+        +". Your personality is: "
+        + announcementPersonality
         + ". The flight departs from " 
         + departureIcao 
         + ", and is flying to "
@@ -379,7 +401,7 @@ private String getCurrentUtcDateTime() {
         + scheduledBoardingTime
         + ". Always convert from the timezone given in the departure and boarding times to the timezone of the departure location.";
 
-        instruction = "Write a script for a very brief announcement that Group 3 passengers can begin boarding at this time. Don't introduce yourself. When mentioning the flight number, only mention airline name followed by the number portion as individual digits, not the letters. Never say the icao codes directly, always say the actual city name. Keep the announcement short, and to the point. Don't use too many extra adjectives or other fluff words.";
+        instruction = "In the style of a " + announcementPersonality + ", " + "Write a script for a very brief announcement that Group 3 passengers can begin boarding at this time. Don't introduce yourself. When mentioning the flight number, only mention airline name followed by the number portion as individual digits, not the letters. Never say the icao codes directly, always say the actual city name. Keep the announcement short, and to the point. Don't use too many extra adjectives or other fluff words.";
         }
         else if (announcementType.equals("boarding4")) {
         systemRole = 
@@ -387,6 +409,8 @@ private String getCurrentUtcDateTime() {
         + airline 
         + ", flight number: " 
         + flightNumber
+        +". Your personality is: "
+        + announcementPersonality
         + ". The flight departs from " 
         + departureIcao 
         + ", and is flying to "
@@ -399,7 +423,7 @@ private String getCurrentUtcDateTime() {
         + scheduledBoardingTime
         + ". Always convert from the timezone given in the departure and boarding times to the timezone of the departure location.";
 
-        instruction = "Write a script for a very brief announcement that Group 4 and any remaining passengers can begin boarding at this time. Don't introduce yourself. When mentioning the flight number, only mention airline name followed by the number portion as individual digits, not the letters. Never say the icao codes directly, always say the actual city name. Keep the announcement short, and to the point. Don't use too many extra adjectives or other fluff words.";
+        instruction = "In the style of a " + announcementPersonality + ", " + "Write a script for a very brief announcement that Group 4 and any remaining passengers can begin boarding at this time. Don't introduce yourself. When mentioning the flight number, only mention airline name followed by the number portion as individual digits, not the letters. Never say the icao codes directly, always say the actual city name. Keep the announcement short, and to the point. Don't use too many extra adjectives or other fluff words.";
         }
         else if (announcementType.equals("boarding5")) {
         systemRole = 
@@ -407,6 +431,8 @@ private String getCurrentUtcDateTime() {
         + airline 
         + ", flight number: " 
         + flightNumber
+        +". Your personality is: "
+        + announcementPersonality
         + ". The flight departs from " 
         + departureIcao 
         + ", and is flying to "
@@ -419,7 +445,7 @@ private String getCurrentUtcDateTime() {
         + scheduledBoardingTime
         + ". Always convert from the timezone given in the departure and boarding times to the timezone of the departure location.";
 
-        instruction = "Write a script for a very brief announcement for last call for passengers to board the flight, and the gates are about to close. Don't introduce yourself. When mentioning the flight number, only mention airline name followed by the number portion as individual digits, not the letters. Never say the icao codes directly, always say the actual city name. Keep the announcement short, and to the point. Don't use too many extra adjectives or other fluff words.";
+        instruction = "In the style of a " + announcementPersonality + ", " + "Write a script for a very brief announcement for last call for passengers to board the flight, and the gates are about to close. Don't introduce yourself. When mentioning the flight number, only mention airline name followed by the number portion as individual digits, not the letters. Never say the icao codes directly, always say the actual city name. Keep the announcement short, and to the point. Don't use too many extra adjectives or other fluff words.";
         }
         else if (announcementType.equals("boarding6")) {
         systemRole = 
@@ -427,6 +453,8 @@ private String getCurrentUtcDateTime() {
         + airline 
         + ", flight number: " 
         + flightNumber
+        +". Your personality is: "
+        + announcementPersonality
         + ". The flight departs from " 
         + departureIcao 
         + ", and is flying to "
@@ -439,7 +467,7 @@ private String getCurrentUtcDateTime() {
         + scheduledBoardingTime
         + ". Always convert from the timezone given in the departure and boarding times to the timezone of the departure location.";
 
-        instruction = "Write a script for a very brief announcement that the gate has now closed, and passengers that have missed their flight should visit the customer service deck. Don't introduce yourself. When mentioning the flight number, only mention airline name followed by the number portion as individual digits, not the letters. Never say the icao codes directly, always say the actual city name. Keep the announcement short, and to the point. Don't use too many extra adjectives or other fluff words.";
+        instruction = "In the style of a " + announcementPersonality + ", " + "Write a script for a very brief announcement that the gate has now closed, and passengers that have missed their flight should visit the customer service deck. Don't introduce yourself. When mentioning the flight number, only mention airline name followed by the number portion as individual digits, not the letters. Never say the icao codes directly, always say the actual city name. Keep the announcement short, and to the point. Don't use too many extra adjectives or other fluff words.";
         }
         
         // Define the body for the OpenAI chat completion request

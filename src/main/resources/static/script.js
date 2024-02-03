@@ -866,6 +866,7 @@ $scope.generateFlightCrew = function() {
         var voiceOptions = (position === 'Captain' && gender === 'male') ? ['onyx'] : 
                             (gender === 'male' ? ['echo', 'fable'] : ['alloy', 'nova', 'shimmer']);
         var voice = voiceOptions[Math.floor(Math.random() * voiceOptions.length)];
+        var personality = "Professional";
         
         // Create the crew member object
         var crewMember = {
@@ -873,7 +874,8 @@ $scope.generateFlightCrew = function() {
             lastName: lastName,
             position: position,
             gender: gender,
-            voice: voice
+            voice: voice,
+            personality: personality
         };
         
         // Add the crew member to the array

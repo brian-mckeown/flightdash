@@ -876,17 +876,49 @@
                                 </div>
                                 <div>
                                     <h4>Flight Crew</h4>
-                                    <table class="table table-sm">
+                                    <p>Sample the sounds of the different AI voices <a href="https://platform.openai.com/docs/guides/text-to-speech" target="_blank">here</a></p>
+                                    <table class="table table-striped table-sm">
                                         <thead>
                                             <tr>
                                                 <th scope="col">Position</th>
-                                                <th scope="col">Name</th>
+                                                <th scope="col">First Name</th>
+                                                <th scope="col">Last Name</th>
+                                                <th scope="col">OpenAI Voice</th>
+                                                <th scope="col">Personality</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr ng-repeat="crewMember in flightCrewArray">
-                                                <td>{{ crewMember.position }}</td>
-                                                <td>{{ crewMember.firstName }} {{ crewMember.lastName }}</td>
+                                                <td>{{crewMember.position}}</td>
+                                                <td><input type="text" class="form-control form-control-sm" ng-model="crewMember.firstName"></td>
+                                                <td><input type="text" class="form-control form-control-sm" ng-model="crewMember.lastName"></td>
+                                                <td>
+                                                    <div ng-show="['Captain', 'Lead Flight Attendant', 'Gate Attendant'].includes(crewMember.position)">
+                                                        <select class="form-select form-select-sm" ng-model="crewMember.voice">
+                                                            <option value="alloy">alloy</option>
+                                                            <option value="echo">echo</option>
+                                                            <option value="fable">fable</option>
+                                                            <option value="onyx">onyx</option>
+                                                            <option value="nova">nova</option>
+                                                            <option value="shimmer">shimmer</option>
+                                                        </select>
+                                                    </div>
+                                                    <div ng-hide="['Captain', 'Lead Flight Attendant', 'Gate Attendant'].includes(crewMember.position)">
+                                                        N/A
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div ng-show="['Captain', 'Lead Flight Attendant', 'Gate Attendant'].includes(crewMember.position)">
+                                                        <select class="form-select form-select-sm" ng-model="crewMember.personality">
+                                                            <option value="Professional">Professional</option>
+                                                            <option value="Comedian">Comedian</option>
+                                                            <option value="Introvert">Introvert</option>
+                                                        </select>
+                                                    </div>
+                                                    <div ng-hide="['Captain', 'Lead Flight Attendant', 'Gate Attendant'].includes(crewMember.position)">
+                                                        N/A
+                                                    </div>
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
