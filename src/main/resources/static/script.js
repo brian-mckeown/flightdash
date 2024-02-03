@@ -26,15 +26,30 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$
     $scope.announcementApiReport = '';
     $scope.announcementsReady = false;
 
-    //VatTrack Pilot Tracking data
+    // VatTrack Pilot Tracking data
     $scope.vatTrackBannerPilot = {};
+    $scope.groupPilots = []; 
+
     window.addEventListener('storage', function(event) {
+        // Check for changes in vatTrackBannerPilot
         if (event.key === 'vatTrackBannerPilot') {
             $scope.$apply(function() {
                 $scope.vatTrackBannerPilot = JSON.parse(event.newValue);
             });
         }
+
+        // Independently check for changes in similarFlightPlanPilots
+        if (event.key === 'similarFlightPlanPilots') {
+            $scope.$apply(function() {
+                $scope.groupPilots = JSON.parse(event.newValue) || [];
+            });
+        }
     });
+
+    //custom filter for group pilots to exclude current callsign
+    $scope.excludeCallsign = function(pilot) {
+        return pilot.callsign !== $scope.callSign;
+    };
 
     //Announcement Autopilot checkboxes
     $scope.autoPilotAnnouncementPreBoardingChecked = false;
@@ -807,6 +822,7 @@ $scope.flightCrewArray = [];
 $scope.showFlightStatBanner = false;
 $scope.showPassengersBanner = false;
 $scope.showVatTrackBanner = false;
+$scope.showVatTrackGroupTable = false;
 $scope.currentFlightStatus = 'Idle';
 $scope.finalArrivalStatus = '';
 $scope.scheduledBoardingDateTime = '';

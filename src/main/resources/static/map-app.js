@@ -186,20 +186,38 @@ angular.module('flightMapApp', ['sharedModule'])
                 if (matchingPilot) {
                     // Calculate toGoDistance
                     var arrivalIcao = matchingPilot.flight_plan ? matchingPilot.flight_plan.arrival : null;
+                    var departureIcao = matchingPilot.flight_plan ? matchingPilot.flight_plan.departure : null;
                     var toGoDistance = 0;
                     if (arrivalIcao && airportData[arrivalIcao]) {
                         var arrivalAirport = airportData[arrivalIcao];
                         toGoDistance = calculateDistance(matchingPilot.latitude, matchingPilot.longitude, arrivalAirport.lat, arrivalAirport.lon);
                     }
 
-    // Set status and toGoDistance
-    matchingPilot.status = vm.getVatsimFlightStatus(matchingPilot.flight_plan, matchingPilot.groundspeed, toGoDistance);
-    matchingPilot.toGoDistance = toGoDistance;
+                    // Set status and toGoDistance
+                    matchingPilot.status = vm.getVatsimFlightStatus(matchingPilot.flight_plan, matchingPilot.groundspeed, toGoDistance);
+                    matchingPilot.toGoDistance = toGoDistance;
 
-    // Update vatTrackBannerPilot in scope and shared service
-    $scope.vatTrackBannerPilot = matchingPilot;
-    SharedService.setVatTrackBannerPilot(matchingPilot); // Set object in shared service
-}
+                    // Update vatTrackBannerPilot in scope and shared service
+                    $scope.vatTrackBannerPilot = matchingPilot;
+                    SharedService.setVatTrackBannerPilot(matchingPilot); // Set object in shared service
+                
+                    // Find pilots with the same departure and arrival and set status and toGoDistance for each
+                    var similarFlightPlanPilots = response.data.pilots.filter(pilot => 
+                        pilot.flight_plan &&
+                        pilot.flight_plan.departure === departureIcao &&
+                        pilot.flight_plan.arrival === arrivalIcao
+                    ).map(pilot => {
+                        var pilotToGoDistance = calculateDistance(pilot.latitude, pilot.longitude, arrivalAirport.lat, arrivalAirport.lon);
+                        return {
+                            ...pilot,
+                            status: vm.getVatsimFlightStatus(pilot.flight_plan, pilot.groundspeed, pilotToGoDistance),
+                            toGoDistance: pilotToGoDistance
+                        };
+                    });
+
+                    // Set the array of similar flight plan pilots in the shared service
+                    SharedService.setSimilarFlightPlanPilots(similarFlightPlanPilots);
+                }
 
                 // Clear streamers list
                 vm.streamers = [];
