@@ -91,7 +91,7 @@ body, div, section {
     overflow-y: scroll;
 }
 .text-magenta {
-    color: magenta;
+    color: magenta !important;
 }
 .no-gutter > .col {
     padding-right: 5px;
@@ -387,4 +387,21 @@ div.bg-black {
 .custom-card-header:hover, .custom-card-header:focus {
     text-decoration: none; /* Remove underline on hover/focus */
     color: inherit; /* Maintain the same color on hover/focus */
+}
+
+.marquee {
+    width: 120px; /* Adjust as needed */
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.marquee .marquee-content {
+    display: inline-block;
+    padding-left: 100%; /* Give some starting space */
+    animation: marquee 20s linear infinite; /* Adjust time as needed */
+}
+
+@keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-100%); }
 }

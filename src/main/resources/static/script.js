@@ -1,12 +1,12 @@
 /**************************** */
 /*** ANGULAR JS SECTION BELOW */
 /**************************** */
-var app = angular.module('checklistApp', []);
+var app = angular.module('checklistApp', ['sharedModule']);
 
-app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$document', '$interval', function($scope, $sce, $timeout, $http, $document, $interval) {
+app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$document', '$interval', 'SharedService', function($scope, $sce, $timeout, $http, $document, $interval, SharedService) {
     
 
-    $scope.versionNumber = '1.5.3'; 
+    $scope.versionNumber = '1.6.0'; 
 
     $scope.state = 'Idle';
     $scope.messages = [];
@@ -25,6 +25,144 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$
     $scope.defaultChecklists = {};
     $scope.announcementApiReport = '';
     $scope.announcementsReady = false;
+
+    // VatTrack Pilot Tracking data
+    $scope.vatTrackBannerPilot = {};
+    $scope.groupPilots = [];
+    $scope.proximityPilots = [];
+
+    $scope.proximityDistances = [1, 2, 5, 10, 20, 50, 100, 200];
+    $scope.proximityDistance = $scope.proximityDistances[0];
+
+    $scope.setProximityDistance = function(distance) {
+        $scope.proximityDistance = distance;
+    };
+
+    window.addEventListener('storage', function(event) {
+        // Check for changes in vatTrackBannerPilot
+        if (event.key === 'vatTrackBannerPilot') {
+            $scope.$apply(function() {
+                $scope.vatTrackBannerPilot = JSON.parse(event.newValue);
+            });
+        }
+
+        // Independently check for changes in similarFlightPlanPilots
+        if (event.key === 'similarFlightPlanPilots') {
+            $scope.$apply(function() {
+                $scope.groupPilots = JSON.parse(event.newValue) || [];
+            });
+        }
+
+        // Independently check for changes in proximityPilots
+        if (event.key === 'proximityPilots') {
+            $scope.$apply(function() {
+                $scope.proximityPilots = JSON.parse(event.newValue) || [];
+            });
+        }
+    });
+
+    //custom filter for group pilots to exclude current callsign
+    $scope.excludeCallsign = function(pilot) {
+        return pilot.callsign !== $scope.callSign;
+    };
+
+    $scope.distanceFilter = function(pilot) {
+        return pilot.distance <= $scope.proximityDistance;
+    };
+
+    //Announcement Autopilot checkboxes
+    $scope.autoPilotAnnouncementPreBoardingChecked = false;
+    $scope.autoPilotAnnouncementBoardingChecked = false;
+    $scope.autoPilotAnnouncementSafetyChecked = false;
+    $scope.autoPilotAnnouncementLandingChecked = false;
+
+    $scope.autoPilotAnnouncementPreBoardingPlayed = false;
+    $scope.autoPilotAnnouncementBoardingPlayed = false;
+    $scope.autoPilotAnnouncementSafetyPlayed = false;
+    $scope.autoPilotAnnouncementLandingPlayed = false;
+
+    $scope.resetAutoPilotAnnouncements = function() {
+        $scope.autoPilotAnnouncementPreBoardingChecked = false;
+        $scope.autoPilotAnnouncementBoardingChecked = false;
+        $scope.autoPilotAnnouncementSafetyChecked = false;
+        $scope.autoPilotAnnouncementLandingChecked = false;
+
+        $scope.autoPilotAnnouncementPreBoardingPlayed = false;
+        $scope.autoPilotAnnouncementBoardingPlayed = false;
+        $scope.autoPilotAnnouncementSafetyPlayed = false;
+        $scope.autoPilotAnnouncementLandingPlayed = false;
+    };
+
+    //interval function to trigger autopilot announcements
+    $interval(function() {
+        //pre-boarding autopilot
+        if ($scope.autoPilotAnnouncementPreBoardingChecked && !$scope.autoPilotAnnouncementPreBoardingPlayed) {
+            var currentTime = new Date();
+            var scheduledBoardingTime = new Date($scope.scheduledBoardingDateTime); //date as string
+    
+            // Calculate the time difference in minutes
+            var timeDiff = (scheduledBoardingTime - currentTime) / 60000; // convert milliseconds to minutes
+    
+            if (timeDiff >= 9 && timeDiff <= 11) {
+                $scope.fetchAnnouncement('pre boarding');
+                $scope.autoPilotAnnouncementPreBoardingPlayed = true;
+            }
+        }
+        //boarding auto-pilot
+        if ($scope.autoPilotAnnouncementBoardingChecked && !$scope.autoPilotAnnouncementBoardingPlayed) {
+            var currentTime = new Date();
+            var scheduledBoardingTime = new Date($scope.scheduledBoardingDateTime);
+    
+            // Calculate the time difference in minutes
+            var timeDiff = (scheduledBoardingTime - currentTime) / 60000; // convert milliseconds to minutes
+    
+            if (timeDiff >= 0 && timeDiff <= 1) {
+                $scope.autoPilotAnnouncementBoardingPlayed = true;
+                $scope.fetchAnnouncement('boarding1');
+
+                $timeout(function() {
+                    $scope.fetchAnnouncement('boarding2');
+                }, 120000); // 2 minutes
+
+                $timeout(function() {
+                    $scope.fetchAnnouncement('boarding3');
+                }, 300000); // 5 minutes (2 + 3)
+
+                $timeout(function() {
+                    $scope.fetchAnnouncement('boarding4');
+                }, 480000); // 8 minutes (2 + 3 + 3)
+
+                $timeout(function() {
+                    $scope.fetchAnnouncement('boarding5');
+                }, 600000); // 10 minutes (2 + 3 + 3 + 2)
+
+                $timeout(function() {
+                    $scope.fetchAnnouncement('boarding6');
+                    noiseAudio.currentTime = 0; // Reset the audio to the start
+                }, 720000); // 12 minutes (2 + 3 + 3 + 2 + 2)
+                $scope.autoPilotAnnouncementBoardingPlayed = true;
+            }
+        }
+        //safety autopilot announcement
+        if ($scope.autoPilotAnnouncementSafetyChecked && !$scope.autoPilotAnnouncementSafetyPlayed) {
+        
+            if ($scope.vatTrackBannerPilot.status.status === "Left Gate") {
+                $scope.fetchAnnouncement('safety');
+                $scope.autoPilotAnnouncementSafetyPlayed = true;
+            }
+        }
+
+        //landed autopilot announcement
+        if ($scope.autoPilotAnnouncementLandingChecked && !$scope.autoPilotAnnouncementLandingPlayed) {
+        
+            if ($scope.vatTrackBannerPilot.status.status === "Landed") {
+                $scope.fetchAnnouncement('landing');
+                $scope.autoPilotAnnouncementLandingPlayed = true;
+            }
+        }
+    }, 10000); // 10000 milliseconds = 10 seconds
+
+
 
     $scope.announcementCheckboxes = [
         { id: 'policyAgreement', label: 'I have read and agree to the OpenAI Usage Policy.', checked: false },
@@ -690,7 +828,11 @@ $scope.clearConfigValues = function() {
 //** Flight Status Section */
 // Default values for the badges
 $scope.aircraftName = '';
-$scope.callSign = '';
+$scope.callSign = SharedService.getCallsign();
+// Watch for changes in callSign and update it in SharedService
+$scope.$watch('callSign', function(newVal) {
+    SharedService.setCallsign(newVal);
+});
 $scope.departureIcao = '';
 $scope.arrivalIcao = '';
 $scope.flightLevelString = '';
@@ -698,6 +840,8 @@ $scope.airline = '';
 $scope.flightCrewArray = [];
 $scope.showFlightStatBanner = false;
 $scope.showPassengersBanner = false;
+$scope.showVatTrackBanner = false;
+$scope.showVatTrackGroupTable = false;
 $scope.currentFlightStatus = 'Idle';
 $scope.finalArrivalStatus = '';
 $scope.scheduledBoardingDateTime = '';
@@ -722,6 +866,7 @@ $scope.generateFlightCrew = function() {
         var voiceOptions = (position === 'Captain' && gender === 'male') ? ['onyx'] : 
                             (gender === 'male' ? ['echo', 'fable'] : ['alloy', 'nova', 'shimmer']);
         var voice = voiceOptions[Math.floor(Math.random() * voiceOptions.length)];
+        var personality = "Professional";
         
         // Create the crew member object
         var crewMember = {
@@ -729,7 +874,8 @@ $scope.generateFlightCrew = function() {
             lastName: lastName,
             position: position,
             gender: gender,
-            voice: voice
+            voice: voice,
+            personality: personality
         };
         
         // Add the crew member to the array

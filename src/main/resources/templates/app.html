@@ -20,7 +20,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css" rel="stylesheet">
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
@@ -34,11 +33,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
     <!-- Custom files-->
     <link th:href="@{/styles.css}" rel="stylesheet">
-
 </head>
 
 <body ng-app="checklistApp" ng-controller="ChecklistController">
-
     <div id="overlay" class=""></div>
     <!-- Warning message -->
     <div id="warning-message" class="alert alert-warning alert-dismissible fade show">
@@ -46,7 +43,6 @@
         of at least 1200 pixels. Please try another device to use FlightDash.io.
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
-
     <!-- Initial Agreement-->
     <div class="toast align-items-center bg-primary border-0 position-fixed"
         style="top: 50%; left: 50%; transform: translate(-50%, -50%);" role="alert" aria-live="assertive"
@@ -62,28 +58,43 @@
             <button type="button" class="btn btn-white btn-lg fw-bold" data-bs-dismiss="toast">Agree</button>
         </div>
     </div>
-
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div class="container-fluid">
-
             <!-- Branding Text -->
             <a class="navbar-brand" href="./">
                 <i class="fas fa-plane"></i> FlightDash.io
             </a>
             <div ng-show="showFlightStatBanner" class="text-white d-flex align-items-center ms-2">
                 <p class="mb-0">
-                    {{callSign}} {{departureIcao}}->{{arrivalIcao}}
-                    <a ng-show="currentFlightStatus == 'Idle'" class="text-white text-decoration-none"> | Boarding in:
+                    <span class="text-info">{{callSign}}</span> {{departureIcao}}->{{arrivalIcao}} <a ng-show="currentFlightStatus == 'Idle' && showVatTrackBanner == false" class="text-white text-decoration-none"> | Boarding in:
                         <span id="boardingCountdown">{{boardingHours}}h {{boardingMinutes}}m {{boardingSeconds}}s</span>
-                        <span class="badge"
-                            ng-class="{'bg-success': boardingStatus == 'ON TIME', 'bg-warning': boardingStatus == 'DELAYED'}">{{
-                            boardingStatus }}</span> | <span ng-show="showPassengersBanner">Checked In: <i
-                                class="fa-solid fa-user"></i> {{passengersCheckedIn.length}}/{{numberOfPassengers}} <i
-                                class="fa-solid fa-suitcase"></i> {{bagsCheckedIn.length}}</span>
+                        <span class="badge" ng-class="{'bg-success': boardingStatus == 'ON TIME', 'bg-warning': boardingStatus == 'DELAYED'}">{{boardingStatus }}</span> | <span ng-show="showPassengersBanner">Checked In: <i class="fa-solid fa-user"></i> {{passengersCheckedIn.length}}/{{numberOfPassengers}} <i class="fa-solid fa-suitcase"></i> {{bagsCheckedIn.length}}</span>
                     </a>
-                    <a ng-show="currentFlightStatus == 'Boarding'" class="text-white text-decoration-none"> | <span
-                            class="badge bg-info">BOARDING</span> | Departing in: <span
-                            id="departureCountdown">{{departureHours}}h {{departureMinutes}}m
+                    <!--VatTrack Banner-->
+                    <a ng-show="showVatTrackBanner && !showVatTrackGroupBanner" class="text-white text-decoration-none"> |
+                        <span class="badge" ng-class="vatTrackBannerPilot.status.class">{{
+                            vatTrackBannerPilot.status.status }}</span> |
+                            <span class="badge bg-dark text-white">A/C:
+                                {{vatTrackBannerPilot.flight_plan.aircraft_short}}</span>
+                            <span class="badge bg-dark text-white">Speed: {{vatTrackBannerPilot.groundspeed}} kts</span>
+                            <span class="badge bg-dark text-white">Altitude: {{vatTrackBannerPilot.altitude}} ft</span>
+                            <span class="badge bg-dark text-white">To Go: {{vatTrackBannerPilot.toGoDistance |
+                                number:0}} nm</span>
+                            <div class="badge bg-dark text-white marquee">
+                                <div class="marquee-content">
+                                    <span>
+                                        Sched Boarding: {{ scheduledBoardingDateTime | date:'HH:mm' }}z |
+                                        Sched Departure: {{ scheduledDepartureDateTime | date:'HH:mm' }}z |
+                                        Est Landing: {{ estimateArrivalDateTime | date:'HH:mm' }}z |
+                                        Est Gate Arrival: {{ estimateGateArrivalDateTime | date:'HH:mm' }}z
+                                    </span>
+                                </div>
+                            </div>
+                    </a>
+
+                    <a ng-show="currentFlightStatus == 'Boarding' && !showVatTrackBanner"
+                        class="text-white text-decoration-none"> | <span class="badge bg-info">BOARDING</span> |
+                        Departing in: <span id="departureCountdown">{{departureHours}}h {{departureMinutes}}m
                             {{departureSeconds}}s</span>
                         <span class="badge"
                             ng-class="{'bg-success': departureStatus == 'ON TIME', 'bg-warning': departureStatus == 'DELAYED'}">{{
@@ -91,22 +102,24 @@
                                 class="fa-solid fa-user"></i> {{passengersSeated.length}}/{{numberOfPassengers}} <i
                                 class="fa-solid fa-suitcase"></i> {{bagsLoaded.length}}</span>
                     </a>
-                    <a ng-show="currentFlightStatus == 'Departed'" class="text-white text-decoration-none"> | <span
-                            class="badge bg-info">DEPARTED</span> | Landing in: <span
-                            id="landingCountdown">{{landingHours}}h {{landingMinutes}}m {{landingSeconds}}s</span>
+                    <a ng-show="currentFlightStatus == 'Departed' && !showVatTrackBanner"
+                        class="text-white text-decoration-none"> | <span class="badge bg-info">DEPARTED</span> | Landing
+                        in: <span id="landingCountdown">{{landingHours}}h {{landingMinutes}}m {{landingSeconds}}s</span>
                         <span class="badge"
                             ng-class="{'bg-success': landingStatus == 'ON TIME', 'bg-warning': landingStatus == 'DELAYED'}">{{
                             landingStatus }}</span>
                     </a>
-                    <a ng-show="currentFlightStatus == 'Landed'" class="text-white text-decoration-none"> | <span
-                            class="badge bg-success">LANDED</span> | Arriving at Gate in: <span
-                            id="arrivalCountdown">{{arrivalHours}}h {{arrivalMinutes}}m {{arrivalSeconds}}s</span>
+                    <a ng-show="currentFlightStatus == 'Landed' && !showVatTrackBanner"
+                        class="text-white text-decoration-none"> | <span class="badge bg-success">LANDED</span> |
+                        Arriving at Gate in: <span id="arrivalCountdown">{{arrivalHours}}h {{arrivalMinutes}}m
+                            {{arrivalSeconds}}s</span>
                         <span class="badge"
                             ng-class="{'bg-success': arrivalStatus == 'ON TIME', 'bg-warning': arrivalStatus == 'DELAYED'}">{{
                             arrivalStatus }}</span>
                     </a>
-                    <a ng-show="currentFlightStatus == 'Arrived'" class="text-white text-decoration-none"> | <span
-                            class="badge bg-success">ARRIVED AT GATE</span> | {{
+                    <a ng-show="currentFlightStatus == 'Arrived' && !showVatTrackBanner"
+                        class="text-white text-decoration-none"> | <span class="badge bg-success">ARRIVED AT GATE</span>
+                        | {{
                         getDifference(estimateGateArrivalDateTime, actualGateArrivalDateTime) }}
                         <span class="badge"
                             ng-class="{'bg-success': finalArrivalStatus == 'ON TIME', 'bg-warning': finalArrivalStatus == 'DELAYED'}">{{
@@ -116,13 +129,11 @@
                     </a>
                 </p>
             </div>
-
             <!-- Toggler for mobile -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
                 aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
             <!-- Navbar content -->
             <div class="collapse navbar-collapse" id="navbarContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
@@ -257,19 +268,15 @@
                 </ul>
             </div>
         </div>
-
-
         <div class="container mt-4 pt-5 main-content-container">
             <div class="row mb-5 clearfix">
                 <!-- Panel of Buttons -->
                 <div class="col-md-10">
-
                     <!-- Vat-Track Tab -->
                     <div ng-show="activeTab === 'vat-track'">
                         <iframe src="../vat-track" frameborder="0" scrolling="no" seamless="seamless"
                             style="display:block; width:100%; height:85vh;"></iframe>
                     </div>
-
                     <!-- Checklists Tab -->
                     <div ng-show="activeTab === 'checklists'">
                         <div class="row">
@@ -286,7 +293,6 @@
                                     <input type="text" class="form-control mt-3" ng-model="chatMessage"
                                         ng-keypress="sendMessage($event)" id="chat-message"
                                         placeholder="Type your message...">
-
                                     <div class="d-flex mt-2 justify-content-start align-items-center">
                                         <button class="btn btn-primary" ng-click="sendMessage()"
                                             id="send-button">Send</button>
@@ -307,7 +313,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <!-- Checklist Column -->
                             <div class="col-md-8">
                                 <div class="row no-gutter">
@@ -324,8 +329,6 @@
                             </div>
                         </div>
                     </div>
-
-
                     <!-- Airports Tab -->
                     <div ng-show="activeTab === 'airports'">
                         <!-- Content for Airports -->
@@ -348,7 +351,6 @@
                         <div class="container mt-5" ng-show="airportRequested">
                             <!-- Header for the airport name -->
                             <h3 class="mb-4">{{airportInfo.name}}</h3>
-
                             <!-- Form with airport details -->
                             <div class="container mb-5">
                                 <div class="row mb-3">
@@ -373,7 +375,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <!-- Weather section -->
                             <div class="container mt-4">
                                 <div class="alert alert-secondary small-alert" role="alert" data-bs-toggle="collapse"
@@ -394,7 +395,6 @@
                                             <p class="small">{{airportInfo.metarSource}}</p>
                                         </div>
                                     </div>
-
                                     <div class="row mb-2">
                                         <div class="col-md-3">
                                             <label class="fw-bold">UTC DateTime:</label>
@@ -413,7 +413,6 @@
                                             <p class="small">{{metarVisibility}}</p>
                                         </div>
                                     </div>
-
                                     <div class="row mb-2">
                                         <div class="col-md-3">
                                             <label class="fw-bold">Weather:</label>
@@ -440,7 +439,6 @@
                                             <p class="small">{{metarAltimeter}}</p>
                                         </div>
                                     </div>
-
                                     <div class="row">
                                         <div class="col-md-12">
                                             <label class="fw-bold">Remarks:</label>
@@ -449,7 +447,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <!-- Frequencies section -->
                             <div class="container mt-4">
                                 <div class="alert alert-secondary small-alert" role="alert" data-bs-toggle="collapse"
@@ -460,7 +457,6 @@
                                     </h4>
                                 </div>
                                 <div class="collapse" id="frequenciesSection">
-
                                     <form>
                                         <div class="row mb-2" ng-repeat="freq in airportData.freqs">
                                             <div class="col-md-3">
@@ -474,7 +470,6 @@
                                     </form>
                                 </div>
                             </div>
-
                             <!-- Runways section -->
                             <div class="container mt-4">
                                 <div class="alert alert-secondary small-alert" role="alert" data-bs-toggle="collapse"
@@ -483,7 +478,6 @@
                                         Runways <i class="fas fa-caret-right" aria-hidden="true" id="runwaysCaret"></i>
                                     </h4>
                                 </div>
-
                                 <div class="collapse" id="runwaysSection">
                                     <div class="row">
                                         <!-- Iterate for each flattened runway -->
@@ -498,13 +492,15 @@
                                                     <p><strong>Length:</strong> {{runway.length_ft}} ft</p>
                                                     <p><strong>Width:</strong> {{runway.width_ft}} ft</p>
                                                     <p><strong>Headwind:</strong> {{getHeadwind(runway.heading_degT,
-                                                        windSpeed, windDirection)}} kts</p>
+                                                        windSpeed, windDirection)}} kts
+                                                    </p>
                                                     <p><strong>Crosswind:</strong> {{getCrosswind(runway.heading_degT,
                                                         windSpeed, windDirection)}} kts
                                                         ({{getCrosswindDirection(runway.heading_degT, windDirection)}})
                                                     </p>
                                                     <p ng-if="runway.ils"><strong>ILS:</strong> {{runway.ils.freq}} /
-                                                        {{runway.ils.course}}°</p>
+                                                        {{runway.ils.course}}°
+                                                    </p>
                                                     <p><strong>Surface:</strong> {{runway.surface}}</p>
                                                     <p>
                                                         <strong>Lighted:</strong>
@@ -517,7 +513,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <!-- Vatsim section -->
                             <div class="container mt-4">
                                 <div class="alert alert-secondary small-alert" role="alert" data-bs-toggle="collapse"
@@ -526,7 +521,6 @@
                                         Vatsim <i class="fas fa-caret-right" aria-hidden="true" id="vatsimCaret"></i>
                                     </h4>
                                 </div>
-
                                 <div class="collapse" id="vatsimSection">
                                     <div class="row">
                                         <div class="mt-3">
@@ -552,14 +546,14 @@
                                                             <ul>
                                                                 <li ng-repeat="(key, value) in controller"
                                                                     ng-if="key !== 'isCollapsed'">
-                                                                    <strong>{{key}}:</strong> {{value}}</li>
+                                                                    <strong>{{key}}:</strong> {{value}}
+                                                                </li>
                                                             </ul>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-
                                         <!-- ATIS Column -->
                                         <div class="col-md-3">
                                             <h6>ATIS</h6>
@@ -577,14 +571,14 @@
                                                             <ul>
                                                                 <li ng-repeat="(key, value) in atis"
                                                                     ng-if="key !== 'isCollapsed'">
-                                                                    <strong>{{key}}:</strong> {{value}}</li>
+                                                                    <strong>{{key}}:</strong> {{value}}
+                                                                </li>
                                                             </ul>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-
                                         <!-- Departures Column -->
                                         <div class="col-md-3">
                                             <h6>Departures</h6>
@@ -608,7 +602,8 @@
                                                                     <ul ng-if="key === 'flight_plan'">
                                                                         <li ng-repeat="(fpKey, fpValue) in value"
                                                                             ng-if="fpKey !== 'isCollapsed'">
-                                                                            <strong>{{fpKey}}:</strong> {{fpValue}}</li>
+                                                                            <strong>{{fpKey}}:</strong> {{fpValue}}
+                                                                        </li>
                                                                     </ul>
                                                                 </li>
                                                             </ul>
@@ -617,7 +612,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                         <!-- Arrivals Column -->
                                         <div class="col-md-3">
                                             <h6>Arrivals</h6>
@@ -641,7 +635,8 @@
                                                                     <ul ng-if="key === 'flight_plan'">
                                                                         <li ng-repeat="(fpKey, fpValue) in value"
                                                                             ng-if="fpKey !== 'isCollapsed'">
-                                                                            <strong>{{fpKey}}:</strong> {{fpValue}}</li>
+                                                                            <strong>{{fpKey}}:</strong> {{fpValue}}
+                                                                        </li>
                                                                     </ul>
                                                                 </li>
                                                             </ul>
@@ -650,22 +645,11 @@
                                                 </div>
                                             </div>
                                         </div>
-
-
                                     </div>
-
-
                                 </div>
-
                             </div>
-
-
                         </div>
-
                     </div>
-
-
-
                     <!-- Flight Plan Tab -->
                     <div ng-show="activeTab === 'flightPlan'">
                         <h3>Flight Plan</h3>
@@ -676,9 +660,6 @@
                         <hr>
                         <div class="fp-scrollable-content" ng-bind-html="flightPlanTrustedHtml"></div>
                     </div>
-
-
-
                     <!-- Charts Tab -->
                     <div ng-show="activeTab === 'charts'">
                         <div class="container mt-4">
@@ -725,7 +706,6 @@
                                             ng-click="selectTab('sid')">SID</a>
                                     </li>
                                 </ul>
-
                                 <!-- Chart Tab Content -->
                                 <div id="tabContent" class="d-flex">
                                     <!-- Navigation Bar with id="chartOptions" -->
@@ -746,7 +726,6 @@
                                                 </li>
                                             </ul>
                                         </div>
-
                                         <!-- APP Tab -->
                                         <div ng-show="selectedTab === 'app'">
                                             <ul class="nav flex-column bg-dark">
@@ -763,7 +742,6 @@
                                                 </li>
                                             </ul>
                                         </div>
-
                                         <!-- TAXI Tab -->
                                         <div ng-show="selectedTab === 'taxi'">
                                             <ul class="nav flex-column bg-dark">
@@ -780,7 +758,6 @@
                                                 </li>
                                             </ul>
                                         </div>
-
                                         <!-- SID Tab -->
                                         <div ng-show="selectedTab === 'sid'">
                                             <ul class="nav flex-column bg-dark">
@@ -798,24 +775,19 @@
                                             </ul>
                                         </div>
                                     </div>
-
                                     <!-- PDF Viewer -->
                                     <div class="flex-grow-1 pdf-viewer-container">
                                         <embed ng-src="{{selectedPdfUrl}}" type="application/pdf" width="100%"
-                                            height="600px" ng-show="selectedPdfUrl"></embed>
+                                            height="600px" ng-show="selectedPdfUrl">
+                                        </embed>
                                     </div>
                                 </div>
-
-
-
                             </div>
                         </div>
                     </div>
-
                     <!-- Flight Stats Tab -->
                     <div
                         ng-show="activeTab === 'flightStats' || activeTab === 'dataEntry' || activeTab === 'controller' || activeTab === 'report'">
-
                         <!-- Data Entry Sub Tab-->
                         <div class="container mt-4" ng-show="activeTab === 'flightStats' || activeTab === 'dataEntry'">
                             <h3>Flight Data</h3>
@@ -834,7 +806,6 @@
                                         <input type="text" class="form-control" id="callSignInput"
                                             placeholder="Enter Call Sign" ng-model="callSign">
                                     </div>
-
                                     <!-- Departure ICAO Input -->
                                     <div class="col-md-3">
                                         <label for="departureICAOInput" class="form-label">Departure ICAO</label>
@@ -842,7 +813,6 @@
                                             oninput="this.value = this.value.toUpperCase()"
                                             placeholder="Enter Departure ICAO" ng-model="departureIcao">
                                     </div>
-
                                     <!-- Arrival ICAO Input -->
                                     <div class="col-md-3">
                                         <label for="arrivalICAOInput" class="form-label">Arrival ICAO</label>
@@ -851,7 +821,6 @@
                                             placeholder="Enter Arrival ICAO" ng-model="arrivalIcao">
                                     </div>
                                 </div>
-
                                 <!-- Row 2 -->
                                 <div class="row mb-3">
                                     <!-- Scheduled Boarding Input -->
@@ -860,7 +829,6 @@
                                         <input type="datetime-local" class="form-control" id="boardingDateTime"
                                             ng-model="scheduledBoardingDateTime">
                                     </div>
-
                                     <!-- Scheduled Departure Input -->
                                     <div class="col-md-6">
                                         <label for="departureDateTimeInput" class="form-label">Scheduled
@@ -869,7 +837,6 @@
                                             ng-model="scheduledDepartureDateTime">
                                     </div>
                                 </div>
-
                                 <!-- Row 3 -->
                                 <div class="row mb-3">
                                     <!-- Estimated Arrival Input -->
@@ -878,7 +845,6 @@
                                         <input type="datetime-local" class="form-control" id="arrivalDateTimeInput"
                                             ng-model="estimateArrivalDateTime">
                                     </div>
-
                                     <!-- Estimated Gate Arrival Input -->
                                     <div class="col-md-6">
                                         <label for="gateArrivalDateTimeInput" class="form-label">Estimated Gate
@@ -887,7 +853,6 @@
                                             ng-model="estimateGateArrivalDateTime">
                                     </div>
                                 </div>
-
                                 <!-- Row 4 -->
                                 <div class="row mb-3">
                                     <!-- Passengers Input -->
@@ -896,14 +861,12 @@
                                         <input type="number" class="form-control" id="numberOfPassengers"
                                             ng-model="numberOfPassengers">
                                     </div>
-
                                     <!-- Airline -->
                                     <div class="col-md-4">
                                         <label for="airlineInput" class="form-label">Airline</label>
                                         <input type="text" class="form-control" id="airlienInput"
                                             placeholder="e.g. American Airlines" ng-model="airline">
                                     </div>
-
                                     <!-- Generate Flight Crew -->
                                     <div class="col-md-4">
                                         <label for="generateFlightCrew" class="form-label">Generate Flight Crew</label>
@@ -911,28 +874,57 @@
                                             ng-click="generateFlightCrew()" value="Generate Flight Crew">
                                     </div>
                                 </div>
-
                                 <div>
                                     <h4>Flight Crew</h4>
-                                    <table class="table table-sm">
+                                    <p>Sample the sounds of the different AI voices <a href="https://platform.openai.com/docs/guides/text-to-speech" target="_blank">here</a></p>
+                                    <table class="table table-striped table-sm">
                                         <thead>
                                             <tr>
                                                 <th scope="col">Position</th>
-                                                <th scope="col">Name</th>
+                                                <th scope="col">First Name</th>
+                                                <th scope="col">Last Name</th>
+                                                <th scope="col">OpenAI Voice</th>
+                                                <th scope="col">Personality</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr ng-repeat="crewMember in flightCrewArray">
-                                                <td>{{ crewMember.position }}</td>
-                                                <td>{{ crewMember.firstName }} {{ crewMember.lastName }}</td>
+                                                <td>{{crewMember.position}}</td>
+                                                <td><input type="text" class="form-control form-control-sm" ng-model="crewMember.firstName"></td>
+                                                <td><input type="text" class="form-control form-control-sm" ng-model="crewMember.lastName"></td>
+                                                <td>
+                                                    <div ng-show="['Captain', 'Lead Flight Attendant', 'Gate Attendant'].includes(crewMember.position)">
+                                                        <select class="form-select form-select-sm" ng-model="crewMember.voice">
+                                                            <option value="alloy">alloy</option>
+                                                            <option value="echo">echo</option>
+                                                            <option value="fable">fable</option>
+                                                            <option value="onyx">onyx</option>
+                                                            <option value="nova">nova</option>
+                                                            <option value="shimmer">shimmer</option>
+                                                        </select>
+                                                    </div>
+                                                    <div ng-hide="['Captain', 'Lead Flight Attendant', 'Gate Attendant'].includes(crewMember.position)">
+                                                        N/A
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div ng-show="['Captain', 'Lead Flight Attendant', 'Gate Attendant'].includes(crewMember.position)">
+                                                        <select class="form-select form-select-sm" ng-model="crewMember.personality">
+                                                            <option value="Professional">Professional</option>
+                                                            <option value="Comedian">Comedian</option>
+                                                            <option value="Introvert">Introvert</option>
+                                                        </select>
+                                                    </div>
+                                                    <div ng-hide="['Captain', 'Lead Flight Attendant', 'Gate Attendant'].includes(crewMember.position)">
+                                                        N/A
+                                                    </div>
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
                             </form>
-
                         </div>
-
                         <!-- Controller SubTab -->
                         <div ng-show="activeTab === 'controller'">
                             <div class="container mt-4">
@@ -1005,9 +997,112 @@
                                         Show Passenger Stats in Banner
                                     </label>
                                 </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="vatTrackBannerCheckbox"
+                                        ng-model="showVatTrackBanner">
+                                    <label class="form-check-label" for="vatTrackBannerCheckbox">
+                                        Use Vat Track Stats in Banner (Auto-updating status)
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="vatTrackGroupTableCheckbox"
+                                        ng-model="showVatTrackGroupTable">
+                                    <label class="form-check-label" for="vatTrackGroupTableCheckbox">
+                                        Show Vatsim Group Flight Members Table
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="vatTrackProximityTableCheckbox"
+                                        ng-model="showVatTrackProximityTable">
+                                    <label class="form-check-label" for="vatTrackProximityTableCheckbox">
+                                        Show Vatsim Proximity Table
+                                    </label>
+                                </div>
+                                <div ng-show="showVatTrackProximityTable">
+                                    <h4>Proximity</h4>
+                                    <p>This table shows Vatsim aircraft within a selected distance from your current location.</p>
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Distance (nm)
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <li ng-repeat="distance in proximityDistances"><a class="dropdown-item" href="#" ng-click="setProximityDistance(distance)">{{distance}}</a></li>
+                                        </ul>
+                                    </div>
+                                    <span style="margin-left: 15px;">{{proximityDistance}} nm</span>
+                                    <table class="table table-sm table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Callsign</th>
+                                                <th scope="col">A/C</th>
+                                                <th scope="col">Departure</th>
+                                                <th scope="col">Arrival</th>
+                                                <th scope="col">Status</th>
+                                                <th scope="col">Speed</th>
+                                                <th scope="col">Altitude</th>
+                                                <th scope="col">Distance</th>
+                                                <th scope="col">To Go</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="pilot in proximityPilots | filter:distanceFilter | orderBy:'distance'" ng-class="{'text-magenta': pilot.callsign === callSign}">
+                                                <td>
+                                                    <img ng-src="./assets/logos/{{pilot.callsign.substring(0, 3)}}.png" 
+                                                         alt="{{pilot.callsign}}" 
+                                                         style="height: 25px; width: 25px; margin-right: 5px;"
+                                                         onerror="this.src='./assets/logos/default.png';">
+                                                    {{pilot.callsign}}
+                                                  </td>
+                                                <td>{{pilot.flight_plan.aircraft_short}}</td>
+                                                <td>{{pilot.flight_plan.departure}}</td>
+                                                <td>{{pilot.flight_plan.arrival}}</td>
+                                                <td><span class="badge {{pilot.status.class}}">{{pilot.status.status}}</span></td>
+                                                <td>{{pilot.groundspeed}} kts</td>
+                                                <td>{{pilot.altitude}} ft</td>
+                                                <td>{{pilot.distance | number:2}} nm</td>
+                                                <td>{{pilot.toGoDistance | number:0}} nm</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div ng-show="showVatTrackGroupTable">
+                                    <h4>Group Flight</h4>
+                                    <p>This table shows Vatsim flights that have the same departure and arrival as your flight plan.</p>
+                                        <table class="table table-sm table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">Callsign</th>
+                                                    <th scope="col">A/C</th>
+                                                    <th scope="col">Departure</th>
+                                                    <th scope="col">Arrival</th>
+                                                    <th scope="col">Status</th>
+                                                    <th scope="col">Speed</th>
+                                                    <th scope="col">Altitude</th>
+                                                    <th scope="col">To Go</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="pilot in groupPilots | orderBy:'toGoDistance':false" ng-class="{'text-magenta': pilot.callsign === callSign}">
+                                                    <td>
+                                                        <img ng-src="./assets/logos/{{pilot.callsign.substring(0, 3)}}.png" 
+                                                             alt="{{pilot.callsign}}" 
+                                                             style="height: 25px; width: 25px; margin-right: 5px;"
+                                                             onerror="this.src='./assets/logos/default.png';">
+                                                        {{pilot.callsign}}
+                                                      </td>
+                                                    <td>{{pilot.flight_plan.aircraft_short}}</td>
+                                                    <td>{{pilot.flight_plan.departure}}</td>
+                                                    <td>{{pilot.flight_plan.arrival}}</td>
+                                                    <td><span class="badge {{pilot.status.class}}">{{pilot.status.status}}</span></td>
+                                                    <td>{{pilot.groundspeed}} kts</td>
+                                                    <td>{{pilot.altitude}} ft</td>
+                                                    <td>{{pilot.toGoDistance | number:0}} nm</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                </div>
                             </div>
                         </div>
-
                         <!-- Report SubTab -->
                         <div ng-show="activeTab === 'report'">
                             <div class="container mt-4">
@@ -1031,7 +1126,6 @@
                                             </p>
                                         </div>
                                     </div>
-
                                     <!-- Row for Departure Time -->
                                     <div class="row mb-3">
                                         <div class="col-md-4">
@@ -1050,7 +1144,6 @@
                                             </p>
                                         </div>
                                     </div>
-
                                     <!-- Row for Arrival Time -->
                                     <div class="row mb-3">
                                         <div class="col-md-4">
@@ -1065,10 +1158,10 @@
                                             <label class="form-label fw-bold">Difference</label>
                                             <p
                                                 ng-style="getDifferenceStyle(estimateArrivalDateTime, actualArrivalDateTime)">
-                                                {{ getDifference(estimateArrivalDateTime, actualArrivalDateTime) }}</p>
+                                                {{ getDifference(estimateArrivalDateTime, actualArrivalDateTime) }}
+                                            </p>
                                         </div>
                                     </div>
-
                                     <!-- Row for Gate Arrival Time -->
                                     <div class="row mb-3">
                                         <div class="col-md-4">
@@ -1084,15 +1177,14 @@
                                             <p
                                                 ng-style="getDifferenceStyle(estimateGateArrivalDateTime, actualGateArrivalDateTime)">
                                                 {{ getDifference(estimateGateArrivalDateTime, actualGateArrivalDateTime)
-                                                }}</p>
+                                                }}
+                                            </p>
                                         </div>
                                     </div>
-
                                 </form>
                             </div>
                         </div>
                     </div>
-
                     <!-- Passengers Tab -->
                     <div ng-show="activeTab === 'passengers'">
                         <div class="container mt-4">
@@ -1119,8 +1211,6 @@ Baggage Claim: {{ bagsBaggageClaim.length }}
 </pre>
                                     </div>
                                 </div>
-
-
                                 <table class="table table-sm table-bordered table-dark text-nowrap fs-6">
                                     <thead>
                                         <tr>
@@ -1138,12 +1228,12 @@ Baggage Claim: {{ bagsBaggageClaim.length }}
                                             <td>{{ passenger.name }}</td>
                                             <td>
                                                 <span class="badge" ng-class="{
-                                                'bg-secondary': passenger.status === 'Not Checked In',
-                                                'bg-primary': passenger.status === 'Checked In',
-                                                'bg-magenta': passenger.status === 'Boarding',
-                                                'bg-success': passenger.status === 'Seated',
-                                                'bg-danger': passenger.status === 'Deboarded'
-                                            }">
+                                                        'bg-secondary': passenger.status === 'Not Checked In',
+                                                        'bg-primary': passenger.status === 'Checked In',
+                                                        'bg-magenta': passenger.status === 'Boarding',
+                                                        'bg-success': passenger.status === 'Seated',
+                                                        'bg-danger': passenger.status === 'Deboarded'
+                                                        }">
                                                     {{ passenger.status }}
                                                 </span>
                                             </td>
@@ -1152,12 +1242,12 @@ Baggage Claim: {{ bagsBaggageClaim.length }}
                                                 <div class="bg-dark" ng-repeat="bag in passenger.bagsArray">
                                                     Bag {{ $index + 1 }}:
                                                     <span class="badge bg-light text-dark" ng-class="{
-                                                    'bg-secondary': bag.status === 'Not Checked In',
-                                                    'bg-primary': bag.status === 'Checked In',
-                                                    'bg-success': bag.status === 'Loaded',
-                                                    'bg-warning': bag.status == 'Unloaded',
-                                                    'bg-information': bag.status === 'Baggage Claim'
-                                                }">
+                                                            'bg-secondary': bag.status === 'Not Checked In',
+                                                            'bg-primary': bag.status === 'Checked In',
+                                                            'bg-success': bag.status === 'Loaded',
+                                                            'bg-warning': bag.status == 'Unloaded',
+                                                            'bg-information': bag.status === 'Baggage Claim'
+                                                            }">
                                                         {{ bag.status }}
                                                     </span>
                                                 </div>
@@ -1165,11 +1255,6 @@ Baggage Claim: {{ bagsBaggageClaim.length }}
                                         </tr>
                                     </tbody>
                                 </table>
-
-
-
-
-
                             </div>
                         </div>
                     </div>
@@ -1181,7 +1266,8 @@ Baggage Claim: {{ bagsBaggageClaim.length }}
                                     target="_blank">OpenAI Usage Policy</a>.</p>
                             <p>Please complete the checklist below. This ensures that you understand all terms of use,
                                 and are properly configured to receive the best possible experience with this feature.
-                                Once complete, the Announcements Controller will become available.</p>
+                                Once complete, the Announcements Controller will become available.
+                            </p>
                             <form>
                                 <div class="form-check" ng-repeat="checkbox in announcementCheckboxes">
                                     <input class="form-check-input" type="checkbox" id="{{checkbox.id}}"
@@ -1199,6 +1285,54 @@ Baggage Claim: {{ bagsBaggageClaim.length }}
                                         <label class="form-label">
                                             AI Crew Announcements
                                         </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="autopilotCheckbox"
+                                            onclick="toggleAutopilotAnnouncementCheckboxes()">
+                                        <label class="form-check-label" for="autopilotCheckbox">
+                                            Enable Announcement Autopilot
+                                        </label>
+                                    </div>
+                                    <div id="additionalAutopilotAnnouncementCheckboxes" class="mt-2"
+                                        style="display: none;">
+                                        <p class="text-danger">This feature only works when flying on the VATSIM network
+                                            with a Simbrief flightplan!</p>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="preBoarding"
+                                                ng-model="autoPilotAnnouncementPreBoardingChecked"
+                                                ng-disabled="autoPilotAnnouncementPreBoardingPlayed">
+                                            <label class="form-check-label" for="preBoarding">Pre Boarding - Will play
+                                                10min before scheduled boarding</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="boarding"
+                                                ng-model="autoPilotAnnouncementBoardingChecked"
+                                                ng-disabled="autoPilotAnnouncementBoardingPlayed">
+                                            <label class="form-check-label" for="boarding">Boarding - Will play at
+                                                scheduled boarding</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="safety"
+                                                ng-model="autoPilotAnnouncementSafetyChecked"
+                                                ng-disabled="autoPilotAnnouncementSafetyPlayed">
+                                            <label class="form-check-label" for="safety">Safety - Will play once Vat
+                                                Track status is "Left Gate"</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="landing"
+                                                ng-model="autoPilotAnnouncementLandingChecked"
+                                                ng-disabled="autoPilotAnnouncementLandingPlayed">
+                                            <label class="form-check-label" for="landing">Landing - Will play once Vat
+                                                Track status is "Landed"</label>
+                                        </div>
+                                        <div>
+                                            <button class="btn btn-link btn-sm"
+                                                ng-click="resetAutoPilotAnnouncements()">Reset Autopilot
+                                                Announcements</button>
+                                            <i class="fa-solid fa-circle-exclamation text-warning"
+                                                data-bs-toggle="tooltip"
+                                                title="Ensure your newest flightplan is imported and filed on Vatsim before resetting between flights."></i>
+                                        </div>
                                     </div>
                                     <div class="col-md-auto">
                                         <button type="button" class="btn btn-sm btn-dark"
@@ -1254,27 +1388,28 @@ Baggage Claim: {{ bagsBaggageClaim.length }}
                             <div class="alert alert-danger">
                                 <strong>Support:</strong> If you feel you've configured everything properly based on the
                                 checklist steps above, and are not getting any announcements after waiting a few
-                                mintues, please cease using the feature (to avoid any additional OpenAI API costs), copy and paste the FULL debug logs below, and
-                                report the issue via <a href="/#support-section" target="_blank">Support</a>. Paste the debug log into your support ticket or message.
+                                mintues, please cease using the feature (to avoid any additional OpenAI API costs), copy
+                                and paste the FULL debug logs below, and
+                                report the issue via <a href="/#support-section" target="_blank">Support</a>. Paste the
+                                debug log into your support ticket or message.
                             </div>
                             <div>
                                 <div class="form-check mb-3">
                                     <label class="form-check-label">
-                                        <input class="form-check-input" type="checkbox" ng-model="showDebugLog"> Debug Log
+                                        <input class="form-check-input" type="checkbox" ng-model="showDebugLog"> Debug
+                                        Log
                                     </label>
                                 </div>
-                            
                                 <div ng-show="showDebugLog">
                                     <label for="debugLog">Debug Log:</label>
-                                    <textarea class="form-control" rows="5" id="debugLog" name="text" 
-                                              ng-model="announcementApiReport" ng-disabled="true"
-                                              style="overflow-y: scroll;"></textarea>
+                                    <textarea class="form-control" rows="5" id="debugLog" name="text"
+                                        ng-model="announcementApiReport" ng-disabled="true"
+                                        style="overflow-y: scroll;"></textarea>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -1296,7 +1431,6 @@ Baggage Claim: {{ bagsBaggageClaim.length }}
         </div>
     </footer>
     </div>
-
     <!-- Modals-->
     <!-- Settings Modal -->
     <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
@@ -1344,7 +1478,8 @@ Baggage Claim: {{ bagsBaggageClaim.length }}
                         <select class="form-select" id="checklistDropdown" ng-model="selectedChecklist"
                             ng-change="updateSelectedChecklistBundle()">
                             <option ng-repeat="checklist in defaultChecklists" value="{{checklist.bundleName}}">
-                                {{checklist.bundleName}}</option>
+                                {{checklist.bundleName}}
+                            </option>
                         </select>
                         <div class="form-check form-switch mt-3">
                             <input class="form-check-input" type="checkbox" id="customChecklistToggle">
@@ -1420,7 +1555,6 @@ Baggage Claim: {{ bagsBaggageClaim.length }}
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -1430,7 +1564,6 @@ Baggage Claim: {{ bagsBaggageClaim.length }}
             </div>
         </div>
     </div>
-
     <!-- Terms of Use Modal-->
     <div class="modal fade" id="termsOfUseModal" tabindex="-1" role="dialog" aria-labelledby="termsOfUseModalLabel"
         aria-hidden="true">
@@ -1449,7 +1582,6 @@ Baggage Claim: {{ bagsBaggageClaim.length }}
             </div>
         </div>
     </div>
-
     <!-- Privacy Policy Modal-->
     <div class="modal fade" id="privacyPolicyModal" tabindex="-1" role="dialog"
         aria-labelledby="privacyPolicyModalLabel" aria-hidden="true">
@@ -1468,11 +1600,11 @@ Baggage Claim: {{ bagsBaggageClaim.length }}
             </div>
         </div>
     </div>
-
     <!-- custom JS-->
+    <script th:src="@{/sharedService.js}"></script>
     <script th:src="@{/script.js}"></script>
+    <script th:src="@{/map-app.js}"></script>
     <script th:src="@{/vanilla-js.js}"></script>
-
 </body>
 
 </html>

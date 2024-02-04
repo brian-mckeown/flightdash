@@ -89,3 +89,10 @@ fetch('/terms')
             vatsimCaret.classList.add('fa-caret-right');
         });
     });
+
+    //announcement autopilot checkbox toggle
+    function toggleAutopilotAnnouncementCheckboxes() {
+        var checkBoxesDiv = document.getElementById("additionalAutopilotAnnouncementCheckboxes");
+        var autopilotCheckbox = document.getElementById("autopilotCheckbox");
+        checkBoxesDiv.style.display = autopilotCheckbox.checked ? "block" : "none";
+    }

@@ -1,14 +1,28 @@
-angular.module('flightMapApp', [])
-    .controller('MapController', ['$http', function ($http) {
+angular.module('flightMapApp', ['sharedModule'])
+    .controller('MapController', ['$http', '$scope', 'SharedService', function ($http, $scope, SharedService ) {
+        
+        // Initialize $scope.callSign from SharedService
+        $scope.callSign = SharedService.getCallsign();
+
+        // Optionally, if you need to react to changes in callSign value from localStorage:
+        window.addEventListener('storage', function(event) {
+            if (event.key === 'callsign') {
+                $scope.$apply(function() {
+                    $scope.callSign = event.newValue;
+                });
+            }
+        });
+        
         var vm = this;
         var airportData = airportBigData;
         vm.isWeatherLayerActive = true; // Track the state of the weather layer
         // Initialize the map
         var map = L.map('map').setView([40.730610, -73.935242], 3);
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-            attribution: '© OpenStreetMap contributors, © CARTO, <a href="https://github.com/brian-mckeown/flightdash" target="_blank"><i class="fa-brands fa-github"></i> FlightDash.io</a>',
+            attribution: '<a href="https://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap contributors</a>, <a href="https://carto.com/attribution/" target="_blank">© CARTO</a>, <a href="https://github.com/brian-mckeown/flightdash" target="_blank"><i class="fa-brands fa-github"></i> FlightDash.io</a>',
             maxZoom: 19
         }).addTo(map);
+
 
         //SEARCH
         vm.searchQuery = '';
@@ -167,6 +181,89 @@ angular.module('flightMapApp', [])
                     ...response.data.controllers.map(controller => controller.callsign)
                 ]);
 
+                // Find a pilot with a matching primary callsign
+                var matchingPilot = response.data.pilots.find(pilot => pilot.callsign === $scope.callSign);
+                if (matchingPilot) {
+                    // Calculate toGoDistance
+                    var arrivalIcao = matchingPilot.flight_plan ? matchingPilot.flight_plan.arrival : null;
+                    var departureIcao = matchingPilot.flight_plan ? matchingPilot.flight_plan.departure : null;
+                    var toGoDistance = 0;
+                    if (arrivalIcao && airportData[arrivalIcao]) {
+                        var arrivalAirport = airportData[arrivalIcao];
+                        toGoDistance = calculateDistance(matchingPilot.latitude, matchingPilot.longitude, arrivalAirport.lat, arrivalAirport.lon);
+                    }
+
+                    // Set status and toGoDistance
+                    matchingPilot.status = vm.getVatsimFlightStatus(matchingPilot.flight_plan, matchingPilot.groundspeed, toGoDistance);
+                    matchingPilot.toGoDistance = toGoDistance;
+
+                    // Update vatTrackBannerPilot in scope and shared service
+                    $scope.vatTrackBannerPilot = matchingPilot;
+                    SharedService.setVatTrackBannerPilot(matchingPilot); // Set object in shared service
+                    // Find pilots with the same departure and arrival and set status and toGoDistance for each
+                    var similarFlightPlanPilots = response.data.pilots.filter(pilot => 
+                        pilot.flight_plan &&
+                        pilot.flight_plan.departure === departureIcao &&
+                        pilot.flight_plan.arrival === arrivalIcao
+                    ).map(pilot => {
+                        var pilotToGoDistance = calculateDistance(pilot.latitude, pilot.longitude, arrivalAirport.lat, arrivalAirport.lon);
+                        return {
+                            ...pilot,
+                            status: vm.getVatsimFlightStatus(pilot.flight_plan, pilot.groundspeed, pilotToGoDistance),
+                            toGoDistance: pilotToGoDistance
+                        };
+                    });
+
+                    // Set the array of similar flight plan pilots in the shared service
+                    SharedService.setSimilarFlightPlanPilots(similarFlightPlanPilots);
+                    // Find pilots within 200nm of current pilot's location
+
+                    var currentCallsignForProximity = SharedService.getCallsign();
+                    var currentPilotForProximity = response.data.pilots.find(pilot => pilot.callsign === currentCallsignForProximity);
+
+                    if (!currentPilotForProximity) {
+                        console.error('Current pilot for proximity not found');
+                        return;
+                    }
+                    var proximityPilots = response.data.pilots.filter(pilot => {
+                        // Calculate the distance from the current pilot for proximity to each pilot in the list
+                        var distance = calculateDistance(
+                            currentPilotForProximity.latitude,
+                            currentPilotForProximity.longitude,
+                            pilot.latitude,
+                            pilot.longitude
+                        );
+                        // Filter pilots within 200nm (not including the current pilot for proximity)
+                        return distance <= 200 && pilot.callsign !== currentCallsignForProximity;
+                    }).map(pilot => {
+                        var arrivalAirportData = pilot.flight_plan ? airportData[pilot.flight_plan.arrival] : null;
+                        var pilotToGoDistance = null; // Default to null
+                        // Only calculate distance if arrivalAirportData is available
+                        if (arrivalAirportData) {
+                            pilotToGoDistance = calculateDistance(
+                                pilot.latitude, 
+                                pilot.longitude, 
+                                arrivalAirportData.lat, 
+                                arrivalAirportData.lon
+                            );
+                        }
+                        return {
+                            ...pilot,
+                            distance: calculateDistance(
+                                currentPilotForProximity.latitude,
+                                currentPilotForProximity.longitude,
+                                pilot.latitude,
+                                pilot.longitude
+                            ),
+                            status: vm.getVatsimFlightStatus(pilot.flight_plan, pilot.groundspeed, pilotToGoDistance),
+                            toGoDistance: pilotToGoDistance
+                        };
+                    });
+                
+                    // Set the array of proximity pilots in the shared service
+                        SharedService.setProximityPilots(proximityPilots);
+                }
+
                 // Clear streamers list
                 vm.streamers = [];
 
@@ -186,7 +283,6 @@ angular.module('flightMapApp', [])
 
                 // Randomize streamers list
                 vm.streamers.sort(() => 0.5 - Math.random());
-                console.log(vm.streamers);
 
                 // Remove markers not present in the new data
                 Object.keys(markers).forEach(function (callsign) {
@@ -275,11 +371,11 @@ angular.module('flightMapApp', [])
                     progressPercentage = Math.max(0, Math.min(100, ((totalDistance - toGoDistance) / totalDistance * 100)));
                 }
 
-                var flightStatus = vm.getVatsimFlightStatus(pilot.groundspeed, toGoDistance);
+                var flightStatus = vm.getVatsimFlightStatus(pilot.flight_plan, pilot.groundspeed, toGoDistance);
                 var remarksWithLinks = pilot.flight_plan && pilot.flight_plan.remarks ? convertUrlsToLinks(pilot.flight_plan.remarks) : 'None';
                 var popupContent = `
                     <div class="d-flex justify-content-between align-items-center">
-                        <h4><i class="fa-solid fa-plane"></i>${pilot.callsign}</h4>
+                    <h4><i class="fa-solid fa-plane"></i>${pilot.callsign}</h4>
                         <h6 class="rounded px-2 ${flightStatus.class}">${flightStatus.status}</h6>
                     </div>
                     <h4 class="small text-secondary">${pilot.flight_plan && pilot.flight_plan.aircraft_short ? pilot.flight_plan.aircraft_short : 'N/A'} - ${pilot.name}</h4>
@@ -378,13 +474,14 @@ angular.module('flightMapApp', [])
             });
         };
 
-        vm.getVatsimFlightStatus = function(speed, toGoDistance) {
-            if (speed === 0 && toGoDistance > 20) return { status: "Pre-Departure", class: "bg-secondary text-white" };
-            if (speed > 0 && speed < 50 && toGoDistance > 20) return { status: "Left Gate", class: "bg-info text-white" };
-            if (speed >= 50 && toGoDistance > 20) return { status: "Departed", class: "bg-primary text-white" };
-            if (speed >= 50 && toGoDistance < 20) return { status: "Arriving Shortly", class: "bg-warning text-white" };
-            if (speed < 50 && speed > 0 && toGoDistance < 20) return { status: "Landed", class: "bg-success text-white" };
-            if (speed === 0 && toGoDistance < 20) return { status: "Arrived", class: "bg-success text-white" };
+        vm.getVatsimFlightStatus = function(flight_plan ,speed, toGoDistance) {
+            if (speed === 0 && toGoDistance > 20 && flight_plan !== null) return { status: "Pre-Departure", class: "bg-secondary text-white" };
+            if (speed > 0 && speed < 50 && toGoDistance > 20 && flight_plan !== null) return { status: "Left Gate", class: "bg-info text-white" };
+            if (speed >= 50 && toGoDistance > 20 && flight_plan !== null) return { status: "Enroute", class: "bg-primary text-white" };
+            if (speed >= 50 && toGoDistance < 20 && flight_plan !== null) return { status: "Arriving Shortly", class: "bg-warning text-white" };
+            if (speed < 50 && speed > 0 && toGoDistance < 20 && flight_plan !== null) return { status: "Landed", class: "bg-success text-white" };
+            if (speed === 0 && toGoDistance < 20 && flight_plan !== null) return { status: "Arrived", class: "bg-success text-white" };
+            if (flight_plan === null) return { status: "Not Filed", class: "bg-dark text-white" };
             return { status: "Unknown", class: "bg-dark text-white" }; // Default case
         };
 
