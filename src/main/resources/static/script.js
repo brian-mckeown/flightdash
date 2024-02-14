@@ -6,7 +6,7 @@ var app = angular.module('checklistApp', ['sharedModule']);
 app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$document', '$interval', 'SharedService', function($scope, $sce, $timeout, $http, $document, $interval, SharedService) {
     
 
-    $scope.versionNumber = '1.6.1'; 
+    $scope.versionNumber = '1.6.2'; 
 
     $scope.state = 'Idle';
     $scope.messages = [];
@@ -1747,6 +1747,7 @@ $scope.deBoardPassengersAndBags = function() {
 
     $scope.isAnnouncementLoading = false;
     $scope.fetchAnnouncement = function(announcementType) {
+        console.log("Announcement Type:" + announcementType);
         $scope.isAnnouncementLoading = true;
 
         var requestData = {
@@ -1796,17 +1797,104 @@ $scope.deBoardPassengersAndBags = function() {
             $scope.announcementApiReport = response.data.apiCallLog;
             // Append requestDataString to announcementApiReport
             $scope.announcementApiReport += "\n\nRequest Data:\n" + requestDataString;
-    
-            // Play the audio
+            
+            // Initialize AudioContext at the beginning
+            var audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+            var distortion = audioContext.createWaveShaper();
+            var convolver = audioContext.createConvolver(); // For reverberation effect
+
+            // Additional nodes for wet/dry mix
+            var dryGainNode = audioContext.createGain();
+            var wetGainNode = audioContext.createGain();
+            var masterGainNode = audioContext.createGain();
+
+            // Configure the gains for wet/dry mix
+            dryGainNode.gain.value = 0.95; // More of the original signal
+            wetGainNode.gain.value = 0.8; // Less of the reverberated signal
+            masterGainNode.gain.value = 1.2;
+
+            function makeDistortionCurve(amount) {
+                var k = typeof amount === 'number' ? amount : 50,
+                    n_samples = 44100,
+                    curve = new Float32Array(n_samples),
+                    deg = Math.PI / 180,
+                    i = 0,
+                    x;
+                for (; i < n_samples; ++i) {
+                    x = i * 2 / n_samples - 1;
+                    curve[i] = (3 + k) * x * 20 * deg / (Math.PI + k * Math.abs(x));
+                }
+                return curve;
+            };
+
+            // Configure the distortion effect
+            distortion.curve = makeDistortionCurve(100);
+            distortion.oversample = '4x';
+
+            // Function to load impulse response
+            function loadImpulseResponse(url) {
+                return fetch(url)
+                    .then(response => response.arrayBuffer())
+                    .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
+                    .then(audioBuffer => {
+                        convolver.buffer = audioBuffer;
+                    });
+            }
+
+            loadImpulseResponse('./assets/jfk-ir.wav');
+
             $scope.playDingThenCallback(function() {
                 var announcementAudio = document.getElementById('announcementAudio');
                 if (announcementAudio) {
-                    announcementAudio.src = $scope.audioSrc;
-                    announcementAudio.play();
+                    fetch($scope.audioSrc)
+                        .then(response => response.arrayBuffer())
+                        .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
+                        .then(audioBuffer => {
+                            var source = audioContext.createBufferSource();
+                            source.buffer = audioBuffer;
+            
+                            var filter = audioContext.createBiquadFilter();
+                            filter.type = 'bandpass';
+                            filter.frequency.value = 800;
+                            filter.Q.value = 2;
+            
+                            source.connect(filter);
+            
+                            // Conditional audio processing based on announcementType
+                            if (announcementType === 'pre boarding' || 
+                            announcementType === 'boarding1' ||
+                            announcementType === 'boarding2' ||
+                            announcementType === 'boarding3' ||
+                            announcementType === 'boarding4' ||
+                            announcementType === 'boarding5' ||
+                            announcementType === 'boarding6') {
+                                // Apply reverberation with wet/dry mix for specific announcement types
+                                filter.connect(convolver);
+                                convolver.connect(wetGainNode); // Connect convolver to wet gain
+                                wetGainNode.connect(audioContext.destination); // Connect wet gain to destination
+                                
+                                filter.connect(dryGainNode); // Also connect filter directly to dry gain for the dry signal
+                                dryGainNode.connect(audioContext.destination); // Connect dry gain to destination
+                                
+                                masterGainNode.connect(audioContext.destination);
+                                filter.connect(masterGainNode);
+                            } else {
+                                // Apply distortion for other announcement types
+                                distortion.curve = makeDistortionCurve(100);
+                                distortion.oversample = '4x';
+                                filter.connect(distortion);
+                                distortion.connect(audioContext.destination);
+                            }
+            
+                            source.start(0);
+                        })
+                        .catch(error => console.error('Error with decoding audio data', error));
                 } else {
                     console.error('Announcement audio element not found');
                 }
             });
+
         }).catch(function(error) {
             console.error('Error fetching announcement:', error);
         
