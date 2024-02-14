@@ -47,7 +47,12 @@
                 <div style="position: relative;">
                     <input type="text" ng-model="mapCtrl.searchQuery" ng-change="mapCtrl.searchCallsign()" placeholder="Search Callsign" class="form-control form-control-sm" style="width: 125px;">
                     <div class="list-group" style="position: absolute; top: 100%; z-index: 1001;" ng-show="mapCtrl.searchResults.length">
-                        <a href="#" class="list-group-item list-group-item-action" ng-repeat="result in mapCtrl.searchResults" ng-click="mapCtrl.selectFlight(result)">{{result.callsign}}</a>
+                        <a href="#" class="list-group-item list-group-item-action flex-column align-items-start" ng-repeat="result in mapCtrl.searchResults" ng-click="mapCtrl.selectFlight(result)">
+                            <div class="d-flex w-100 justify-content-start align-items-center">
+                                <img ng-src="./assets/logos/{{result.callsign.substring(0, 3)}}.png" onerror="this.style.display='none'" style="height: 25px; width: auto; margin-right: 10px;">
+                                {{result.callsign}}
+                            </div>
+                        </a>
                     </div>
                 </div>
                  <!-- Streamers Button -->
