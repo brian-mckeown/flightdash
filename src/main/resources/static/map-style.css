@@ -6,7 +6,7 @@ html, body {
 
 #map {
     width: 100%;
-    height: 100%;
+    height: calc(100vh - 56px); /* Adjust 50px navbar's height */
 }
 
 .freq-badge {
@@ -82,4 +82,14 @@ html, body {
 @keyframes fadeInOut {
     0%, 100% { opacity: 0; }
     50% { opacity: 1; }
+}
+
+/* Normal state of the label */
+.custom-controller-label {
+    transition: opacity 0.25s ease-in-out; /* Smooth transition for opacity change */
+}
+
+/* Hover state of the label */
+.custom-controller-label:hover {
+    opacity: 0.65; /* Increase opacity on hover */
 }

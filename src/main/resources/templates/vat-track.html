@@ -21,6 +21,9 @@
 <!-- Fontawesome-->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" rel="stylesheet">
 
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
     <!-- AngularJS -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
 
@@ -29,9 +32,47 @@
 </head>
 <body>
     <div ng-controller="MapController as mapCtrl">
-        <div id="map" style="height: 100vh; position: relative;">
+
+        <!-- NavBar -->
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+            <div class="container-fluid">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                <a class="nav-link active disabled" href="#">Vat Track <span class="text-secondary">(Beta)</span></a>
+                </li>
+            </ul>
+            </div>
+            <div class="map-controls" style="position: absolute; top: 10px; right: 10px; z-index: 1000;">
+                <!-- Search bar and Dropdown -->
+                <div style="position: relative;">
+                    <input type="text" ng-model="mapCtrl.searchQuery" ng-change="mapCtrl.searchCallsign()" placeholder="Search Callsign" class="form-control form-control-sm" style="width: 125px;">
+                    <div class="list-group" style="position: absolute; top: 100%; z-index: 1001;" ng-show="mapCtrl.searchResults.length">
+                        <a href="#" class="list-group-item list-group-item-action flex-column align-items-start" ng-repeat="result in mapCtrl.searchResults" ng-click="mapCtrl.selectFlight(result)">
+                            <div class="d-flex w-100 justify-content-start align-items-center">
+                                <img ng-src="./assets/logos/{{result.callsign.substring(0, 3)}}.png" onerror="this.style.display='none'" style="height: 25px; width: auto; margin-right: 10px;">
+                                {{result.callsign}}
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                 <!-- Streamers Button -->
+                 <button type="button" ng-class="{'btn-primary': mapCtrl.showStreamerOverlay, 'btn-outline-primary': !mapCtrl.showStreamerOverlay}" class="btn btn-sm" ng-click="mapCtrl.toggleStreamerOverlay()">
+                    Streamers
+                </button>
+                 <!-- Weather Button -->
+                 <button type="button" ng-class="{'btn-primary': mapCtrl.isWeatherLayerActive, 'btn-outline-primary': !mapCtrl.isWeatherLayerActive}" class="btn btn-sm" ng-click="mapCtrl.toggleWeatherLayer()">
+                    <i class="fa-solid fa-cloud-sun-rain"></i>
+                </button>
+                <!-- Refresh Button -->
+                <button type="button" class="btn btn-sm btn-outline-secondary" ng-click="mapCtrl.resetAllMarkers()">
+                    <i class="fa-solid fa-arrow-rotate-right"></i>
+                </button>
+            </div>
+        </nav>
+
+        <div id="map" style="position: relative;">
             
-            <a href="/" target="_blank" class="map-heading">VAT TRACK (Beta) by <i class="fas fa-plane"></i> FlightDash.io</a>
+            
             <!-- Streamers Overlay -->
             <div class="streamers-overlay" ng-show="mapCtrl.streamers.length && mapCtrl.showStreamersOverlay">
                 <p>Streamers</p>
@@ -41,32 +82,11 @@
                     <span ng-if="!$last" class="streamer-separator">|</span>
                 </div>
             </div>
-            <div class="map-controls" style="position: absolute; top: 10px; right: 10px; z-index: 1000;">
-            <!-- Search bar and Dropdown -->
-            <div style="position: relative;">
-                <input type="text" ng-model="mapCtrl.searchQuery" ng-change="mapCtrl.searchCallsign()" placeholder="Search Callsign" class="form-control form-control-sm" style="width: 125px;">
-                <div class="list-group" style="position: absolute; top: 100%; z-index: 1001;" ng-show="mapCtrl.searchResults.length">
-                    <a href="#" class="list-group-item list-group-item-action" ng-repeat="result in mapCtrl.searchResults" ng-click="mapCtrl.selectFlight(result)">{{result.callsign}}</a>
-                </div>
-            </div>
-             <!-- Streamers Button -->
-             <button type="button" ng-class="{'btn-primary': mapCtrl.showStreamerOverlay, 'btn-outline-primary': !mapCtrl.showStreamerOverlay}" class="btn btn-sm" ng-click="mapCtrl.toggleStreamerOverlay()">
-                Streamers
-            </button>
-             <!-- Weather Button -->
-             <button type="button" ng-class="{'btn-primary': mapCtrl.isWeatherLayerActive, 'btn-outline-primary': !mapCtrl.isWeatherLayerActive}" class="btn btn-sm" ng-click="mapCtrl.toggleWeatherLayer()">
-                <i class="fa-solid fa-cloud-sun-rain"></i>
-            </button>
-            <!-- Refresh Button -->
-            <button type="button" class="btn btn-sm btn-outline-secondary" ng-click="mapCtrl.resetAllMarkers()">
-                <i class="fa-solid fa-arrow-rotate-right"></i>
-            </button>
-        </div>
+            
         
         
         </div>
     </div>
-
    
     <!-- Custom Script -->
     <script src="sharedService.js"></script>
