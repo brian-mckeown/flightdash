@@ -1,6 +1,7 @@
 angular.module('flightMapApp', ['sharedModule'])
     .controller('MapController', ['$http', '$scope', 'SharedService', function ($http, $scope, SharedService ) {
         
+        $scope.mapIsLoadingIcon = false;
         // Initialize $scope.callSign from SharedService
         $scope.callSign = SharedService.getCallsign();
 
@@ -116,6 +117,8 @@ angular.module('flightMapApp', ['sharedModule'])
                     }
                 }
             }).addTo(map);
+
+            $scope.mapIsLoadingIcon = false;
         }     
         
         // Function to calculate minutes since a given timestamp
@@ -290,6 +293,7 @@ angular.module('flightMapApp', ['sharedModule'])
 
         var vatsimDataInterval;
         vm.loadVatsimData = function () {
+            $scope.mapIsLoadingIcon = true;
             // Clear existing interval
             clearInterval(vatsimDataInterval);
 
@@ -796,4 +800,3 @@ angular.module('flightMapApp', ['sharedModule'])
         // Load VATSIM data
         vm.loadVatsimData(); // Load initial data
     }]);
-

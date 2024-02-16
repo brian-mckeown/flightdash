@@ -34,7 +34,7 @@
     <div ng-controller="MapController as mapCtrl">
 
         <!-- NavBar -->
-        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
             <div class="container-fluid">
             <ul class="navbar-nav">
                 <li class="nav-item">
@@ -43,6 +43,8 @@
             </ul>
             </div>
             <div class="map-controls" style="position: absolute; top: 10px; right: 10px; z-index: 1000;">
+                <!-- Loading indicator-->
+                <div class="spinner-border text-info" ng-show="mapIsLoadingIcon"></div>
                 <!-- Search bar and Dropdown -->
                 <div style="position: relative;">
                     <input type="text" ng-model="mapCtrl.searchQuery" ng-change="mapCtrl.searchCallsign()" placeholder="Search Callsign" class="form-control form-control-sm" style="width: 125px;">

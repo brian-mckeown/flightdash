@@ -20,3 +20,6 @@ buildNumber.properties
 
 #Environment Variables
 .env
+
+#DS Store Files
+**/.DS_Store
