@@ -800,4 +800,3 @@ angular.module('flightMapApp', ['sharedModule'])
         // Load VATSIM data
         vm.loadVatsimData(); // Load initial data
     }]);
-
