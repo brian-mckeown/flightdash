@@ -43,6 +43,8 @@
             </ul>
             </div>
             <div class="map-controls" style="position: absolute; top: 10px; right: 10px; z-index: 1000;">
+                <!-- Loading indicator-->
+                <div class="spinner-border text-info" ng-show="mapIsLoadingIcon"></div>
                 <!-- Search bar and Dropdown -->
                 <div style="position: relative;">
                     <input type="text" ng-model="mapCtrl.searchQuery" ng-change="mapCtrl.searchCallsign()" placeholder="Search Callsign" class="form-control form-control-sm" style="width: 125px;">
