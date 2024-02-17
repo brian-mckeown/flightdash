@@ -23,7 +23,7 @@ angular.module('flightMapApp', ['sharedModule'])
         var airportData = airportBigData;
         vm.isWeatherLayerActive = true; // Track the state of the weather layer
         // Initialize the map
-        var map = L.map('map').setView([40.730610, -73.935242], 3);
+        var map = L.map('map',{zoomControl: false}).setView([40.730610, -73.935242], 3);
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
             attribution: '<a href="https://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap contributors</a>, <a href="https://carto.com/attribution/" target="_blank">© CARTO</a>, <a href="https://github.com/brian-mckeown/flightdash" target="_blank"><i class="fa-brands fa-github"></i> FlightDash.io</a> <a href="https://github.com/vatsimnetwork/vatspy-data-project" target="_blank"><i class="fa-brands fa-github"></i> Boundaries from vatspy-data-project</a>',
             maxZoom: 19
