@@ -23,7 +23,7 @@ angular.module('flightMapApp', ['sharedModule'])
         var airportData = airportBigData;
         vm.isWeatherLayerActive = true; // Track the state of the weather layer
         // Initialize the map
-        var map = L.map('map').setView([40.730610, -73.935242], 3);
+        var map = L.map('map',{zoomControl: false}).setView([40.730610, -73.935242], 3);
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
             attribution: '<a href="https://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap contributors</a>, <a href="https://carto.com/attribution/" target="_blank">© CARTO</a>, <a href="https://github.com/brian-mckeown/flightdash" target="_blank"><i class="fa-brands fa-github"></i> FlightDash.io</a> <a href="https://github.com/vatsimnetwork/vatspy-data-project" target="_blank"><i class="fa-brands fa-github"></i> Boundaries from vatspy-data-project</a>',
             maxZoom: 19
@@ -34,6 +34,7 @@ angular.module('flightMapApp', ['sharedModule'])
 
         // Function to add the GeoJSON layer to the map
         function addAirspaceBoundaries(data, controllerData, centersMapping) {
+            console.log("Function Started.")
             // Remove the previous GeoJSON layer if it exists
             if (currentGeoJsonLayer) {
                 map.removeLayer(currentGeoJsonLayer);
@@ -51,19 +52,22 @@ angular.module('flightMapApp', ['sharedModule'])
                     };
         
                     if (Array.isArray(controllerData)) {
+                        console.log("beginning loop");
                         controllerData.forEach(function(controller) {
                             if (controller.facility === 6) { // Only consider controllers for centers (facility code 6)
-                                var matchingCenter = Object.values(centersMapping).find(center => {
-                                    // Normalize the callsign by replacing '-' with '_'
-                                    var callsignNormalized = controller.callsign.replace('-', '_');
-                                    // Check if the normalized callsign includes any of center's identifying attributes
-                                    var matchCondition = (callsignNormalized.includes(center.icao) || 
-                                                          callsignNormalized.includes(center.name) || 
-                                                          callsignNormalized.includes(center.prefix)) && 
-                                                          center.prefix !== ""; // Ensure prefix is not empty
-                                    return matchCondition;
-                                });
-        
+                                // Normalize the callsign by replacing '-' with '_'
+                                var callsignNormalized = controller.callsign.replace('-', '_');
+                    
+                                // Attempt direct lookup using the normalized callsign
+                                var matchingCenter = centersMapping[callsignNormalized];
+                    
+                                // If no direct match, attempt lookup with other possible keys (if applicable)
+                                if (!matchingCenter) {
+                                    // Split the callsign and try with the first part, if it's composite
+                                    var possibleKey = callsignNormalized.split('_')[0];
+                                    matchingCenter = centersMapping[possibleKey];
+                                }
+                    
                                 // Apply specific styles if a matching center is found and its code matches the feature's ID
                                 if (matchingCenter && (matchingCenter.center_code === feature.properties.id || matchingCenter.icao === feature.properties.id)) {
                                     style.color = "#FFF"; // Update for matching controller
@@ -72,54 +76,37 @@ angular.module('flightMapApp', ['sharedModule'])
                                 }
                             }
                         });
+                        console.log("loop done");
                     }
-        
+                    console.log("style returning");
                     return style;
                 },
-                onEachFeature: function (feature, layer) {
-                    if (Array.isArray(controllerData)) {
-                        controllerData.forEach(function(controller) {
-                            if (controller.facility === 6) { // Repeat check for center controllers
-                                var matchingCenter = Object.values(centersMapping).find(center => {
-                                    var callsignNormalized = controller.callsign.replace('-', '_');
-                                    return (callsignNormalized.includes(center.icao) || 
-                                            callsignNormalized.includes(center.name) || 
-                                            callsignNormalized.includes(center.prefix)) && 
-                                            center.prefix !== "";
-                                });
-        
-                                // Add labels for matching controllers
-                                if (matchingCenter && (matchingCenter.center_code === feature.properties.id || matchingCenter.icao === feature.properties.id)) {
-                                    var labelCoords = [feature.properties.label_lat, feature.properties.label_lon];
-                                    var labelId = "label-" + feature.properties.id; // Create a unique ID for the label
-                                    var labelText = `<span id="${labelId}" class="custom-controller-label" style="background-color: #39FF14; color: black;">${feature.properties.id}</span>`;
-                                    
-                                    // Format the tooltip content
-                                    var centerPopupContent = `
-                                    <strong>${controller.callsign}</strong><br>
-                                    ${controller.name}<br>
-                                    <span class="badge bg-dark freq-badge">${controller.frequency}</span><br>
-                                    Rating: ${controller.rating}<br>
-                                    ${controller.text_atis ? controller.text_atis.join(" ") : 'N/A'}<br>
-                                    Logged on: ${calculateMinutesSince(controller.logon_time)} minutes ago
-                                `;
-                                    
-                                    var labelMarker = L.marker(labelCoords, {
-                                        icon: L.divIcon({
-                                            className: 'custom-controller-label',
-                                            html: labelText,
-                                            iconSize: [100, 40] // Define the size of the custom label
-                                        })
-                                    }).bindPopup(centerPopupContent).addTo(map);
-                                }
+                onEachFeature: function(feature, layer) {
+                    // Optimized logic as per the style function
+                    controllerData.forEach(controller => {
+                        if (controller.facility === 6) { // Center controllers only
+                            var callsignNormalized = controller.callsign.replace('-', '_');
+                            var matchingCenter = centersMapping[callsignNormalized] || centersMapping[callsignNormalized.split('_')[0]];
+                            
+                            if (matchingCenter && (matchingCenter.center_code === feature.properties.id || matchingCenter.icao === feature.properties.id)) {
+                                var labelCoords = [feature.properties.label_lat, feature.properties.label_lon];
+                                var centerPopupContent = `<strong>${controller.callsign}</strong><br>${controller.name}<br><span class="badge bg-dark freq-badge">${controller.frequency}</span><br>Rating: ${controller.rating}<br>${controller.text_atis ? controller.text_atis.join(" ") : 'N/A'}<br>Logged on: ${calculateMinutesSince(controller.logon_time)} minutes ago`;
+                                
+                                L.marker(labelCoords, {
+                                    icon: L.divIcon({
+                                        className: 'custom-controller-label',
+                                        html: `<span class="custom-controller-label" style="background-color: #39FF14; color: black;">${controller.callsign}</span>`,
+                                        iconSize: [100, 40]
+                                    })
+                                }).bindPopup(centerPopupContent).addTo(map);
                             }
-                        });
-                    }
+                        }
+                    });
                 }
             }).addTo(map);
-
-            $scope.mapIsLoadingIcon = false;
-        }     
+        
+            $scope.mapIsLoadingIcon = false; // Assuming this is part of your AngularJS controller
+        }
         
         // Function to calculate minutes since a given timestamp
         function calculateMinutesSince(timestamp) {
@@ -137,10 +124,22 @@ angular.module('flightMapApp', ['sharedModule'])
             console.error('Error fetching the airspace boundaries:', error);
         });
 
-        // Fetch the airspace boundaries JSON data
+        // Get Centers Mapping Data
         $http.get('./centers.json').then(function(response) {
-            // Assuming the JSON structure you provided
-            centersMapping = response.data;
+            const originalCentersMapping = response.data;
+
+            // Creating a combined mapping for ICAO, name, and prefix for direct lookup
+            const combinedLookup = {};
+
+            Object.entries(originalCentersMapping).forEach(([key, center]) => {
+                // Add entries for icao, name, and prefix (if not empty)
+                if (center.icao) combinedLookup[center.icao] = center;
+                if (center.name) combinedLookup[center.name] = center;
+                if (center.prefix && center.prefix !== "") combinedLookup[center.prefix] = center;
+            });
+
+            // Now use combinedLookup for efficient lookups
+            centersMapping = combinedLookup; // Replace the old centersMapping with the new lookup
         }).catch(function(error) {
             console.error('Error fetching the centers mappings:', error);
         });

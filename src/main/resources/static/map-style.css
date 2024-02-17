@@ -6,7 +6,7 @@ html, body {
 
 #map {
     width: 100%;
-    height: calc(100vh - 56px); /* Adjust 50px navbar's height */
+    height: calc(100vh); /* Adjust 50px navbar's height */
 }
 
 .freq-badge {
