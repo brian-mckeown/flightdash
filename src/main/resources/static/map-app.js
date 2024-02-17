@@ -29,12 +29,10 @@ angular.module('flightMapApp', ['sharedModule'])
             maxZoom: 19
         }).addTo(map);
 
-
         var currentGeoJsonLayer = null; // Initiate airspace boundary layer
 
         // Function to add the GeoJSON layer to the map
         function addAirspaceBoundaries(data, controllerData, centersMapping) {
-            console.log("Function Started.")
             // Remove the previous GeoJSON layer if it exists
             if (currentGeoJsonLayer) {
                 map.removeLayer(currentGeoJsonLayer);
@@ -52,7 +50,6 @@ angular.module('flightMapApp', ['sharedModule'])
                     };
         
                     if (Array.isArray(controllerData)) {
-                        console.log("beginning loop");
                         controllerData.forEach(function(controller) {
                             if (controller.facility === 6) { // Only consider controllers for centers (facility code 6)
                                 // Normalize the callsign by replacing '-' with '_'
@@ -76,9 +73,7 @@ angular.module('flightMapApp', ['sharedModule'])
                                 }
                             }
                         });
-                        console.log("loop done");
                     }
-                    console.log("style returning");
                     return style;
                 },
                 onEachFeature: function(feature, layer) {

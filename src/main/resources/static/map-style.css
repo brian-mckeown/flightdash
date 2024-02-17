@@ -21,6 +21,18 @@ html, body {
 .leaflet-popup-tip {
     background-color: rgba(255, 255, 255, 0.75); /* Adjust as needed to match the popup content */
 }
+
+.leaflet-popup-content {
+    max-height: 300px; /* Adjust this value as needed */
+    overflow-y: auto; /* Allows vertical scrolling */
+    overflow-x: hidden; /* Prevents horizontal scrolling */
+    min-width: 300px !important;
+}
+
+.leaflet-popup-content-wrapper {
+    overflow: hidden; /* Ensures the wrapper doesn't grow */
+}
+
 .airport-detail-row {
     padding-top: 0; /* Reduces space above the row */
 }
