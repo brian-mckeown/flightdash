@@ -68,8 +68,9 @@ angular.module('flightMapApp', ['sharedModule'])
                                 // Apply specific styles if a matching center is found and its code matches the feature's ID
                                 if (matchingCenter && (matchingCenter.center_code === feature.properties.id || matchingCenter.icao === feature.properties.id)) {
                                     style.color = "#FFF"; // Update for matching controller
-                                    style.fillColor = "#FFF";
-                                    style.fillOpacity = 0.07; // Make fill slightly opaque
+                                    style.weight = 3;
+                                    style.fillColor = "#FF00FF";
+                                    style.fillOpacity = 0.25; // Make fill slightly opaque
                                 }
                             }
                         });
