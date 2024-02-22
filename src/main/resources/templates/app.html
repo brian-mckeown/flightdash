@@ -170,14 +170,14 @@
                     <li class="nav-item py-3 d-flex justify-content-center" ng-click="activeTab='vat-track'"
                         ng-class="{'active': activeTab === 'vat-track'}">
                         <a href="#" class="nav-link align-middle px-0">
-                            <i class="fa-solid fa-globe fa-2xl"></i></i><span class="ms-1 d-none d-sm-inline"></span>
+                            <i class="fa-solid fa-globe fa-2xl" data-bs-toggle="tooltip" title="VAT Track Map"></i></i><span class="ms-1 d-none d-sm-inline"></span>
                         </a>
                     </li>
                     <!--Checklist Icon-->
                     <li class="nav-item py-3 d-flex justify-content-center" ng-click="activeTab='checklists'"
                         ng-class="{'active': activeTab === 'checklists'}">
                         <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
-                            <i class="fa-solid fa-list-check fa-2xl"></i><span class="ms-1 d-none d-sm-inline"></span>
+                            <i class="fa-solid fa-list-check fa-2xl" data-bs-toggle="tooltip" title="Checklists"></i><span class="ms-1 d-none d-sm-inline"></span>
                         </a>
                         <ul class="collapse show nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
                             <li class="w-100">
@@ -192,7 +192,7 @@
                     <li class="nav-item py-3 d-flex justify-content-center" ng-click="activeTab='airports'"
                         ng-class="{'active': activeTab === 'airports'}">
                         <a href="#" class="nav-link align-middle px-0">
-                            <i class="fa-solid fa-plane-arrival fa-2xl"></i><span
+                            <i class="fa-solid fa-plane-arrival fa-2xl" data-bs-toggle="tooltip" title="Airport Data"></i><span
                                 class="ms-1 d-none d-sm-inline"></span>
                         </a>
                     </li>
@@ -200,14 +200,14 @@
                     <li class="nav-item py-3 d-flex justify-content-center" ng-click="activeTab='flightPlan'"
                         ng-class="{'active': activeTab === 'flightPlan'}">
                         <a href="#" class="nav-link px-0 align-middle">
-                            <i class="fa-regular fa-file-lines fa-2xl"></i><span
+                            <i class="fa-regular fa-file-lines fa-2xl" data-bs-toggle="tooltip" title="Flight Plan"></i><span
                                 class="ms-1 d-none d-sm-inline"></span></a>
                     </li>
                     <!-- Charts Icon -->
                     <li class="nav-item py-3 d-flex justify-content-center" ng-click="activeTab='charts'"
                         ng-class="{'active': activeTab === 'charts'}">
-                        <a href="#submenu2" data-bs-toggle="collapse" class="nav-link px-0 align-middle ">
-                            <i class="fa-regular fa-map fa-2xl"></i><span class="ms-1 d-none d-sm-inline"></span></a>
+                        <a href="#submenu2" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                            <i class="fa-regular fa-map fa-2xl" data-bs-toggle="tooltip" title="Charts"></i><span class="ms-1 d-none d-sm-inline"></span></a>
                         <ul class="collapse nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
                             <li class="w-100">
                                 <a href="#" class="nav-link px-0"></a>
@@ -221,7 +221,7 @@
                     <li class="nav-item py-3 d-flex justify-content-center" ng-click="activeTab='dataEntry'"
                         ng-class="{'active': activeTab === 'dataEntry'}">
                         <a href="#submenu3" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
-                            <i class="fa-regular fa-pen-to-square fa-2xl"></i><span
+                            <i class="fa-regular fa-pen-to-square fa-2xl" data-bs-toggle="tooltip" title="Flight Data"></i><span
                                 class="ms-1 d-none d-sm-inline"></span> </a>
                         <ul class="collapse nav flex-column ms-1" id="submenu3" data-bs-parent="#menu">
                             <li class="w-100">
@@ -242,27 +242,27 @@
                     <li class="nav-item py-3 d-flex justify-content-center" ng-click="activeTab='controller'"
                         ng-class="{'active': activeTab === 'controller'}">
                         <a href="#" class="nav-link px-0 align-middle">
-                            <i class="fa-regular fa-clock fa-2xl"></i><span class="ms-1 d-none d-sm-inline"></span> </a>
+                            <i class="fa-regular fa-clock fa-2xl" data-bs-toggle="tooltip" title="Flight Status Controls"></i><span class="ms-1 d-none d-sm-inline"></span> </a>
                     </li>
                     <!-- Passenger Announcement Icon -->
                     <li class="nav-item py-3 d-flex justify-content-center" ng-click="activeTab='announcements'"
                         ng-class="{'active': activeTab === 'announcements'}">
                         <a href="#" class="nav-link px-0 align-middle">
-                            <i class="fa-solid fa-bullhorn fa-2xl"></i><span class="ms-1 d-none d-sm-inline"></span>
+                            <i class="fa-solid fa-bullhorn fa-2xl" data-bs-toggle="tooltip" title="Cabin Crew Announcements"></i><span class="ms-1 d-none d-sm-inline"></span>
                         </a>
                     </li>
                     <!-- Passenger Manifest Icon -->
                     <li class="nav-item py-3 d-flex justify-content-center" ng-click="activeTab='passengers'"
                         ng-class="{'active': activeTab === 'passengers'}">
                         <a href="#" class="nav-link px-0 align-middle">
-                            <i class="fa-solid fa-person-walking-luggage fa-2xl"></i><span
+                            <i class="fa-solid fa-person-walking-luggage fa-2xl" data-bs-toggle="tooltip" title="Passenger Manifest"></i><span
                                 class="ms-1 d-none d-sm-inline"></span> </a>
                     </li>
                     <!-- Flight Report Icon -->
                     <li class="nav-item py-3 d-flex justify-content-center" ng-click="activeTab='report'"
                         ng-class="{'active': activeTab === 'report'}">
                         <a href="#" class="nav-link px-0 align-middle">
-                            <i class="fa-solid fa-chart-line fa-2xl"></i><span class="ms-1 d-none d-sm-inline"></span>
+                            <i class="fa-solid fa-chart-line fa-2xl" data-bs-toggle="tooltip" title="Post Flight Report"></i><span class="ms-1 d-none d-sm-inline"></span>
                         </a>
                     </li>
                 </ul>

@@ -88,6 +88,13 @@ fetch('/terms')
             vatsimCaret.classList.remove('fa-caret-down');
             vatsimCaret.classList.add('fa-caret-right');
         });
+
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl, {
+            template: '<div class="tooltip" role="tooltip"><div class="arrow" style="color: #000;"></div><div class="tooltip-inner bg-light text-dark"></div></div>'
+            });
+        });
     });
 
     //announcement autopilot checkbox toggle
