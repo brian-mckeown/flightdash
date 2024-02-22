@@ -29,12 +29,10 @@ angular.module('flightMapApp', ['sharedModule'])
             maxZoom: 19
         }).addTo(map);
 
-
         var currentGeoJsonLayer = null; // Initiate airspace boundary layer
 
         // Function to add the GeoJSON layer to the map
         function addAirspaceBoundaries(data, controllerData, centersMapping) {
-            console.log("Function Started.")
             // Remove the previous GeoJSON layer if it exists
             if (currentGeoJsonLayer) {
                 map.removeLayer(currentGeoJsonLayer);
@@ -52,7 +50,6 @@ angular.module('flightMapApp', ['sharedModule'])
                     };
         
                     if (Array.isArray(controllerData)) {
-                        console.log("beginning loop");
                         controllerData.forEach(function(controller) {
                             if (controller.facility === 6) { // Only consider controllers for centers (facility code 6)
                                 // Normalize the callsign by replacing '-' with '_'
@@ -71,14 +68,13 @@ angular.module('flightMapApp', ['sharedModule'])
                                 // Apply specific styles if a matching center is found and its code matches the feature's ID
                                 if (matchingCenter && (matchingCenter.center_code === feature.properties.id || matchingCenter.icao === feature.properties.id)) {
                                     style.color = "#FFF"; // Update for matching controller
-                                    style.fillColor = "#FFF";
-                                    style.fillOpacity = 0.07; // Make fill slightly opaque
+                                    style.weight = 3;
+                                    style.fillColor = "#FF00FF";
+                                    style.fillOpacity = 0.25; // Make fill slightly opaque
                                 }
                             }
                         });
-                        console.log("loop done");
                     }
-                    console.log("style returning");
                     return style;
                 },
                 onEachFeature: function(feature, layer) {
