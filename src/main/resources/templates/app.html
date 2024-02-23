@@ -78,18 +78,8 @@
                                 {{vatTrackBannerPilot.flight_plan.aircraft_short}}</span>
                             <span class="badge bg-dark text-white">Speed: {{vatTrackBannerPilot.groundspeed}} kts</span>
                             <span class="badge bg-dark text-white">Altitude: {{vatTrackBannerPilot.altitude}} ft</span>
-                            <span class="badge bg-dark text-white">To Go: {{vatTrackBannerPilot.toGoDistance |
-                                number:0}} nm</span>
-                            <div class="badge bg-dark text-white marquee">
-                                <div class="marquee-content">
-                                    <span>
-                                        Sched Boarding: {{ scheduledBoardingDateTime | date:'HH:mm' }}z |
-                                        Sched Departure: {{ scheduledDepartureDateTime | date:'HH:mm' }}z |
-                                        Est Landing: {{ estimateArrivalDateTime | date:'HH:mm' }}z |
-                                        Est Gate Arrival: {{ estimateGateArrivalDateTime | date:'HH:mm' }}z
-                                    </span>
-                                </div>
-                            </div>
+                            <span class="badge bg-dark text-white" ng-if="vatTrackBannerPilot.status.status == 'Enroute' || vatTrackBannerPilot.status.status == 'Arriving Shortly'">To Go: {{vatTrackBannerPilot.toGoDistance | number:0}} nm</span>
+                            <span class="badge bg-dark text-white" ng-if="vatTrackBannerPilot.status.status == 'Enroute' || vatTrackBannerPilot.status.status == 'Arriving Shortly'">ETA: {{vatTrackBannerPilot.toGoEta}}</span>
                     </a>
 
                     <a ng-show="currentFlightStatus == 'Boarding' && !showVatTrackBanner"
