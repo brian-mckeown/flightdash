@@ -581,13 +581,16 @@
                                         </div>
                                         <!-- Departures Column -->
                                         <div class="col-md-3">
-                                            <h6>Departures</h6>
+                                            <h6><i class="fa-solid fa-plane-departure"></i> Departures</h6>
                                             <div ng-repeat="departure in vatsimDeparturesData">
                                                 <div class="card">
-                                                    <div class="card-header">
+                                                    <div class="card-header" style="text-align: left !important;">
                                                         <button class="btn btn-link custom-card-header"
                                                             ng-click="departure.isCollapsed = !departure.isCollapsed">
-                                                            <i class="fa-solid fa-plane-departure"></i>
+                                                            <img ng-src="./assets/logos/{{departure.callsign.substring(0, 3)}}.png" 
+                                                         alt="{{departure.callsign}}" 
+                                                         style="height: 25px; width: 25px; margin-right: 5px;"
+                                                         onerror="this.src='./assets/logos/default.png';">
                                                             {{departure.callsign}} to: {{departure.flight_plan.arrival}}
                                                         </button>
                                                     </div>
@@ -614,13 +617,16 @@
                                         </div>
                                         <!-- Arrivals Column -->
                                         <div class="col-md-3">
-                                            <h6>Arrivals</h6>
+                                            <h6><i class="fa-solid fa-plane-arrival"></i> Arrivals</h6>
                                             <div ng-repeat="arrival in vatsimArrivalsData">
                                                 <div class="card">
                                                     <div class="card-header">
                                                         <button class="btn btn-link custom-card-header"
                                                             ng-click="arrival.isCollapsed = !arrival.isCollapsed">
-                                                            <i class="fa-solid fa-plane-arrival"></i>
+                                                            <img ng-src="./assets/logos/{{arrival.callsign.substring(0, 3)}}.png" 
+                                                                alt="{{arrival.callsign}}" 
+                                                                style="height: 25px; width: 25px; margin-right: 5px;"
+                                                                onerror="this.src='./assets/logos/default.png';">
                                                             {{arrival.callsign}} from: {{arrival.flight_plan.departure}}
                                                         </button>
                                                     </div>
@@ -1042,6 +1048,7 @@
                                                 <th scope="col">Altitude</th>
                                                 <th scope="col">Distance</th>
                                                 <th scope="col">To Go</th>
+                                                <th scope ="col">ETA</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -1061,6 +1068,7 @@
                                                 <td>{{pilot.altitude}} ft</td>
                                                 <td>{{pilot.distance | number:2}} nm</td>
                                                 <td>{{pilot.toGoDistance | number:0}} nm</td>
+                                                <td>{{(pilot.status.status === 'Enroute' || pilot.status.status === 'Arriving Shortly') ? pilot.toGoEta : ''}}</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -1079,6 +1087,7 @@
                                                     <th scope="col">Speed</th>
                                                     <th scope="col">Altitude</th>
                                                     <th scope="col">To Go</th>
+                                                    <th scope="col">ETA</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -1097,6 +1106,7 @@
                                                     <td>{{pilot.groundspeed}} kts</td>
                                                     <td>{{pilot.altitude}} ft</td>
                                                     <td>{{pilot.toGoDistance | number:0}} nm</td>
+                                                    <td>{{(pilot.status.status === 'Enroute' || pilot.status.status === 'Arriving Shortly') ? pilot.toGoEta : ''}}</td>
                                                 </tr>
                                             </tbody>
                                         </table>

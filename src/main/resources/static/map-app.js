@@ -67,7 +67,7 @@ angular.module('flightMapApp', ['sharedModule'])
                     
                                 // Apply specific styles if a matching center is found and its code matches the feature's ID
                                 if (matchingCenter && (matchingCenter.center_code === feature.properties.id || matchingCenter.icao === feature.properties.id)) {
-                                    style.color = "#FFF"; // Update for matching controller
+                                    style.color = "333"; // Update for matching controller
                                     style.weight = 3;
                                     style.fillColor = "#FF00FF";
                                     style.fillOpacity = 0.25; // Make fill slightly opaque
@@ -308,14 +308,17 @@ angular.module('flightMapApp', ['sharedModule'])
                     var arrivalIcao = matchingPilot.flight_plan ? matchingPilot.flight_plan.arrival : null;
                     var departureIcao = matchingPilot.flight_plan ? matchingPilot.flight_plan.departure : null;
                     var toGoDistance = 0;
+                    var toGoEta = '';
                     if (arrivalIcao && airportData[arrivalIcao]) {
                         var arrivalAirport = airportData[arrivalIcao];
                         toGoDistance = calculateDistance(matchingPilot.latitude, matchingPilot.longitude, arrivalAirport.lat, arrivalAirport.lon);
+                        toGoEta = calculateEta(matchingPilot.groundspeed, toGoDistance);
                     }
 
                     // Set status and toGoDistance
                     matchingPilot.status = vm.getVatsimFlightStatus(matchingPilot.flight_plan, matchingPilot.groundspeed, toGoDistance);
                     matchingPilot.toGoDistance = toGoDistance;
+                    matchingPilot.toGoEta = toGoEta;
 
                     // Update vatTrackBannerPilot in scope and shared service
                     $scope.vatTrackBannerPilot = matchingPilot;
@@ -327,10 +330,12 @@ angular.module('flightMapApp', ['sharedModule'])
                         pilot.flight_plan.arrival === arrivalIcao
                     ).map(pilot => {
                         var pilotToGoDistance = calculateDistance(pilot.latitude, pilot.longitude, arrivalAirport.lat, arrivalAirport.lon);
+                        var pilotToGoEta = calculateEta(pilot.groundspeed, pilotToGoDistance);
                         return {
                             ...pilot,
                             status: vm.getVatsimFlightStatus(pilot.flight_plan, pilot.groundspeed, pilotToGoDistance),
-                            toGoDistance: pilotToGoDistance
+                            toGoDistance: pilotToGoDistance,
+                            toGoEta: pilotToGoEta
                         };
                     });
 
@@ -358,6 +363,7 @@ angular.module('flightMapApp', ['sharedModule'])
                     }).map(pilot => {
                         var arrivalAirportData = pilot.flight_plan ? airportData[pilot.flight_plan.arrival] : null;
                         var pilotToGoDistance = null; // Default to null
+                        var pilotToGoEta = '';
                         // Only calculate distance if arrivalAirportData is available
                         if (arrivalAirportData) {
                             pilotToGoDistance = calculateDistance(
@@ -366,6 +372,7 @@ angular.module('flightMapApp', ['sharedModule'])
                                 arrivalAirportData.lat, 
                                 arrivalAirportData.lon
                             );
+                            pilotToGoEta = calculateEta(pilot.groundspeed, pilotToGoDistance);
                         }
                         return {
                             ...pilot,
@@ -376,7 +383,8 @@ angular.module('flightMapApp', ['sharedModule'])
                                 pilot.longitude
                             ),
                             status: vm.getVatsimFlightStatus(pilot.flight_plan, pilot.groundspeed, pilotToGoDistance),
-                            toGoDistance: pilotToGoDistance
+                            toGoDistance: pilotToGoDistance,
+                            toGoEta: pilotToGoEta
                         };
                     });
                 
@@ -469,9 +477,11 @@ angular.module('flightMapApp', ['sharedModule'])
                 // Get arrival ICAO code
                 var arrivalIcao = pilot.flight_plan ? pilot.flight_plan.arrival : null;
                 var toGoDistance = 0;
+                var toGoEta = '';
                 if (arrivalIcao && airportData[arrivalIcao]) {
                     var arrivalAirport = airportData[arrivalIcao];
                     toGoDistance = calculateDistance(pilot.latitude, pilot.longitude, arrivalAirport.lat, arrivalAirport.lon);
+                    toGoEta = calculateEta(pilot.groundspeed, toGoDistance);
         }
 
                 var departureAirport = pilot.flight_plan && airportData[pilot.flight_plan.departure];
@@ -501,10 +511,14 @@ angular.module('flightMapApp', ['sharedModule'])
                 // HTML for the logo or the default icon
                 const logoOrIconHtml = `<img src="${logoPath}" alt="${airlineCode} logo" onerror="this.style.display='none'" style="height: 45px;">`;
                 
+                // Check if status is not "Enroute" or "Arriving Shortly" to override toGoEta
+                if (flightStatus.status !== "Enroute" && flightStatus.status !== "Arriving Shortly") {
+                    toGoEta = "N/A";
+                }
                 var popupContent = `
                     <div class="d-flex justify-content-between align-items-center">
                     <h4>${logoOrIconHtml} ${pilot.callsign}</h4>
-                        <h6 class="rounded px-2 ${flightStatus.class}">${flightStatus.status}</h6>
+                        <h6 class="rounded px-2 ${flightStatus.class}"><small>${flightStatus.status}</small></h6>
                     </div>
                     <h4 class="small text-secondary">${pilot.flight_plan && pilot.flight_plan.aircraft_short ? pilot.flight_plan.aircraft_short : 'N/A'} - ${pilot.name}</h4>
                     <div class="row mb-2 progress-bar-row">
@@ -533,13 +547,16 @@ angular.module('flightMapApp', ['sharedModule'])
                     </div>
                     <div class="row bg-dark text-white rounded">
                         <div class="col">
-                            Speed:<h6>${pilot.groundspeed} kts</h6>
+                            Speed:<h6><small>${pilot.groundspeed} kts</small></h6>
                         </div>
                         <div class="col">
-                            Altitude:<h6>${pilot.altitude} ft</h6>
+                            Altitude:<h6><small>${pilot.altitude} ft</small></h6>
                         </div>
                         <div class="col">
-                            To Go:<h6>${toGoDistance.toFixed(0)} nm</h6><!-- Show rounded distance -->
+                            To Go:<h6><small>${toGoDistance.toFixed(0)} nm</small></h6><!-- Show rounded distance -->
+                        </div>
+                        <div class="col">
+                            ETA:<h6><small>${toGoEta}</small></h6>
                         </div>
                     </div>
                     <br>
@@ -790,6 +807,16 @@ angular.module('flightMapApp', ['sharedModule'])
             var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
             var distance = R * c; // Distance in km
             return distance * 0.539957; // Convert km to nautical miles
+        }
+
+        function calculateEta(speed_kts, distance_nm) {
+            if (speed_kts <= 0) return "N/A"; // Handle zero or negative speeds
+
+            let time_hours = distance_nm / speed_kts;
+            let hours = Math.floor(time_hours);
+            let minutes = Math.floor((time_hours - hours) * 60);
+
+            return `${hours}h ${minutes.toString().padStart(2, '0')}m`;
         }
 
         // Load VATSIM data
