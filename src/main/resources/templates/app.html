@@ -27,10 +27,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- Google Fonts-->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <!--Ogg Vorbis Encoder -->
+    <script th:src="@{/js/OggVorbisEncoder.js}"></script>
+    <!-- JZip -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.6.0/jszip.min.js"></script>
     <!-- Moment.js-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <!-- Optional AngularJS -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+
     <!-- Custom files-->
     <link th:href="@{/styles.css}" rel="stylesheet">
 </head>
@@ -1279,132 +1284,213 @@ Baggage Claim: {{ bagsBaggageClaim.length }}
                             </form>
                         </div>
                         <div class="container mt-4" ng-show="announcementsReady">
-                            <form>
-                                <div class="row mb-3">
-                                    <div class="col-md-12">
-                                        <label class="form-label">
-                                            AI Crew Announcements
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="autopilotCheckbox"
-                                            onclick="toggleAutopilotAnnouncementCheckboxes()">
-                                        <label class="form-check-label" for="autopilotCheckbox">
-                                            Enable Announcement Autopilot
-                                        </label>
-                                    </div>
-                                    <div id="additionalAutopilotAnnouncementCheckboxes" class="mt-2"
-                                        style="display: none;">
-                                        <p class="text-danger">This feature only works when flying on the VATSIM network
-                                            with a Simbrief flightplan!</p>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="preBoarding"
-                                                ng-model="autoPilotAnnouncementPreBoardingChecked"
-                                                ng-disabled="autoPilotAnnouncementPreBoardingPlayed">
-                                            <label class="form-check-label" for="preBoarding">Pre Boarding - Will play
-                                                10min before scheduled boarding</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="boarding"
-                                                ng-model="autoPilotAnnouncementBoardingChecked"
-                                                ng-disabled="autoPilotAnnouncementBoardingPlayed">
-                                            <label class="form-check-label" for="boarding">Boarding - Will play at
-                                                scheduled boarding</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="safety"
-                                                ng-model="autoPilotAnnouncementSafetyChecked"
-                                                ng-disabled="autoPilotAnnouncementSafetyPlayed">
-                                            <label class="form-check-label" for="safety">Safety - Will play once Vat
-                                                Track status is "Left Gate"</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="landing"
-                                                ng-model="autoPilotAnnouncementLandingChecked"
-                                                ng-disabled="autoPilotAnnouncementLandingPlayed">
-                                            <label class="form-check-label" for="landing">Landing - Will play once Vat
-                                                Track status is "Landed"</label>
-                                        </div>
-                                        <div>
-                                            <button class="btn btn-link btn-sm"
-                                                ng-click="resetAutoPilotAnnouncements()">Reset Autopilot
-                                                Announcements</button>
-                                            <i class="fa-solid fa-circle-exclamation text-warning"
-                                                data-bs-toggle="tooltip"
-                                                title="Ensure your newest flightplan is imported and filed on Vatsim before resetting between flights."></i>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-auto">
-                                        <button type="button" class="btn btn-sm btn-dark"
-                                            ng-click="startPreBoardingAnnouncement()"
-                                            ng-disabled="isAnnouncementLoading">Pre Boarding</button>
-                                    </div>
-                                    <div class="col-md-auto">
-                                        <button type="button" class="btn btn-sm btn-dark"
-                                            ng-click="startBoardingAnnouncements()"
-                                            ng-disabled="isAnnouncementLoading">Boarding</button>
-                                    </div>
-                                    <div class="col-md-auto">
-                                        <button type="button" class="btn btn-sm btn-dark"
-                                            ng-click="fetchAnnouncement('pre taxi')"
-                                            ng-disabled="isAnnouncementLoading">Pre Taxi</button>
-                                    </div>
-                                    <div class="col-md-auto">
-                                        <button type="button" class="btn btn-sm btn-dark"
-                                            ng-click="fetchAnnouncement('safety')"
-                                            ng-disabled="isAnnouncementLoading">Safety</button>
-                                    </div>
-                                    <div class="col-md-auto">
-                                        <button type="button" class="btn btn-sm btn-dark"
-                                            ng-click="fetchAnnouncement('cruise')"
-                                            ng-disabled="isAnnouncementLoading">Cruise</button>
-                                    </div>
-                                    <div class="col-md-auto">
-                                        <button type="button" class="btn btn-sm btn-dark"
-                                            ng-click="fetchAnnouncement('descent')"
-                                            ng-disabled="isAnnouncementLoading">Descent </button>
-                                    </div>
-                                    <div class="col-md-auto">
-                                        <button type="button" class="btn btn-sm btn-dark"
-                                            ng-click="fetchAnnouncement('landing')"
-                                            ng-disabled="isAnnouncementLoading">Landing</button>
-                                        <div ng-show="isAnnouncementLoading"
-                                            class="spinner-grow spinner-grow-sm text-info" role="status">
-                                            <span class="visually-hidden"></span>
-                                        </div>
-                                    </div>
-                                    <audio id="dingAudio" src="./airplane-ding.mp3" style="display: none;"></audio>
-                                    <audio id="noiseAudio" src="./noise.mp3" style="display: none;"></audio>
-                                    <audio id="announcementAudio" ng-src="{{audioSrc}}" controls></audio>
+                            <!-- Web Player section -->
+                            <div class="container mt-4">
+                                <div class="alert alert-secondary small-alert" role="alert" data-bs-toggle="collapse"
+                                    href="#WebPlayerSection">
+                                    <h4 class="mb-3 d-inline">
+                                        Web Player <i class="fas fa-caret-right" aria-hidden="true"
+                                            id="WebPlayerCaret"></i>
+                                    </h4>
                                 </div>
-                            </form>
-                            <div class="alert alert-warning">
-                                <strong>Note:</strong> When you click an announcment button, OpenAI is processing your
-                                flight data, creating a script, recording the audio, then sending it back to you. This
-                                does not all happen instantly. Announcments may take up to 1-2 minutes, but usually much
-                                faster. This is dependent on network speeds, as well as OpenAI's current performance and
-                                availability.
-                            </div>
-                            <div class="alert alert-danger">
-                                <strong>Support:</strong> If you feel you've configured everything properly based on the
-                                checklist steps above, and are not getting any announcements after waiting a few
-                                mintues, please cease using the feature (to avoid any additional OpenAI API costs), copy
-                                and paste the FULL debug logs below, and
-                                report the issue via <a href="/#support-section" target="_blank">Support</a>. Paste the
-                                debug log into your support ticket or message.
-                            </div>
-                            <div>
-                                <div class="form-check mb-3">
-                                    <label class="form-check-label">
-                                        <input class="form-check-input" type="checkbox" ng-model="showDebugLog"> Debug
-                                        Log
-                                    </label>
+                                <div class="collapse" id="WebPlayerSection">
+                                    <form>
+                                        <div class="row mb-3">
+                                            <div class="col-md-12">
+                                                <label class="form-label">
+                                                    AI Crew Announcements
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="autopilotCheckbox"
+                                                    onclick="toggleAutopilotAnnouncementCheckboxes()">
+                                                <label class="form-check-label" for="autopilotCheckbox">
+                                                    Enable Announcement Autopilot
+                                                </label>
+                                            </div>
+                                            <div id="additionalAutopilotAnnouncementCheckboxes" class="mt-2"
+                                                style="display: none;">
+                                                <p class="text-danger">This feature only works when flying on the VATSIM network
+                                                    with a Simbrief flightplan!</p>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="preBoarding"
+                                                        ng-model="autoPilotAnnouncementPreBoardingChecked"
+                                                        ng-disabled="autoPilotAnnouncementPreBoardingPlayed">
+                                                    <label class="form-check-label" for="preBoarding">Pre Boarding - Will play
+                                                        10min before scheduled boarding</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="boarding"
+                                                        ng-model="autoPilotAnnouncementBoardingChecked"
+                                                        ng-disabled="autoPilotAnnouncementBoardingPlayed">
+                                                    <label class="form-check-label" for="boarding">Boarding - Will play at
+                                                        scheduled boarding</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="safety"
+                                                        ng-model="autoPilotAnnouncementSafetyChecked"
+                                                        ng-disabled="autoPilotAnnouncementSafetyPlayed">
+                                                    <label class="form-check-label" for="safety">Safety - Will play once Vat
+                                                        Track status is "Left Gate"</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="landing"
+                                                        ng-model="autoPilotAnnouncementLandingChecked"
+                                                        ng-disabled="autoPilotAnnouncementLandingPlayed">
+                                                    <label class="form-check-label" for="landing">Landing - Will play once Vat
+                                                        Track status is "Landed"</label>
+                                                </div>
+                                                <div>
+                                                    <button class="btn btn-link btn-sm"
+                                                        ng-click="resetAutoPilotAnnouncements()">Reset Autopilot
+                                                        Announcements</button>
+                                                    <i class="fa-solid fa-circle-exclamation text-warning"
+                                                        data-bs-toggle="tooltip"
+                                                        title="Ensure your newest flightplan is imported and filed on Vatsim before resetting between flights."></i>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-auto">
+                                                <button type="button" class="btn btn-sm btn-dark"
+                                                    ng-click="startPreBoardingAnnouncement()"
+                                                    ng-disabled="isAnnouncementLoading">Pre Boarding</button>
+                                            </div>
+                                            <div class="col-md-auto">
+                                                <button type="button" class="btn btn-sm btn-dark"
+                                                    ng-click="startBoardingAnnouncements()"
+                                                    ng-disabled="isAnnouncementLoading">Boarding</button>
+                                            </div>
+                                            <div class="col-md-auto">
+                                                <button type="button" class="btn btn-sm btn-dark"
+                                                    ng-click="fetchAnnouncement('pre taxi')"
+                                                    ng-disabled="isAnnouncementLoading">Pre Taxi</button>
+                                            </div>
+                                            <div class="col-md-auto">
+                                                <button type="button" class="btn btn-sm btn-dark"
+                                                    ng-click="fetchAnnouncement('safety')"
+                                                    ng-disabled="isAnnouncementLoading">Safety</button>
+                                            </div>
+                                            <div class="col-md-auto">
+                                                <button type="button" class="btn btn-sm btn-dark"
+                                                    ng-click="fetchAnnouncement('cruise')"
+                                                    ng-disabled="isAnnouncementLoading">Cruise</button>
+                                            </div>
+                                            <div class="col-md-auto">
+                                                <button type="button" class="btn btn-sm btn-dark"
+                                                    ng-click="fetchAnnouncement('descent')"
+                                                    ng-disabled="isAnnouncementLoading">Descent </button>
+                                            </div>
+                                            <div class="col-md-auto">
+                                                <button type="button" class="btn btn-sm btn-dark"
+                                                    ng-click="fetchAnnouncement('landing')"
+                                                    ng-disabled="isAnnouncementLoading">Landing</button>
+                                                <div ng-show="isAnnouncementLoading"
+                                                    class="spinner-grow spinner-grow-sm text-info" role="status">
+                                                    <span class="visually-hidden"></span>
+                                                </div>
+                                            </div>
+                                            <audio id="dingAudio" src="./airplane-ding.mp3" style="display: none;"></audio>
+                                            <audio id="noiseAudio" src="./noise.mp3" style="display: none;"></audio>
+                                            <audio id="announcementAudio" ng-src="{{audioSrc}}" controls></audio>
+                                        </div>
+                                    </form>
+                                    <div class="alert alert-warning">
+                                        <strong>Note:</strong> When you click an announcment button, OpenAI is processing your
+                                        flight data, creating a script, recording the audio, then sending it back to you. This
+                                        does not all happen instantly. Announcments may take up to 1-2 minutes, but usually much
+                                        faster. This is dependent on network speeds, as well as OpenAI's current performance and
+                                        availability.
+                                    </div>
+                                    <div class="alert alert-danger">
+                                        <strong>Support:</strong> If you feel you've configured everything properly based on the
+                                        checklist steps above, and are not getting any announcements after waiting a few
+                                        mintues, please cease using the feature (to avoid any additional OpenAI API costs), copy
+                                        and paste the FULL debug logs below, and
+                                        report the issue via <a href="/#support-section" target="_blank">Support</a>. Paste the
+                                        debug log into your support ticket or message.
+                                    </div>
+                                    <div>
+                                        <div class="form-check mb-3">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" ng-model="showDebugLog"> Debug
+                                                Log
+                                            </label>
+                                        </div>
+                                        <div ng-show="showDebugLog">
+                                            <label for="debugLog">Debug Log:</label>
+                                            <textarea class="form-control" rows="5" id="debugLog" name="text"
+                                                ng-model="announcementApiReport" ng-disabled="true"
+                                                style="overflow-y: scroll;"></textarea>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div ng-show="showDebugLog">
-                                    <label for="debugLog">Debug Log:</label>
-                                    <textarea class="form-control" rows="5" id="debugLog" name="text"
-                                        ng-model="announcementApiReport" ng-disabled="true"
-                                        style="overflow-y: scroll;"></textarea>
+                            </div>
+                            <!-- Fenix Generator section -->
+                            <div class="container mt-4">
+                                <div class="alert alert-secondary small-alert" role="alert" data-bs-toggle="collapse"
+                                    href="#FenixGeneratorSection">
+                                    <h4 class="mb-3 d-inline">
+                                        Fenix Soundpack Generator <i class="fas fa-caret-right" aria-hidden="true"
+                                            id="FenixGeneratorCaret"></i>
+                                    </h4>
+                                </div>
+                                <div class="collapse" id="FenixGeneratorSection">
+                                   <div>
+                                        <div class="alert alert-warning">
+                                            <strong>OpenAI Cost <u>Estimate</u>:</strong> 35-50 cents (USD) per Soundpack
+                                        </div>
+                                    <h4>Prerequisites</h4>
+                                    <ol>
+                                        <li>Simbrief and OpenAI Keys</li>
+                                        <ul>
+                                            <li>Ensure that your Simbrief Pilot ID and OpenAI API Key are both entered in the <strong>Settings</strong>.</li>
+                                            <li>Load your Simbrief OFP in the <strong>Flight Plan</strong> tab.</li>
+                                            <li>Ensure that all details are complete in the <strong>Flight Data</strong> tab. In addition to the information auto-populated by Simbrief, you must add an Airline Name and Generate a Flight Crew.</li>
+                                        </ul>
+                                        <li>Create Folder Structure.</li>
+                                        <ul>
+                                            <li>Ensure you already have the Fenix A320 v2 block 2 installed and working. This guide assumes you have already done this.</li>
+                                            <li>Navigate to your MSFS2020 Community Folder and create a new folder named <strong>fnx-announcements</strong></li>
+                                            <li>If you already have this folder, then you can skip creating the folder.
+                                        </ul>
+                                        <li>Prepare your livery.</li>
+                                        <ul>
+                                            <li>Navitate to <strong>[Your Community Folder]\fnx-aircraft-320-liveries\SimObjects\Airplanes\[Your Livery]</strong></li>
+                                            <li>Open <strong>aircraft.cfg</strong> in a text editor.</li>
+                                            <li>Ensure that the value for <strong>icao_airline</strong> equals the folder name for the airline callsign you are using in your flight plan. This should be in double quotes. Change this value only if needed. And if you do, save the file before closing. </li>
+                                        </ul>
+                                    </ol>
+                                    <h4>Download Soundpack</h4>
+                                    <button class="btn btn-fenix" ng-click="fetchFenixSoundpack()" ng-disabled="isFenixSoundpackDownloading">Download Fenix A320 AI Soundpack</button>
+                                    <div ng-show="isFenixSoundpackDownloading">
+                                        <div class="spinner-border text-info"></div>
+                                        <a>Your AI soundpack is being built. This may take 5 to 10 minutes. Please do not leave or refresh page!</a>
+                                        <div class="progress">
+                                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" style="width:{{fenixDownloadProgress}}%"></div>
+                                          </div>
+                                    </div>
+                                    <hr>
+                                    <h4>Install the Soundpack</h4>
+                                    <ol>
+                                        <li>Unzip the <strong>[callsign]FenixSoundpack.zip</strong> that was downloaded.</li>
+                                        <li>You will now have a folder named after your callsign. Cut/Copy the folder.</li>
+                                        <li>Paste the folder in <strong>Community\fnx-announcements</strong></li>
+                                    </ol>
+                                    <h4>Using the Soundpack</h4>
+                                    <ul>
+                                        <li>Start a MSFS2020 flight with the Fenix A320 v2 Block 2 as usual. Ensure that the Fenix.exe app starts as well.</li>
+                                        <li>Ensure that the PA Knob in the aircraft is ON and volume turned up.</li>
+                                        <li>Enjoy! Your new AI announcements, customized to your flight plan, will play throughout your flight just as the default Fenix ones would. </li>
+                                    </ul>
+                                    <h4>Hot Swapping</h4>
+                                    <ul>
+                                        <li>Flying back to back flights?</li>
+                                        <li>Repeat the steps above between flights.</li>
+                                        <li>You will delete your first call sign folder inside the <strong>Community\fnx-announcements</strong> folder, and replace it with the new one. </li>
+                                        <li>Ensure that no announcements are playing or about to be playing when making the switch. Doing so may result in inorrect, missing, or default Fenix announcements playing. </li>
+                                    </ul>
+                                    <div class="alert alert-warning">
+                                        <strong>Having an issue?:</strong> Be sure that your Simbrief ID and OpenAI Key are properly entered in the settings/configuration. Ensure that a payment method has been added to your OpenAI Account and credits are available. We recommend always having at least a few dollars (USD) in credits available as multiple API calls will be used to generate an entire soundpack. Finally, ensure that your Simbrief Flight Plan is loaded into FlightDash.io on the Flight Plan tab, as well as ALL details complete in the Flight Data tab, including generating a flight crew. Failure to complete all of these steps may result in an empty or incomplete Soundpack Zip file.
+                                    </div>
                                 </div>
                             </div>
                         </div>

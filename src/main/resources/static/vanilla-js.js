@@ -37,6 +37,8 @@ fetch('/terms')
         const weatherSection = document.getElementById('weatherSection');
         const frequenciesSection = document.getElementById('frequenciesSection');
         const vatsimSection = document.getElementById('vatsimSection');
+        const webPlayerSection = document.getElementById('WebPlayerSection');
+        const fenixGeneratorSection = document.getElementById('FenixGeneratorSection');
         
         const weatherCaret = document.getElementById('weatherCaret');
         const frequenciesCaret = document.getElementById('frequenciesCaret');
@@ -44,6 +46,9 @@ fetch('/terms')
         const runwaysSection = document.getElementById('runwaysSection');
         const runwaysCaret = document.getElementById('runwaysCaret');
         const vatsimCaret = document.getElementById('vatsimCaret');
+
+        const webPlayerCaret = document.getElementById('WebPlayerCaret');
+        const fenixGeneratorCaret = document.getElementById('FenixGeneratorCaret');
     
         // Event listener for Weather section
         weatherSection.addEventListener('show.bs.collapse', function () {
@@ -87,6 +92,28 @@ fetch('/terms')
         vatsimSection.addEventListener('hide.bs.collapse', function () {
             vatsimCaret.classList.remove('fa-caret-down');
             vatsimCaret.classList.add('fa-caret-right');
+        });
+
+        // Event listener for Web Player section
+        webPlayerSection.addEventListener('show.bs.collapse', function () {
+            webPlayerCaret.classList.remove('fa-caret-right');
+            webPlayerCaret.classList.add('fa-caret-down');
+        });
+
+        webPlayerSection.addEventListener('hide.bs.collapse', function () {
+            webPlayerCaret.classList.remove('fa-caret-down');
+            webPlayerCaret.classList.add('fa-caret-right');
+        });
+
+        // Event listener for Fenix Generator section
+        fenixGeneratorSection.addEventListener('show.bs.collapse', function () {
+            fenixGeneratorCaret.classList.remove('fa-caret-right');
+            fenixGeneratorCaret.classList.add('fa-caret-down');
+        });
+
+        fenixGeneratorSection.addEventListener('hide.bs.collapse', function () {
+            fenixGeneratorCaret.classList.remove('fa-caret-down');
+            fenixGeneratorCaret.classList.add('fa-caret-right');
         });
 
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
