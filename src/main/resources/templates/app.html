@@ -1426,8 +1426,7 @@ Baggage Claim: {{ bagsBaggageClaim.length }}
                             </div>
                             <!-- Fenix Generator section -->
                             <div class="container mt-4">
-                                <div class="alert alert-secondary small-alert" role="alert" data-bs-toggle="collapse"
-                                    href="#FenixGeneratorSection">
+                                <div class="alert alert-secondary small-alert" role="alert" data-bs-toggle="collapse" href="#FenixGeneratorSection">
                                     <h4 class="mb-3 d-inline">
                                         Fenix Soundpack Generator <i class="fas fa-caret-right" aria-hidden="true"
                                             id="FenixGeneratorCaret"></i>
@@ -1464,6 +1463,7 @@ Baggage Claim: {{ bagsBaggageClaim.length }}
                                     <div ng-show="isFenixSoundpackDownloading">
                                         <div class="spinner-border text-info"></div>
                                         <a>Your AI soundpack is being built. This may take 5 to 10 minutes. Please do not leave or refresh page!</a>
+                                        <p><strong>{{fenixDownloadStatus}}</strong></p>
                                         <div class="progress">
                                             <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" style="width:{{fenixDownloadProgress}}%"></div>
                                           </div>
@@ -1496,7 +1496,7 @@ Baggage Claim: {{ bagsBaggageClaim.length }}
                         </div>
                     </div>
                 </div>
-            </div>
+            
         </div>
     </div>
     <footer class="footer">
@@ -1516,7 +1516,7 @@ Baggage Claim: {{ bagsBaggageClaim.length }}
             </div>
         </div>
     </footer>
-    </div>
+</div>
     <!-- Modals-->
     <!-- Settings Modal -->
     <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">

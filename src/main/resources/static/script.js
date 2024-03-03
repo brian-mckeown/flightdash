@@ -1912,8 +1912,10 @@ $scope.deBoardPassengersAndBags = function() {
         });
     };
     $scope.fenixDownloadProgress = 0;
+    $scope.fenixDownloadStatus = "Starting...";
     $scope.fetchFenixSoundpack = function() {
         $scope.isFenixSoundpackDownloading = true;
+        $scope.fenixDownloadStatus = "Processing and fetching audio files from OpenAI..."
         $scope.fenixDownloadProgress = 15;
 
         var requestData = {
@@ -1966,7 +1968,9 @@ $scope.deBoardPassengersAndBags = function() {
                                 const processedAudio = await processAudio(pcmFloat32, sampleRate);
                     
                                 $scope.$evalAsync(function() {
+                                    $scope.fenixDownloadStatus = "Adding EQ, Effects and Encoding " + zipEntry.name + " to .OGG ...";
                                     $scope.fenixDownloadProgress += 5;
+                                
                                 });
                                 // Now encode the processed audio to Ogg Vorbis
                                 return encodeOggVorbis(processedAudio, zipEntry.name).then(function(oggData) {
@@ -1990,6 +1994,7 @@ $scope.deBoardPassengersAndBags = function() {
                         URL.revokeObjectURL(downloadUrl);
                         a.remove();
                         $scope.$evalAsync(function() {
+                            $scope.fenixDownloadStatus = "Complete! Zipping your Soundpack...";
                             $scope.fenixDownloadProgress = 100; // Indicate completion
                             $scope.isFenixSoundpackDownloading = false; // Indicate downloading has finished
                         });
@@ -2040,19 +2045,24 @@ $scope.deBoardPassengersAndBags = function() {
         // Create and configure the highpass filter to remove low frequencies
         const highpassFilter = offlineContext.createBiquadFilter();
         highpassFilter.type = 'highpass';
-        highpassFilter.frequency.value = 500; // Adjust as needed to cut more or less of the low end
+        highpassFilter.frequency.value = 400; // Adjust as needed to cut more or less of the low end
     
         // Create and configure the bandpass filter to focus on mid frequencies
         const bandpassFilter = offlineContext.createBiquadFilter();
         bandpassFilter.type = 'bandpass';
-        bandpassFilter.frequency.value = 1200; // Adjust to target the desired mid frequency
-        bandpassFilter.Q.value = 3.5; // Tighten the Q factor to narrow the frequency range
+        bandpassFilter.frequency.value = 1000; // Adjust to target the desired mid frequency
+        bandpassFilter.Q.value = 1.5; // Tighten the Q factor to narrow the frequency range
+
+        // Create a GainNode to increase the volume
+        const gainNode = offlineContext.createGain();
+        gainNode.gain.value = 5.0; // Increase this value to increase volume, 1.0 is the default
     
         // Connect everything
         source.connect(distortion);
         distortion.connect(highpassFilter); // Distortion -> Highpass Filter
         highpassFilter.connect(bandpassFilter); // Highpass Filter -> Bandpass Filter
-        bandpassFilter.connect(offlineContext.destination); // Bandpass Filter -> Destination
+        bandpassFilter.connect(gainNode); //Bandpass Filter -> Gain Node
+        bandpassFilter.connect(offlineContext.destination); // Gain Node -> Destination
     
         // Start the source
         source.start(0);
