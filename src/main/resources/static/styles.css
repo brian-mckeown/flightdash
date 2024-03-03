@@ -152,7 +152,13 @@ body, div, section {
     color: #000;  /* Text color on hover/focus/active states */
 }
 
+.btn-fenix {
+    background: linear-gradient(91.6deg, #f16724 1.37%, #ed1d6d 100%);
+  }
 
+.progress-bar-fenix {
+    background: linear-gradient(91.6deg, #f16724 1.37%, #ed1d6d 100%);
+}
 
 .btn-primary {
     background-color: var(--my-primary-color) !important;

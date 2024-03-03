@@ -6,7 +6,7 @@ var app = angular.module('checklistApp', ['sharedModule']);
 app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$document', '$interval', 'SharedService', function($scope, $sce, $timeout, $http, $document, $interval, SharedService) {
     
 
-    $scope.versionNumber = '1.6.6'; 
+    $scope.versionNumber = '1.7.0'; 
 
     $scope.state = 'Idle';
     $scope.messages = [];
@@ -25,6 +25,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$
     $scope.defaultChecklists = {};
     $scope.announcementApiReport = '';
     $scope.announcementsReady = false;
+    $scope.isFenixSoundpackDownloading = false;
 
     // VatTrack Pilot Tracking data
     $scope.vatTrackBannerPilot = {};
@@ -166,7 +167,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$
 
     $scope.announcementCheckboxes = [
         { id: 'policyAgreement', label: 'I have read and agree to the OpenAI Usage Policy.', checked: false },
-        { id: 'costResponsibility', label: 'I understand that all costs incurred via OpenAI are my responsibility, regardless of FlightDash.io\'s cost estimation accuracy. I do not hold FlightDash.io (including developers, members, affiliates, etc.) accountable for any costs incurred.', checked: false },
+        { id: 'costResponsibility', label: 'I understand that all costs incurred via OpenAI are my responsibility, regardless of FlightDash.io\'s cost estimation accuracy, issues with any tool involved, or any other reason. I do not hold FlightDash.io (including developers, members, affiliates, etc.) accountable for any costs incurred.', checked: false },
         { id: 'betaUnderstanding', label: 'I understand that this is an Open Beta feature and may not always work as expected.', checked: false },
         { id: 'apiKeyAdded', label: 'I\'ve added my OpenAI API Key in the Configuration Settings.', checked: false },
         { id: 'flightDataCheck', label: 'I\'ve ensured that all Flight Data and Flight Crew are generated in the Flight Data section of FlightDash.io (no fields are empty).', checked: false }
@@ -1909,6 +1910,181 @@ $scope.deBoardPassengersAndBags = function() {
         }).finally(function() {
             $scope.isAnnouncementLoading = false;
         });
+    };
+    $scope.fenixDownloadProgress = 0;
+    $scope.fenixDownloadStatus = "Starting...";
+    $scope.fetchFenixSoundpack = function() {
+        $scope.isFenixSoundpackDownloading = true;
+        $scope.fenixDownloadStatus = "Processing and fetching audio files from OpenAI..."
+        $scope.fenixDownloadProgress = 15;
+
+        var requestData = {
+            openAiApiKey: $scope.openAiApiKey,
+            flightCrewArray: $scope.flightCrewArray,
+            airline: $scope.airline,
+            flightNumber: $scope.callSign,
+            currentDateTime: new Date().toISOString(), // Format the current date and time as ISO string
+            departureIcao: $scope.departureIcao,
+            arrivalIcao: $scope.arrivalIcao,
+            arrivalTime: $scope.estimateGateArrivalDateTime,
+            flightLevelString: $scope.flightLevelString,
+            scheduledBoardingTime: $scope.scheduledBoardingDateTime,
+            scheduledDepartureTime: $scope.scheduledDepartureDateTime,
+            scheduledArrivalTime: $scope.scheduledArrivalTime,
+            aircraftName: $scope.aircraftName
+        };
+
+        // Create a string representation of requestData with masked API key
+        var requestDataString = JSON.stringify({
+            ...requestData,
+            openAiApiKey: 'xxxxxxxxx'
+        }, null, 2); // Format with 2-space indentation for readability
+
+        $http({
+            method: 'POST',
+            url: '/api/v1/fenix-soundpack/universal',
+            data: requestData,
+            headers: {'Content-Type': 'application/json'},
+            responseType: 'arraybuffer'
+        }).then(function(response) {
+            JSZip.loadAsync(response.data)
+                .then(function(zip) {
+                    var promises = [];
+                    var newZip = new JSZip();
+    
+                    zip.forEach(function(relativePath, zipEntry) {
+                        // Check if the entry is a file, not a directory
+                        if (!zipEntry.dir) {
+                            const promise = zip.file(zipEntry.name).async('arraybuffer').then(async function(arrayBuffer) {
+                                // Convert Int16Array PCM data to Float32Array
+                                const pcmInt16 = new Int16Array(arrayBuffer);
+                                const pcmFloat32 = new Float32Array(pcmInt16.length);
+                                for (let i = 0; i < pcmInt16.length; i++) {
+                                    pcmFloat32[i] = pcmInt16[i] / 32768;
+                                }
+                    
+                                // Process audio before encoding
+                                const sampleRate = 24000; // Your sample rate
+                                const processedAudio = await processAudio(pcmFloat32, sampleRate);
+                    
+                                $scope.$evalAsync(function() {
+                                    $scope.fenixDownloadStatus = "Adding EQ, Effects and Encoding " + zipEntry.name + " to .OGG ...";
+                                    $scope.fenixDownloadProgress += 5;
+                                
+                                });
+                                // Now encode the processed audio to Ogg Vorbis
+                                return encodeOggVorbis(processedAudio, zipEntry.name).then(function(oggData) {
+                                    const newFileName = zipEntry.name.replace('.pcm', '.ogg');
+                                    newZip.file(newFileName, oggData);
+                                });                                
+                            });
+                            promises.push(promise);
+                        }
+                    });
+    
+                    Promise.all(promises).then(function() {
+                        return newZip.generateAsync({type:"blob"});
+                    }).then(function(content) {
+                        var downloadUrl = URL.createObjectURL(content);
+                        var a = document.createElement("a");
+                        a.href = downloadUrl;
+                        a.download = $scope.callSign.substring(0, 3) + "FenixSoundpack.zip";
+                        document.body.appendChild(a);
+                        a.click();
+                        URL.revokeObjectURL(downloadUrl);
+                        a.remove();
+                        $scope.$evalAsync(function() {
+                            $scope.fenixDownloadStatus = "Complete! Zipping your Soundpack...";
+                            $scope.fenixDownloadProgress = 100; // Indicate completion
+                            $scope.isFenixSoundpackDownloading = false; // Indicate downloading has finished
+                        });
+                    });
+                });
+        }).catch(function(error) {
+            console.error('Error:', error);
+        });
+    };
+
+    function encodeOggVorbis(pcmData, fileName) {
+        return new Promise((resolve, reject) => {
+            // Check if the PCM data size is within expected limits
+            if (pcmData.byteLength > 16 * 1024 * 1024) { // 16 MB limit as an example
+                console.log("pcm byte length: " + pcmData.byteLength);
+                console.error('File too large to process:', fileName);
+                reject('File too large to process: ' + fileName);
+                return;
+            }
+    
+            // Assuming OggVorbisEncoder is correctly included and accessible
+            var vorbisEncoder = new OggVorbisEncoder(24000, 1, 0.3); // Adjust parameters as necessary
+            vorbisEncoder.encode([pcmData]);
+    
+            // Once encoding is done, we can finish and get the encoded data
+            var oggData = vorbisEncoder.finish();
+            resolve(oggData); // Resolve the promise with the encoded data
+        });
+    }
+
+    async function processAudio(pcmData, sampleRate) {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const offlineContext = new OfflineAudioContext(1, pcmData.length, sampleRate);
+    
+        // Create a buffer and copy pcmData into it
+        const buffer = offlineContext.createBuffer(1, pcmData.length, sampleRate);
+        buffer.copyToChannel(pcmData, 0);
+    
+        // Create source from the buffer
+        const source = offlineContext.createBufferSource();
+        source.buffer = buffer;
+    
+        // Create and configure effects here (distortion, EQ, etc.)
+        const distortion = offlineContext.createWaveShaper();
+        distortion.curve = makeDistortionCurve(100); // Adjust the curve for desired distortion
+        distortion.oversample = '4x';
+    
+        // Create and configure the highpass filter to remove low frequencies
+        const highpassFilter = offlineContext.createBiquadFilter();
+        highpassFilter.type = 'highpass';
+        highpassFilter.frequency.value = 400; // Adjust as needed to cut more or less of the low end
+    
+        // Create and configure the bandpass filter to focus on mid frequencies
+        const bandpassFilter = offlineContext.createBiquadFilter();
+        bandpassFilter.type = 'bandpass';
+        bandpassFilter.frequency.value = 1000; // Adjust to target the desired mid frequency
+        bandpassFilter.Q.value = 1.5; // Tighten the Q factor to narrow the frequency range
+
+        // Create a GainNode to increase the volume
+        const gainNode = offlineContext.createGain();
+        gainNode.gain.value = 5.0; // Increase this value to increase volume, 1.0 is the default
+    
+        // Connect everything
+        source.connect(distortion);
+        distortion.connect(highpassFilter); // Distortion -> Highpass Filter
+        highpassFilter.connect(bandpassFilter); // Highpass Filter -> Bandpass Filter
+        bandpassFilter.connect(gainNode); //Bandpass Filter -> Gain Node
+        bandpassFilter.connect(offlineContext.destination); // Gain Node -> Destination
+    
+        // Start the source
+        source.start(0);
+    
+        // Render the audio
+        const renderedBuffer = await offlineContext.startRendering();
+        return renderedBuffer.getChannelData(0); // Return the processed audio as Float32Array
+    }
+    
+
+    function makeDistortionCurve(amount) {
+        var k = typeof amount === 'number' ? amount : 50,
+            n_samples = 44100,
+            curve = new Float32Array(n_samples),
+            deg = Math.PI / 180,
+            i = 0,
+            x;
+        for (; i < n_samples; ++i) {
+            x = i * 2 / n_samples - 1;
+            curve[i] = (3 + k) * x * 20 * deg / (Math.PI + k * Math.abs(x));
+        }
+        return curve;
     };
     
     // Helper function to convert base64 string to Blob
