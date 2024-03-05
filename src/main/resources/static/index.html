@@ -35,11 +35,22 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                         <li class="nav-item"><a class="nav-link active" aria-current="page" href="#!">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="./app" target="_blank">FlightDash App</a></li>
-                        <li class="nav-item"><a class="nav-link" href="./vat-track" target="_blank">Vat Track Map (Beta)</a></li>
-                        <li class="nav-item"><a class="nav-link" href="./guide" target="_blank">Knowledgebase</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#forum-section">Forum</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#support-section">Support</a></li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Products</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="./app" target="_blank">FlightDash App</a></li>
+                                <li><a class="dropdown-item" href="./vat-track" target="_blank">Vat Track Map (Beta)</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Support</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="./guide" target="_blank">Knowledgebase</a></li>
+                                <li><a class="dropdown-item" href="https://flightdash.canny.io/enhancement-requests" target="_blank">Enhancement Requests</a></li>
+                                <li><a class="dropdown-item" href="#forum-section">Forum</a></li>
+                                <li><a class="dropdown-item" href="#support-section">Support</a></li>
+                            </ul>
+                        </li>
                         <li class="nav-item"><a class="nav-link" href="https://www.facebook.com/profile.php?id=61553297903915" target="_blank" style="text-decoration: none;">
                             <i class="fa-brands fa-facebook fa-lg"></i></a></li>
                         <li class="nav-item"><a class="nav-link" href="https://www.youtube.com/@FlightDashIO" target="_blank" style="text-decoration: none;">
@@ -437,7 +448,16 @@
                     <h2 class="fw-bolder">Knowledgebase</h2>
                     <p class="lead mb-0">Learn all about how to use FlightDash.io</p>
                     <p><br>
-                        <a class="btn btn-success btn-lg px-4" href="./guide" target="_blank">Knowledgebase</a>
+                        <a class="btn btn-dark btn-lg px-4" href="./guide" target="_blank">Knowledgebase</a>
+                    </p>
+                </div>
+                <hr>
+                <div class="text-center mb-5" id="idea-section">
+                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="fa-solid fa-lightbulb"></i></div>
+                    <h2 class="fw-bolder">Enhancement Requests</h2>
+                    <p class="lead mb-0">Have and idea for a new feature? Submit your enhancement requests and upvote other ideas! Check back to view progress on your requests!</p>
+                    <p><br>
+                        <a class="btn btn-dark btn-lg px-4" href="https://flightdash.canny.io/enhancement-requests" target="_blank"><i class="fa-regular fa-lightbulb" style="vertical-align: middle;"></i> Enhancement Requests</a>
                     </p>
                 </div>
                 <hr>
@@ -462,14 +482,14 @@
                 <div class="text-center mb-5" id="support-section">
                     <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="fa-solid fa-screwdriver-wrench"></i></div>
                     <h2 class="fw-bolder">Support</h2>
-                    <p class="lead mb-0">We'd love to hear your feedback</p>
+                    <p class="lead mb-0">Experiencing an issue?</p>
                     <p><br>
                         <a class="btn btn-dark btn-lg px-4" href="https://github.com/brian-mckeown/flightdash/issues" target="_blank"><i class="fab fa-github" style="vertical-align: middle;"></i> Open Issues</a>
                     </p>
                 </div>
                 <div class="row gx-5 justify-content-center">
                     <p> We use <i class="fab fa-github" style="vertical-align: middle;"></i> <strong>Github</strong> for support.</p>
-                    <p> To submit feedback, report an issue, or request an enhancement, please create a <i class="fab fa-github" style="vertical-align: middle;"></i> <strong>Github Issue</strong>. These are used to track
+                    <p> Having an issue? Please create a <i class="fab fa-github" style="vertical-align: middle;"></i> <strong>Github Issue</strong>. These are used to track
                         todos, bugs, feature requests, and more. As issues are created, they’ll appear in a searchable and filterable
                         list. To get started, you can create an issue below.</p>
                 
@@ -484,7 +504,7 @@
                 
                     <h5>Report a New Issue</h5>
                     <p>
-                        To report a new issue or enhancement request, visit:
+                        To report a new issue, visit:
                         <a href="https://github.com/brian-mckeown/flightdash/issues/new" target="_blank">
                             <i class="fab fa-github" style="vertical-align: middle;"></i>
                             Report Issue
