@@ -1,0 +1,99 @@
+.btn-primary {
+    background-image: linear-gradient(91.6deg, #00B3FE 1.37%, #006AFE 100%) !important;
+    border: none !important;
+  }
+  
+  
+.btn-secondary {
+    background-image: linear-gradient(91.6deg, #FE00C8 1.37%, #8600FE 100%);
+    border: none;
+  }
+  
+.btn-success {
+    background-image: linear-gradient(91.6deg, #00FE85 1.37%, #00FECA 100%);
+    border: none;
+  }
+  
+.btn-danger {
+    background-image: linear-gradient(91.6deg, #FE0000 1.37%, #FE6A00 100%);
+    border: none;
+  }
+  
+.btn-warning {
+    background-image: linear-gradient(91.6deg, #FECF00 1.37%, #FE8E00 100%);
+    border: none;
+  }
+  
+.btn-info {
+    background-image: linear-gradient(91.6deg, #00FEEA 1.37%, #00A6FE 100%);
+    border: none;
+  }
+  
+.btn-light {
+    background-image: linear-gradient(91.6deg, #F0F0F0 1.37%, #BEBEBE 100%);
+    border: none;
+  }
+  
+.btn-dark {
+    background-image: linear-gradient(91.6deg, #585858 1.37%, #2F2F2F 100%);
+    border: none;
+  }
+  
+.btn:focus {
+    box-shadow: none;
+  }
+  
+.btn:active {
+    transform: translateY(2px);
+  }
+
+  .bg-primary {
+    background-image: linear-gradient(91.6deg, #00B3FE 1.37%, #006AFE 100%) !important;
+    border: none !important;
+  }
+  
+  
+.bg-secondary {
+    background-image: linear-gradient(91.6deg, #FE00C8 1.37%, #8600FE 100%);
+    border: none;
+  }
+  
+.bg-success {
+    background-image: linear-gradient(91.6deg, #00FE85 1.37%, #00FECA 100%);
+    border: none;
+  }
+  
+.bg-danger {
+    background-image: linear-gradient(91.6deg, #FE0000 1.37%, #FE6A00 100%);
+    border: none;
+  }
+  
+.bg-warning {
+    background-image: linear-gradient(91.6deg, #FECF00 1.37%, #FE8E00 100%);
+    border: none;
+  }
+  
+.bg-info {
+    background-image: linear-gradient(91.6deg, #00FEEA 1.37%, #00A6FE 100%);
+    border: none;
+  }
+  
+.bg-light {
+    background-image: linear-gradient(91.6deg, #F0F0F0 1.37%, #BEBEBE 100%);
+    border: none;
+  }
+  
+.bg-dark {
+    background-image: linear-gradient(91.6deg, #585858 1.37%, #2F2F2F 100%);
+    border: none;
+  }
+
+  .bg-custom-title {
+    background-image: linear-gradient(to right, #00FFFF, #00FFFF 1%, #000000 100%);
+    border: none;
+  }
+
+  .small-alert {
+    padding: 5px 10px; /* Reduces the top and bottom padding to 5px and left/right padding to 10px */
+    line-height: 1; /* Adjusts line height to make it more compact */
+  }
