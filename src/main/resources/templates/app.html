@@ -1371,13 +1371,38 @@ Baggage Claim: {{ bagsBaggageClaim.length }}
                                             </div>
                                             <div class="col-md-auto">
                                                 <button type="button" class="btn btn-sm btn-dark"
+                                                    ng-click="fetchAnnouncement('cleared-takeoff')"
+                                                    ng-disabled="isAnnouncementLoading">Clear for Takeoff</button>
+                                            </div>
+                                            <div class="col-md-auto">
+                                                <button type="button" class="btn btn-sm btn-dark"
+                                                    ng-click="fetchAnnouncement('seatbelts-off')"
+                                                    ng-disabled="isAnnouncementLoading">Seatbelts Off</button>
+                                            </div>
+                                            <div class="col-md-auto">
+                                                <button type="button" class="btn btn-sm btn-warning"
+                                                    ng-click="fetchAnnouncement('seatbelts-turbulence')"
+                                                    ng-disabled="isAnnouncementLoading">Seatbelts Turbulence</button>
+                                            </div>
+                                            <div class="col-md-auto">
+                                                <button type="button" class="btn btn-sm btn-dark"
                                                     ng-click="fetchAnnouncement('cruise')"
                                                     ng-disabled="isAnnouncementLoading">Cruise</button>
                                             </div>
                                             <div class="col-md-auto">
                                                 <button type="button" class="btn btn-sm btn-dark"
+                                                    ng-click="fetchAnnouncement('in-flight-start')"
+                                                    ng-disabled="isAnnouncementLoading">Begin In-Flight Services</button>
+                                            </div>
+                                            <div class="col-md-auto">
+                                                <button type="button" class="btn btn-sm btn-dark"
                                                     ng-click="fetchAnnouncement('descent')"
                                                     ng-disabled="isAnnouncementLoading">Descent </button>
+                                            </div>
+                                            <div class="col-md-auto">
+                                                <button type="button" class="btn btn-sm btn-dark"
+                                                    ng-click="fetchAnnouncement('in-flight-end')"
+                                                    ng-disabled="isAnnouncementLoading">End In-Flight Services</button>
                                             </div>
                                             <div class="col-md-auto">
                                                 <button type="button" class="btn btn-sm btn-dark"
