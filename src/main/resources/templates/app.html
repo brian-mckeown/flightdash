@@ -1375,6 +1375,11 @@ Baggage Claim: {{ bagsBaggageClaim.length }}
                                                     ng-disabled="isAnnouncementLoading">Seatbelts Off</button>
                                             </div>
                                             <div class="col-md-auto">
+                                                <button type="button" class="btn btn-sm btn-warning"
+                                                    ng-click="fetchAnnouncement('seatbelts-turbulence')"
+                                                    ng-disabled="isAnnouncementLoading">Seatbelts Turbulence</button>
+                                            </div>
+                                            <div class="col-md-auto">
                                                 <button type="button" class="btn btn-sm btn-dark"
                                                     ng-click="fetchAnnouncement('cruise')"
                                                     ng-disabled="isAnnouncementLoading">Cruise</button>

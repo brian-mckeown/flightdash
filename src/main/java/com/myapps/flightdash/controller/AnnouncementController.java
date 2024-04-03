@@ -141,7 +141,7 @@ private String getCurrentUtcDateTime() {
                 }
             }
         }
-    } else if (announcementType.equals("pre taxi") || announcementType.equals("cruise") || announcementType.equals("descent")) {
+    } else if (announcementType.equals("pre taxi") || announcementType.equals("cruise") || announcementType.equals("descent") || announcementType.equals("seatbelts-turbulence")) {
         // Parse the flightCrewArray to find the Captain
         if (flightCrewArray != null) {
             for (Map<String, Object> crewMember : flightCrewArray) {
@@ -290,6 +290,22 @@ private String getCurrentUtcDateTime() {
 
         instruction = "In the style of a " + announcementPersonality + ", " + "Write a short script for an announcement when the seatbelt sign has been turned off. Include all standard and important information that would be included in this type of modern airline announcement. Mention that passengers are now free to use electronics. If stating the flight number, just say the number portion in individual digits, not the letters. This announcement should be very brief and to the point. The aircraft has not reached cruise altitude yet.";
         }
+        else if (announcementType.equals("seatbelts-turbulence")) {
+            systemRole = 
+            "You are airliner captain for the airline: " 
+            + airline 
+            + ", on flight number: " 
+            + flightNumber
+            +". Your personality is: "
+            + announcementPersonality
+            + ". You are flying from " 
+            + departureIcao 
+            + " to "
+            + arrivalIcao 
+            + ".";
+    
+            instruction = "In the style of a " + announcementPersonality + ", " + "Write an extremely brief script for a captain's announcement for when seatbelt signs come on for turbulence.";
+            }
         else if (announcementType.equals("cruise")) {
         systemRole = 
         "You are airliner captain for the airline: " 
