@@ -25,18 +25,18 @@ import java.time.format.DateTimeFormatter;
 @RequestMapping("/api/v1/fenix-soundpack")
 public class FenixSoundpackController {
 
-    private static final String weatherbitApiToken;
+    private static final String weatherApiToken;
 
     static {
         String token = null;
         Dotenv dotenv = null;
         if (new File("./.env").exists()) {
             dotenv = Dotenv.load();
-            token = dotenv.get("WEATHERBIT_API_TOKEN");
+            token = dotenv.get("WEATHER_API_TOKEN");
         } else {
-            token = System.getenv("WEATHERBIT_API_TOKEN");
+            token = System.getenv("WEATHER_API_TOKEN");
         }
-        weatherbitApiToken = token;
+        weatherApiToken = token;
     }
 
     private String getCurrentUtcDateTime() {
@@ -86,10 +86,10 @@ public class FenixSoundpackController {
         String scheduledDepartureTime = (String) payload.get("scheduledDepartureTime");
         String scheduledArrivalTime = (String) payload.get("scheduledArrivalTime");
 
-        String departureWeatherUrl = "https://api.weatherbit.io/v2.0/current?station=" +
-                departureIcao + "&key=" + weatherbitApiToken + "&include=minutely";
-        String arrivalWeatherUrl = "https://api.weatherbit.io/v2.0/current?station=" +
-                arrivalIcao + "&key=" + weatherbitApiToken + "&include=minutely";
+        String departureWeatherUrl = "https://api.weatherapi.com/v1/forecast.json?q=metar:" +
+                departureIcao + "&key=" + weatherApiToken;
+        String arrivalWeatherUrl = "https://api.weatherapi.com/v1/forecast.json?q=metar:" +
+                arrivalIcao + "&key=" + weatherApiToken;
 
         // set Flight Crew names:
         String captainFirstName = "";
@@ -183,13 +183,19 @@ public class FenixSoundpackController {
         }
 
         // Check for successful response and extract data
-        if (weatherResponse != null && weatherResponse.getStatusCode().is2xxSuccessful()
-                && weatherResponse.getBody() != null) {
-            List<Map<String, Object>> data = (List<Map<String, Object>>) weatherResponse.getBody().get("data");
-            if (data != null && !data.isEmpty()) {
-                Map<String, Object> weatherData = data.get(0);
-                weatherDescription = (String) ((Map) weatherData.get("weather")).get("description");
-                celsiusTemp = (Number) weatherData.get("temp");
+        if (weatherResponse != null && weatherResponse.getStatusCode().is2xxSuccessful() && weatherResponse.getBody() != null) {
+            // Directly cast and use the body of weatherResponse
+            Map<String, Object> weatherData = (Map<String, Object>) weatherResponse.getBody();
+            
+            // Now, access the 'current' key directly from the weatherData map
+            Map<String, Object> current = (Map<String, Object>) weatherData.get("current");
+            if (current != null) {
+                // Proceed to get the condition and then the text and temp_c from it
+                Map<String, Object> condition = (Map<String, Object>) current.get("condition");
+                if (condition != null) {
+                    weatherDescription = (String) condition.get("text");
+                    celsiusTemp = (Number) current.get("temp_c");
+                }
             } else {
                 // Handle the case where weather API call was not successful or body is null
                 apiCallStatus.append(getCurrentUtcDateTime()).append(" - Weather API Call - Failed or no data received\n");
