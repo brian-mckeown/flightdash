@@ -1371,6 +1371,11 @@ Baggage Claim: {{ bagsBaggageClaim.length }}
                                             </div>
                                             <div class="col-md-auto">
                                                 <button type="button" class="btn btn-sm btn-dark"
+                                                    ng-click="fetchAnnouncement('cleared-takeoff')"
+                                                    ng-disabled="isAnnouncementLoading">Clear for Takeoff</button>
+                                            </div>
+                                            <div class="col-md-auto">
+                                                <button type="button" class="btn btn-sm btn-dark"
                                                     ng-click="fetchAnnouncement('seatbelts-off')"
                                                     ng-disabled="isAnnouncementLoading">Seatbelts Off</button>
                                             </div>

@@ -141,7 +141,7 @@ private String getCurrentUtcDateTime() {
                 }
             }
         }
-    } else if (announcementType.equals("pre taxi") || announcementType.equals("cruise") || announcementType.equals("descent") || announcementType.equals("seatbelts-turbulence")) {
+    } else if (announcementType.equals("pre taxi") || announcementType.equals("cruise") || announcementType.equals("descent") || announcementType.equals("seatbelts-turbulence") || announcementType.equals("cleared-takeoff")) {
         // Parse the flightCrewArray to find the Captain
         if (flightCrewArray != null) {
             for (Map<String, Object> crewMember : flightCrewArray) {
@@ -271,6 +271,22 @@ private String getCurrentUtcDateTime() {
 
         instruction = "In the style of a " + announcementPersonality + ", " + "Write a script for your safety breifing before the flight begins. Be sure to introduce yourself. Include all standard and important information that would be include in a modern airline safety announcement. When stating the flight number, just say the number portion in individual digits, not the letters.";
         }
+        else if (announcementType.equals("cleared-takeoff")) {
+            systemRole = 
+            "You are airliner captain for the airline: " 
+            + airline 
+            + ", on flight number: " 
+            + flightNumber
+            +". Your personality is: "
+            + announcementPersonality
+            + ". You are flying from " 
+            + departureIcao 
+            + " to "
+            + arrivalIcao 
+            + ".";
+    
+            instruction = "In the style of a " + announcementPersonality + ", " + "Write an extremely brief script for a captain's announcement for letting the crew know we've been cleared for takeoff. Ensure to mention that crew should be seated for takeoff.";
+            }
         else if (announcementType.equals("seatbelts-off")) {
         systemRole = 
         "You are a flight attendant for the airline: " 
