@@ -6,7 +6,7 @@ var app = angular.module('checklistApp', ['sharedModule']);
 app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$document', '$interval', 'SharedService', function($scope, $sce, $timeout, $http, $document, $interval, SharedService) {
     
 
-    $scope.versionNumber = '1.7.1'; 
+    $scope.versionNumber = '1.8.0'; 
 
     $scope.state = 'Idle';
     $scope.messages = [];

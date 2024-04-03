@@ -130,7 +130,7 @@ private String getCurrentUtcDateTime() {
     String announcementPersonality = null;
     Map<String, Object> response = new HashMap<>();
 
-    if (announcementType.equals("landing") || announcementType.equals("safety")) {
+    if (announcementType.equals("landing") || announcementType.equals("safety") || announcementType.equals("seatbelts-off")) {
         // Parse the flightCrewArray to find the Lead Flight Attendant
         if (flightCrewArray != null) {
             for (Map<String, Object> crewMember : flightCrewArray) {
@@ -270,6 +270,25 @@ private String getCurrentUtcDateTime() {
         + leadFaFirstName;
 
         instruction = "In the style of a " + announcementPersonality + ", " + "Write a script for your safety breifing before the flight begins. Be sure to introduce yourself. Include all standard and important information that would be include in a modern airline safety announcement. When stating the flight number, just say the number portion in individual digits, not the letters.";
+        }
+        else if (announcementType.equals("seatbelts-off")) {
+        systemRole = 
+        "You are a flight attendant for the airline: " 
+        + airline 
+        + ", on flight number: " 
+        + flightNumber
+        +". Your personality is: "
+        + announcementPersonality
+        + ". You are flying from " 
+        + departureIcao 
+        + " to "
+        + arrivalIcao 
+        + ". The aircraft is: " 
+        + aircraftName
+        + ". Your name is: " 
+        + leadFaFirstName;
+
+        instruction = "In the style of a " + announcementPersonality + ", " + "Write a short script for an announcement when the seatbelt sign has been turned off. Include all standard and important information that would be included in this type of modern airline announcement. If stating the flight number, just say the number portion in individual digits, not the letters. This announcement should be very brief and to the point. The aircraft has not reached cruise altitude yet.";
         }
         else if (announcementType.equals("cruise")) {
         systemRole = 
