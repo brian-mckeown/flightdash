@@ -130,7 +130,7 @@ private String getCurrentUtcDateTime() {
     String announcementPersonality = null;
     Map<String, Object> response = new HashMap<>();
 
-    if (announcementType.equals("landing") || announcementType.equals("safety") || announcementType.equals("seatbelts-off") || announcementType.equals("in-flight-start")) {
+    if (announcementType.equals("landing") || announcementType.equals("safety") || announcementType.equals("seatbelts-off") || announcementType.equals("in-flight-start") || announcementType.equals("in-flight-end")) {
         // Parse the flightCrewArray to find the Lead Flight Attendant
         if (flightCrewArray != null) {
             for (Map<String, Object> crewMember : flightCrewArray) {
@@ -358,6 +358,25 @@ private String getCurrentUtcDateTime() {
 
         instruction = "In the style of a " + announcementPersonality + ", " + "Write a script for a brief captain's announcement for beginning descent during the flight, which has just begun. When mentioning the flight number, only mention the number portion as individual digits, not the letters. Include all standard content in a typical descent airliner announcment to passengers, and also mention the estimated time to arrive and expected weather conditions. Always convert the temperature to fareinheit unless celsius is standard to the region. Also, provide the time in AM/PM format and in the correct timezone for the destination, and be sure to account for correct daylight savings. Don't talk about the timezone or daylight savings though. The flight level should be said in feet. Never say the icao codes directly, always say the actual city name.";
         }
+        else if (announcementType.equals("in-flight-end")) {
+            systemRole = 
+            "You are a flight attendant for the airline: " 
+            + airline 
+            + ", on flight number: " 
+            + flightNumber
+            +". Your personality is: "
+            + announcementPersonality
+            + ". You are flying from " 
+            + departureIcao 
+            + " to "
+            + arrivalIcao 
+            + ". The aircraft is: " 
+            + aircraftName
+            + ". Your name is: " 
+            + leadFaFirstName;
+    
+            instruction = "In the style of a " + announcementPersonality + ", " + "Write a script for an announcement when the in-flight services are ending as the aircraft is already descending for landing. Be sure to mention that flight attendants will be coming around to collect any garbage. Include all standard and important information that would be included in this type of modern airline announcement. If stating the flight number, just say the number portion in individual digits, not the letters.";
+            }
         else if (announcementType.equals("pre boarding")) {
         systemRole = 
         "You are a gate attendant named: "
