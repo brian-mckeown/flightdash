@@ -1381,6 +1381,11 @@ Baggage Claim: {{ bagsBaggageClaim.length }}
                                             </div>
                                             <div class="col-md-auto">
                                                 <button type="button" class="btn btn-sm btn-dark"
+                                                    ng-click="fetchAnnouncement('in-flight-start')"
+                                                    ng-disabled="isAnnouncementLoading">Begin In-Flight Services</button>
+                                            </div>
+                                            <div class="col-md-auto">
+                                                <button type="button" class="btn btn-sm btn-dark"
                                                     ng-click="fetchAnnouncement('descent')"
                                                     ng-disabled="isAnnouncementLoading">Descent </button>
                                             </div>
