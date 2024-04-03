@@ -20,18 +20,18 @@ import java.time.format.DateTimeFormatter;
 @RequestMapping("/api/v1/announcements")
 public class AnnouncementController {
 
-    private static final String weatherbitApiToken;
+    private static final String weatherApiToken;
 
 static {
     String token = null;
     Dotenv dotenv = null;
     if (new File("./.env").exists()) {
         dotenv = Dotenv.load();
-        token = dotenv.get("WEATHERBIT_API_TOKEN");
+        token = dotenv.get("WEATHER_API_TOKEN");
     } else {
-        token = System.getenv("WEATHERBIT_API_TOKEN");
+        token = System.getenv("WEATHER_API_TOKEN");
     }
-    weatherbitApiToken = token;
+    weatherApiToken = token;
 }
 
 private String getCurrentUtcDateTime() {
@@ -59,10 +59,10 @@ private String getCurrentUtcDateTime() {
         String scheduledBoardingTime = (String) payload.get("scheduledBoardingTime");
         String scheduledDepartureTime = (String) payload.get("scheduledDepartureTime");
         
-        String departureWeatherUrl = "https://api.weatherbit.io/v2.0/current?station=" +
-                departureIcao + "&key=" + weatherbitApiToken + "&include=minutely";
-        String arrivalWeatherUrl = "https://api.weatherbit.io/v2.0/current?station=" +
-                arrivalIcao + "&key=" + weatherbitApiToken + "&include=minutely";
+        String departureWeatherUrl = "https://api.weatherapi.com/v1/forecast.json?q=metar:" +
+                departureIcao + "&key=" + weatherApiToken;
+        String arrivalWeatherUrl = "https://api.weatherapi.com/v1/forecast.json?q=metar:" +
+                arrivalIcao + "&key=" + weatherApiToken;
 
         //set Flight Crew names:
         String captainFirstName = "";
@@ -173,11 +173,18 @@ private String getCurrentUtcDateTime() {
 
     // Check for successful response and extract data
     if (weatherResponse != null && weatherResponse.getStatusCode().is2xxSuccessful() && weatherResponse.getBody() != null) {
-        List<Map<String, Object>> data = (List<Map<String, Object>>) weatherResponse.getBody().get("data");
-        if (data != null && !data.isEmpty()) {
-            Map<String, Object> weatherData = data.get(0);
-            weatherDescription = (String) ((Map) weatherData.get("weather")).get("description");
-            celsiusTemp = (Number) weatherData.get("temp");
+        // Directly cast and use the body of weatherResponse
+        Map<String, Object> weatherData = (Map<String, Object>) weatherResponse.getBody();
+        
+        // Now, access the 'current' key directly from the weatherData map
+        Map<String, Object> current = (Map<String, Object>) weatherData.get("current");
+        if (current != null) {
+            // Proceed to get the condition and then the text and temp_c from it
+            Map<String, Object> condition = (Map<String, Object>) current.get("condition");
+            if (condition != null) {
+                weatherDescription = (String) condition.get("text");
+                celsiusTemp = (Number) current.get("temp_c");
+            }
         }
 
         //Chat GPT Script Request
