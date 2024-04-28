@@ -6,7 +6,7 @@ var app = angular.module('checklistApp', ['sharedModule']);
 app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$document', '$interval', 'SharedService', function($scope, $sce, $timeout, $http, $document, $interval, SharedService) {
     
 
-    $scope.versionNumber = '1.8.0'; 
+    $scope.versionNumber = '1.9.0'; 
 
     $scope.state = 'Idle';
     $scope.messages = [];
@@ -26,6 +26,7 @@ app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$
     $scope.announcementApiReport = '';
     $scope.announcementsReady = false;
     $scope.isFenixSoundpackDownloading = false;
+    $scope.customPassengers = '';
 
     // VatTrack Pilot Tracking data
     $scope.vatTrackBannerPilot = {};
@@ -1746,6 +1747,7 @@ $scope.deBoardPassengersAndBags = function() {
         };
     };
 
+    
     $scope.isAnnouncementLoading = false;
     $scope.fetchAnnouncement = function(announcementType) {
         console.log("Announcement Type:" + announcementType);
@@ -1755,6 +1757,7 @@ $scope.deBoardPassengersAndBags = function() {
             openAiApiKey: $scope.openAiApiKey,
             flightCrewArray: $scope.flightCrewArray,
             airline: $scope.airline,
+            customPassengers: $scope.customPassengers,
             flightNumber: $scope.callSign,
             currentDateTime: new Date().toISOString(), // Format the current date and time as ISO string
             departureIcao: $scope.departureIcao,
