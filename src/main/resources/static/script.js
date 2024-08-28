@@ -1470,7 +1470,7 @@ $scope.deBoardPassengersAndBags = function() {
 
 
 
-    /*** API CALLS *****************/
+    /*** API CALLS ******************/
     /**
      * 
      */
