@@ -6,7 +6,7 @@ var app = angular.module('checklistApp', ['sharedModule']);
 app.controller('ChecklistController', ['$scope', '$sce', '$timeout', '$http', '$document', '$interval', 'SharedService', function($scope, $sce, $timeout, $http, $document, $interval, SharedService) {
     
 
-    $scope.versionNumber = '1.9.0'; 
+    $scope.versionNumber = '1.9.1'; 
 
     $scope.state = 'Idle';
     $scope.messages = [];
@@ -1470,7 +1470,7 @@ $scope.deBoardPassengersAndBags = function() {
 
 
 
-    /*** API CALLS *****************/
+    /*** API CALLS ******************/
     /**
      * 
      */
